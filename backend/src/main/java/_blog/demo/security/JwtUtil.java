@@ -29,7 +29,7 @@ public class JwtUtil {
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        long expiration = 1000 * 60 * 60; // 1 hour
+        long expiration = 1000 * 60 * 60; 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)

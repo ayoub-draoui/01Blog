@@ -25,9 +25,9 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
     public String register(RegisterRequest req) {
-        if (userRepo.findByUsername(req.getUsername()) != null) {
-            throw new RuntimeException("user name already exist");
-        }
+    //     if (userRepo.findByUsername(req.getUsername()) != null) {
+    //         // throw new RuntimeException("user name already exist555555555=====");
+    //     }
         User user = new User();
         user.setUsername(req.getUsername());
         user.setPassword(encoder.encode(req.getPassword()));
