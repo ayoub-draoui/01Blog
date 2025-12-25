@@ -1,7 +1,7 @@
 package _blog.demo.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+ 
 import lombok.Data;
 
 @Data
