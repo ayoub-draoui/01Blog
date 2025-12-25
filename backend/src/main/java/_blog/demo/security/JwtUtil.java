@@ -34,12 +34,16 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(String username) {
+    public String generateToken(CustomUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        System.out.println("am failing here1");
+        claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
+        System.out.println("am failing here2");
+
         long expiration = 1000 * 60 * 60; 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(username)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -58,6 +62,9 @@ public class JwtUtil {
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+    public String extractRole(String token){
+        return extractAllClaims(token).get("role", String.class);
     }
 
     // Helper: parse token claims (NEW API)

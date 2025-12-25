@@ -5,32 +5,27 @@ import _blog.demo.dto.RegisterRequest;
 import _blog.demo.model.*;
 import _blog.demo.repository.UserRepository;
 import _blog.demo.security.JwtUtil;
+import lombok.AllArgsConstructor;
 import _blog.demo.security.CustomUserDetails;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class AuthService {
-    @Autowired
     private UserRepository userRepo;
-    @Autowired
     private PasswordEncoder encoder;
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
+    private AuthenticationManager authenticationManager;
     private JwtUtil jwtUtil;
 
     public String register(RegisterRequest req) {
-    //     if (userRepo.findByUsername(req.getUsername()) != null) {
-    //         // throw new RuntimeException("user name already exist555555555=====");
-    //     }
+    
         User user = new User();
         user.setUsername(req.getUsername());
         user.setPassword(encoder.encode(req.getPassword()));
+        user.setRole(Role.ROLE_USER);
         userRepo.save(user);
         return "the user has been added successfully";
     }
@@ -44,7 +39,7 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         CustomUserDetails userDetails = new CustomUserDetails(user);
-        return jwtUtil.generateToken(userDetails.getUsername());
+        return jwtUtil.generateToken(userDetails);
 
     }
 
