@@ -1,34 +1,59 @@
 package _blog.demo.service;
-import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import _blog.demo.dto.PostUpdateRequest;
 import _blog.demo.model.Post;
 import _blog.demo.repository.PostRepository;
+
 
 @Service
 public class PostService {
     private final PostRepository postRepository;
-    public PostService(PostRepository postRepository){
+
+    public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
-    public Post creatPost(Post post){
+
+    public Post creatPost(Post post, Long authorId) {
+        post.setAuthorId(authorId);
         return postRepository.save(post);
     }
 
-    public List<Post> allPosts(){
-        return postRepository.findAll();
+    public Page<Post> allPosts(int page, int size) {
+        return postRepository.findAll(PageRequest.of(page, size));
     }
-    public Post findById(Long id){
-            return postRepository.findById(id).orElseThrow(()-> 
 
-            new RuntimeException("there is no post yet for this user "));
+    public Page<Post> getByAuthor(Long authorId, int page, int size) {
+        return postRepository.findAllByAuthorId(authorId, PageRequest.of(page, size));
     }
-    public Post update(Long id , Post updatposte){
-            Post post = findById(id);
-            post.setContent(updatposte.getContent());
-            post.setTitle(updatposte.getTitle());
-            return postRepository.save(post);
+
+    public Post updatePost(
+            Long postId,
+            Long currentUserId,
+            PostUpdateRequest request) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        if (!post.getAuthorId().equals(currentUserId)) {
+            throw new RuntimeException("You are not allowed to update this post");
+        }
+
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+
+        return postRepository.save(post);
     }
-    public void deletPost(Long id ){
-        postRepository.deleteById(id);
+
+    public void delete(Long postId, Long currentUserId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        if (!post.getAuthorId().equals(currentUserId)) {
+            throw new RuntimeException("Not your post");
+        }
+
+        postRepository.delete(post);
     }
 }

@@ -23,8 +23,8 @@ public class AuthService {
     public String register(RegisterRequest req) {
     
         User user = new User();
-        user.setUsername(req.getUsername());
-        user.setPassword(encoder.encode(req.getPassword()));
+        user.setUsername(req.username());
+        user.setPassword(encoder.encode(req.password()));
         user.setRole(Role.ROLE_USER);
         userRepo.save(user);
         return "the user has been added successfully";
@@ -33,9 +33,9 @@ public class AuthService {
     public String login(LoginRequest req) {
         authenticationManager
                 .authenticate(
-                        new UsernamePasswordAuthenticationToken(req.getUsername(),
-                                req.getPassword()));
-        User user = userRepo.findByUsername(req.getUsername())
+                        new UsernamePasswordAuthenticationToken(req.username(),
+                                req.password()));
+        User user = userRepo.findByUsername(req.username())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         CustomUserDetails userDetails = new CustomUserDetails(user);

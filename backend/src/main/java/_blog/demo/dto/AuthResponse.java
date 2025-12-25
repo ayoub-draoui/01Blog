@@ -1,5 +1,5 @@
 package _blog.demo.dto;
 
-public class AuthResponse {
+public record AuthResponse() {
     
 }
