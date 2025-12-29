@@ -17,6 +17,7 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
+
     public Post creatPost(Post post, Long authorId) {
         post.setAuthorId(authorId);
         return postRepository.save(post);
@@ -40,8 +41,8 @@ public class PostService {
             throw new RuntimeException("You are not allowed to update this post");
         }
 
-        post.setTitle(request.getTitle());
-        post.setContent(request.getContent());
+        post.setTitle(request.title());
+        post.setContent(request.content());
 
         return postRepository.save(post);
     }

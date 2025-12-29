@@ -16,6 +16,10 @@ public class CustomUserDetails implements UserDetails {
   //  public CustomUserDetails(User user){
   //   this.user = user;
   //  }
+   public Long getId() {
+        return user.getId();
+    }
+
    @Override
    public Collection< ? extends GrantedAuthority> getAuthorities(){
         System.out.println("am failing here1");
