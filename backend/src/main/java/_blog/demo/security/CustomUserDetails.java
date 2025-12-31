@@ -22,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
 
    @Override
    public Collection< ? extends GrantedAuthority> getAuthorities(){
-        System.out.println("am failing here1");
+       
     return List.of(new SimpleGrantedAuthority(user.getRole().name()));
 
    } 

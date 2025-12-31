@@ -5,6 +5,7 @@ import _blog.demo.model.Post;
 import _blog.demo.security.CustomUserDetails;
 import _blog.demo.service.PostService;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,7 +23,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Post> createPost(
-            @RequestBody Post post,
+            @Valid @RequestBody Post post,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Post created = postService.creatPost(post, user.getId());
@@ -49,7 +50,7 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<Post> updatePost(
             @PathVariable Long id,
-            @RequestBody PostUpdateRequest request,
+            @Valid @RequestBody PostUpdateRequest request,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Post updatedPost = postService.updatePost(id, user.getId(), request);

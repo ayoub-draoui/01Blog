@@ -5,6 +5,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import _blog.demo.dto.PostUpdateRequest;
+import _blog.demo.exceptions.ResourceNotFoundException;
+import _blog.demo.exceptions.UnauthorizedException;
 import _blog.demo.model.Post;
 import _blog.demo.repository.PostRepository;
 
@@ -12,9 +14,11 @@ import _blog.demo.repository.PostRepository;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final LikeService likeService;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository,LikeService likeService) {
         this.postRepository = postRepository;
+        this.likeService = likeService;
     }
 
 
@@ -36,9 +40,9 @@ public class PostService {
             Long currentUserId,
             PostUpdateRequest request) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
         if (!post.getAuthorId().equals(currentUserId)) {
-            throw new RuntimeException("You are not allowed to update this post");
+            throw new UnauthorizedException("You are not allowed to update this post");
         }
 
         post.setTitle(request.title());
@@ -49,12 +53,12 @@ public class PostService {
 
     public void delete(Long postId, Long currentUserId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with this post is :"+ postId));
 
         if (!post.getAuthorId().equals(currentUserId)) {
-            throw new RuntimeException("Not your post");
+            throw new UnauthorizedException("Not your post  u can't delet it go away");
         }
-
+          likeService.deleteAllLikesForPost(postId);
         postRepository.delete(post);
     }
 }

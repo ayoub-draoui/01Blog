@@ -1,8 +1,11 @@
 package _blog.demo.controllers;
 
+import _blog.demo.dto.AuthResponse;
 import _blog.demo.dto.LoginRequest;
 import _blog.demo.dto.RegisterRequest;
 import _blog.demo.service.AuthService;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +16,12 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest req) {
+    public AuthResponse register(@Valid @RequestBody RegisterRequest req) {
         return authService.register(req);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest req) {
+    public AuthResponse login( @Valid @RequestBody LoginRequest req) {
         return authService.login(req);
     }
 }

@@ -1,7 +1,6 @@
 package _blog.demo.model;
 
 import jakarta.persistence.*;
- 
 import lombok.Data;
 
 @Data
@@ -14,7 +13,18 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String username;
-
+    
+    @Column(unique =  true , nullable =  false)
+    private String email;
+   
+    @Column(nullable =  false)
+    private String firstname;
+   
+    @Column(nullable =  false)
+    private String lastname;
+   
+    @Column( nullable =  false , columnDefinition = "TEXT DEFAULT ''")
+    private String avatar ;
     @Column(nullable = false)
     private String password;
 
