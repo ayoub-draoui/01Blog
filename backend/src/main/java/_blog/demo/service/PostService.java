@@ -15,10 +15,12 @@ import _blog.demo.repository.PostRepository;
 public class PostService {
     private final PostRepository postRepository;
     private final LikeService likeService;
+    private final CommentService commentService; 
 
-    public PostService(PostRepository postRepository,LikeService likeService) {
+    public PostService(PostRepository postRepository,LikeService likeService,CommentService commentService) {
         this.postRepository = postRepository;
         this.likeService = likeService;
+          this.commentService = commentService;
     }
 
 
@@ -59,6 +61,7 @@ public class PostService {
             throw new UnauthorizedException("Not your post  u can't delet it go away");
         }
           likeService.deleteAllLikesForPost(postId);
+          commentService.deleteAllCommentsForPost(postId);
         postRepository.delete(post);
     }
 }
