@@ -22,6 +22,13 @@ public class Post {
     @Column(nullable =  false)
     private Long authorId;
 
+    @Column(length = 500)
+    private String mediaUrl; 
+    
+    @Column(length = 20)
+    private String mediaType; //  this field suppose to hold one of three values image || video || null; 
+
+
     @Column(nullable = false , updatable = false)
     private LocalDateTime createdAt;
 

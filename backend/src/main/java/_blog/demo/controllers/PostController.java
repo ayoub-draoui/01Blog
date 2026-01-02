@@ -10,23 +10,33 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
+      private final ObjectMapper objectMapper;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, ObjectMapper oblObjectMapper) {
         this.postService = postService;
+        this.objectMapper  = oblObjectMapper;
     }
 
-    @PostMapping
+     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Post> createPost(
-            @Valid @RequestBody Post post,
+             @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam(value = "media", required = false) MultipartFile media,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        Post created = postService.creatPost(post, user.getId());
+          Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        Post created = postService.creatPost(post, user.getId(), media);
         return ResponseEntity.ok(created);
     }
 
@@ -47,13 +57,16 @@ public class PostController {
         return ResponseEntity.ok(postService.getByAuthor(authorId, page, size));
     }
 
-    @PutMapping("/{id}")
+      @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<Post> updatePost(
             @PathVariable Long id,
-            @Valid @RequestBody PostUpdateRequest request,
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam(value = "media", required = false) MultipartFile media,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        Post updatedPost = postService.updatePost(id, user.getId(), request);
+        PostUpdateRequest request = new PostUpdateRequest(title, content);
+        Post updatedPost = postService.updatePost(id, user.getId(), request, media);
         return ResponseEntity.ok(updatedPost);
     }
 

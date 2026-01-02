@@ -30,9 +30,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/files/**").permitAll() 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/posts/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/subscriptions/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN") 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
