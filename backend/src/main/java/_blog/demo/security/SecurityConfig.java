@@ -32,9 +32,11 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/files/**").permitAll() 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // .requestMatchers("/v3/api-docs/","/swagger-ui/","/swagger-ui.html").permitAll()
                         .requestMatchers("/posts/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/subscriptions/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN") 
+                        .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/feed/**").hasAnyRole("USER", "ADMIN")  
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
