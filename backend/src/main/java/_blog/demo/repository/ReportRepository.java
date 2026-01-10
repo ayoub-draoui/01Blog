@@ -23,7 +23,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     
     Page<Report> findByReporterId(Long reporterId, Pageable pageable);
     
-    @Query("SELECT COUNT(r) FROM Report r WHERE r.status = 'PENDING'")
+    @Query("SELECT COUNT(r)  FROM Report r WHERE r.status = 'PENDING'")
     long countPendingReports();
     
     boolean existsByReporterIdAndReportedUserId(Long reporterId, Long reportedUserId);
