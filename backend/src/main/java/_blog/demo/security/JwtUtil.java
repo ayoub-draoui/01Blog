@@ -40,7 +40,7 @@ public class JwtUtil {
         claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
         System.out.println("am failing here2");
 
-        long expiration = 1000 * 60 * 60; 
+        long expiration = 100000 * 60 * 60; 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())

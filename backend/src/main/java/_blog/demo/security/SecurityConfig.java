@@ -36,7 +36,8 @@ public class SecurityConfig {
                         .requestMatchers("/posts/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/subscriptions/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/users/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/feed/**").hasAnyRole("USER", "ADMIN")  
+                        .requestMatchers("/feed/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/reports/**").hasAnyRole("USER", "ADMIN")   
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

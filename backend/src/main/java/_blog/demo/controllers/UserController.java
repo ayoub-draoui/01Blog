@@ -78,5 +78,17 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+
+    // chamge the MF's image !!!!
+
+     @PutMapping("/me/avatar")
+    public ResponseEntity<User> updateAvatar(
+            @RequestParam("avatar") MultipartFile avatarFile,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        User updatedUser = userService.updateAvatar(currentUser.getId(), avatarFile);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
     
 }

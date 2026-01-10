@@ -1,0 +1,98 @@
+{
+  "info": {
+    "name": "01Blog API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "01blog-api-collection"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "authToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"user\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth","register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"user\",\n  \"password\": \"password\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        { "name": "Get current user", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users","me"] } } },
+        { "name": "Get user by id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/users/:userId", "host": ["{{baseUrl}}"], "path": ["users",":userId"] }, "description": "Replace :userId with numeric id" } },
+        { "name": "Get user by username", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/users/username/:username", "host": ["{{baseUrl}}"], "path": ["users","username",":username"] }, "description": "Replace :username" } },
+        { "name": "Update profile (PUT /users/me)", "request": { "method": "PUT", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "body": { "mode": "raw", "raw": "{\n  \"displayName\": \"New Name\"\n}" }, "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users","me"] } } },
+        { "name": "Change password (PUT /users/me/password)", "request": { "method": "PUT", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "body": { "mode": "raw", "raw": "{\n  \"oldPassword\": \"old\",\n  \"newPassword\": \"new\"\n}" }, "url": { "raw": "{{baseUrl}}/users/me/password", "host": ["{{baseUrl}}"], "path": ["users","me","password"] } } }
+      ]
+    },
+    {
+      "name": "Posts",
+      "item": [
+        { "name": "Create post (multipart)", "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "body": { "mode": "formdata", "formdata": [ { "key": "title", "value": "My post", "type": "text" }, { "key": "content", "value": "Post content", "type": "text" }, { "key": "media", "type": "file" } ] }, "url": { "raw": "{{baseUrl}}/posts", "host": ["{{baseUrl}}"], "path": ["posts"] } } },
+        { "name": "Get all posts", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/posts?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["posts"], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "10" } ] } } },
+        { "name": "Get posts by author", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/posts/author/:authorId?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["posts","author",":authorId"], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "10" } ] }, "description": "Replace :authorId" } },
+        { "name": "Update post (multipart)", "request": { "method": "PUT", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "body": { "mode": "formdata", "formdata": [ { "key": "title", "value": "Updated", "type": "text" }, { "key": "content", "value": "Updated content", "type": "text" }, { "key": "media", "type": "file" } ] }, "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts",":id"] }, "description": "Replace :id with post id" } },
+        { "name": "Delete post", "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/posts/:id", "host": ["{{baseUrl}}"], "path": ["posts",":id"] }, "description": "Replace :id with post id" } }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        { "name": "Create comment", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "body": { "mode": "raw", "raw": "{\n  \"content\": \"Nice post\"\n}" }, "url": { "raw": "{{baseUrl}}/posts/:postId/comments", "host": ["{{baseUrl}}"], "path": ["posts",":postId","comments"] }, "description": "Replace :postId" } },
+        { "name": "Update comment", "request": { "method": "PUT", "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "body": { "mode": "raw", "raw": "{\n  \"content\": \"Edited comment\"\n}" }, "url": { "raw": "{{baseUrl}}/posts/:postId/comments/:commentId", "host": ["{{baseUrl}}"], "path": ["posts",":postId","comments",":commentId"] } } },
+        { "name": "Delete comment", "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/posts/:postId/comments/:commentId", "host": ["{{baseUrl}}"], "path": ["posts",":postId","comments",":commentId"] } } },
+        { "name": "Get post comments (paginated)", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/posts/:postId/comments?page=0&size=20", "host": ["{{baseUrl}}"], "path": ["posts",":postId","comments"], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "20" } ] } } },
+        { "name": "Get all comments", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/posts/:postId/comments/all", "host": ["{{baseUrl}}"], "path": ["posts",":postId","comments","all"] } } },
+        { "name": "Get comments count", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/posts/:postId/comments/count", "host": ["{{baseUrl}}"], "path": ["posts",":postId","comments","count"] } } }
+      ]
+    },
+    {
+      "name": "Likes",
+      "item": [
+        { "name": "Like post", "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/posts/:postId/likes", "host": ["{{baseUrl}}"], "path": ["posts",":postId","likes"] } } },
+        { "name": "Unlike post", "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/posts/:postId/likes", "host": ["{{baseUrl}}"], "path": ["posts",":postId","likes"] } } },
+        { "name": "Get post likes", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/posts/:postId/likes", "host": ["{{baseUrl}}"], "path": ["posts",":postId","likes"] } } },
+        { "name": "Get likes count", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/posts/:postId/likes/count", "host": ["{{baseUrl}}"], "path": ["posts",":postId","likes","count"] } } },
+        { "name": "Check liked", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/posts/:postId/likes/check", "host": ["{{baseUrl}}"], "path": ["posts",":postId","likes","check"] } } }
+      ]
+    },
+    {
+      "name": "Feed",
+      "item": [
+        { "name": "Home feed", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/feed/home?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["feed","home"], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "10" } ] } } },
+        { "name": "Personalized feed", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/feed/personalize?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["feed","personalize"], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "10" } ] } } },
+        { "name": "Explore feed", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/feed/explore?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["feed","explore"], "query": [ { "key": "page", "value": "0" }, { "key": "size", "value": "10" } ] } } }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        { "name": "Follow user", "request": { "method": "POST", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/subscriptions/follow/:userId", "host": ["{{baseUrl}}"], "path": ["subscriptions","follow",":userId"] } } },
+        { "name": "Unfollow user", "request": { "method": "DELETE", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/subscriptions/unfollow/:userId", "host": ["{{baseUrl}}"], "path": ["subscriptions","unfollow",":userId"] } } },
+        { "name": "Get followers", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/subscriptions/followers/:userId", "host": ["{{baseUrl}}"], "path": ["subscriptions","followers",":userId"] } } },
+        { "name": "Get following", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/subscriptions/following/:userId", "host": ["{{baseUrl}}"], "path": ["subscriptions","following",":userId"] } } },
+        { "name": "Is following", "request": { "method": "GET", "header": [ { "key": "Authorization", "value": "Bearer {{authToken}}" } ], "url": { "raw": "{{baseUrl}}/subscriptions/is-following/:userId", "host": ["{{baseUrl}}"], "path": ["subscriptions","is-following",":userId"] } } },
+        { "name": "Get follower/following stats", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/subscriptions/stats/:userId", "host": ["{{baseUrl}}"], "path": ["subscriptions","stats",":userId"] } } }
+      ]
+    }
+  ]
+}

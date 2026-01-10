@@ -55,8 +55,12 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest req) {
+        System.out.println(req.usernameOrEmail());
+        System.out.println(req.password());
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(req.usernameOrEmail(), req.password()));
+
           User user = userRepo.findByUsernameOrEmail(req.usernameOrEmail())
         .orElseThrow(() -> new RuntimeException("User not found"));
 
