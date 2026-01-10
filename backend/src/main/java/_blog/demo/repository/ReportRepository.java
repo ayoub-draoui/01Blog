@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
     
-    Page<Report> findByStatus(ReportStatus status, Pageable pageable);
+    Page<Report> findByStatus( ReportStatus status, Pageable pageable);
     
     Page<Report> findByReportType(ReportType reportType, Pageable pageable);
     
