@@ -1,7 +1,7 @@
 package _blog.demo.repository;
 
 import _blog.demo.model.User;
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Query("SELECT u FROM User u WHERE u.username = :identifier OR u.email = :identifier")
   Optional<User> findByUsernameOrEmail(@Param("identifier") String identifier);
 
-
+  
   Page<User> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
 }
