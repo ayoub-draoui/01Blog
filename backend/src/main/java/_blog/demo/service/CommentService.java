@@ -20,6 +20,7 @@ import java.util.List;
 public class CommentService {
     private CommentRepository commentRepo;
     private PostRepository postRepo;
+    private NotificationService notificationService;
 
     public Comment createComment(Long postId, Long userId, CommentCreateRequest request) {
         // Check if post exists
@@ -31,8 +32,10 @@ public class CommentService {
         comment.setPostId(postId);
         comment.setUserId(userId);
         comment.setContent(request.content());
-        
-        return commentRepo.save(comment);
+
+        Comment saved = commentRepo.save(comment);
+        notificationService.createCommentNotification(postId, saved.getId(), userId);
+        return saved;
     }
 
     public Comment updateComment(Long commentId, Long userId, CommentUpdateRequest request) {

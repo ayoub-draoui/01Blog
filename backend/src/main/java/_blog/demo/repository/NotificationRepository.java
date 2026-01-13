@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+// import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
 
@@ -16,16 +16,27 @@ public interface NotificationRepository extends JpaRepository<Notification,Long>
     Page<Notification> findByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
     //  this is goona brinng just lii ba9i mata9raw ;
     Page<Notification> findByUserIdAndIsReadFalseOrderByCreatedAtDesc(Long userId, Pageable pageable);
-
+    //  existsByUserIdAndActorIdAndTypeAndRelatedPostId
         // count the unreaad notif to show in the front;
 
         @Query("SELECT COUNT(n) FROM Notification n WHERE n.userId = :userId AND n.isRead = false")
     long countUnreadNotifications(@Param("userId") Long userId);
     
 
-        // thiis wiill mark'em ad readd when the user hit the notif componene
+        // thiis wiill mark'em ad readd when the user hit the notif componenent
      @Modifying
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.userId = :userId AND n.isRead = false")
     void markAllAsRead(@Param("userId") Long userId);
+
+        // delete notif ;
+     void deleteByUserId(Long userId);
+
+             // to prevent duplicate notif ;
+      boolean existsByUserIdAndActorIdAndTypeAndRelatedPostId(
+        Long userId, Long actorId, NotificationType type, Long relatedPostId
+    );
+
+     void deleteByActorId(Long actorId);
+    void deleteByRelatedPostId(Long relatedPostId);
 
 }

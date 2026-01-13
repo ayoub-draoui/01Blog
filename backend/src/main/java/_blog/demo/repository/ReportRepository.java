@@ -31,4 +31,13 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     boolean existsByReporterIdAndReportedPostId(Long reporterId, Long reportedPostId);
     
     Page<Report> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+// this is for the admin , gonna bring some Stats , and help to deteete the user;
+
+    void deleteByReporterId(Long reporterId);
+    void deleteByReportedUserId(Long reportedUserId);
+    void deleteByReportedPostId(Long reportedPostId);
+    
+    @Query("SELECT COUNT(r) FROM Report r WHERE r.status = :status")
+    long countByStatus(@Param("status") ReportStatus status);
 }

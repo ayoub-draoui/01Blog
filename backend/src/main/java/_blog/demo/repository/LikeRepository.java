@@ -25,4 +25,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     
     // Delete all likes for a post (when post is deleted)
     void deleteByPostId(Long postId);
+
+// this is gonna detete likes based on the user id ;
+    void deleteByUserId(Long userId);
 }

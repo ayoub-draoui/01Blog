@@ -15,6 +15,7 @@ import java.util.List;
 public class LikeService {
     private LikeRepository likeRepo;
     private PostRepository postRepo;
+    private NotificationService notificationService;
 
     public Like likePost(Long userId, Long postId) {
         // Check if post exists
@@ -30,6 +31,7 @@ public class LikeService {
         Like like = new Like();
         like.setUserId(userId);
         like.setPostId(postId);
+        notificationService.createLikeNotification(postId, userId);
         return likeRepo.save(like);
     }
 

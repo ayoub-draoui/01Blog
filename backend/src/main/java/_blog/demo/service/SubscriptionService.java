@@ -15,6 +15,8 @@ import java.util.List;
 public class SubscriptionService {
     private SubscriptionRepository subscriptionRepo;
     private UserRepository userRepo;
+    private NotificationService notificationService;
+
 
     public Subscription follow(Long followerId, Long followingId) {
         // Check if trying to follow self
@@ -35,6 +37,9 @@ public class SubscriptionService {
         Subscription subscription = new Subscription();
         subscription.setFollowerId(followerId);
         subscription.setFollowingId(followingId);
+
+        notificationService.createNewFollowerNotification(followingId, followerId);
+
         return subscriptionRepo.save(subscription);
     }
 

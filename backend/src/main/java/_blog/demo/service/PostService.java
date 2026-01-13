@@ -17,12 +17,18 @@ public class PostService {
     private final LikeService likeService;
     private final CommentService commentService; 
     private final FileStorageService fileStorageService;
+    private final NotificationService notificationService;
 
-    public PostService(PostRepository postRepository,LikeService likeService,CommentService commentService, FileStorageService fileStorageService) {
+    public PostService(PostRepository postRepository,
+        LikeService likeService,
+        CommentService commentService,
+         FileStorageService fileStorageService,
+        NotificationService notificationService) {
         this.postRepository = postRepository;
         this.likeService = likeService;
           this.commentService = commentService;
           this.fileStorageService =  fileStorageService;
+          this.notificationService = notificationService;
     }
 
 
@@ -48,7 +54,10 @@ public class PostService {
             }
         }
 
-        return postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+         notificationService.CreatPostNotif(authorId, savedPost.getId());
+
+        return savedPost;
     }
 
     public Page<Post> allPosts(int page, int size) {
