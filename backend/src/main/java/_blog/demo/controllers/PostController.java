@@ -5,7 +5,7 @@ import _blog.demo.model.Post;
 import _blog.demo.security.CustomUserDetails;
 import _blog.demo.service.PostService;
 
-import jakarta.validation.Valid;
+// import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

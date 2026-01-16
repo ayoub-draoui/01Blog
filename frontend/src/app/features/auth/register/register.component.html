@@ -1,0 +1,195 @@
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>Join 01Blog</mat-card-title>
+      <mat-card-subtitle>Create your account and start sharing</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Success Alert -->
+      @if (successMessage()) {
+        <div class="success-alert">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{ successMessage() }}</span>
+        </div>
+      }
+
+      <!-- Error Alert -->
+      @if (errorMessage()) {
+        <div class="error-alert">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <!-- Register Form -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Username -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input 
+            matInput 
+            formControlName="username"
+            placeholder="Choose a unique username"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>person</mat-icon>
+          @if (username?.invalid && username?.touched) {
+            <mat-error>
+              @if (username?.errors?.['required']) {
+                Username is required
+              } @else if (username?.errors?.['minlength']) {
+                Username must be at least 3 characters
+              } @else if (username?.errors?.['pattern']) {
+                Username can only contain letters, numbers, and underscores
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input 
+            matInput 
+            type="email"
+            formControlName="email"
+            placeholder="your.email@example.com"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>email</mat-icon>
+          @if (email?.invalid && email?.touched) {
+            <mat-error>
+              @if (email?.errors?.['required']) {
+                Email is required
+              } @else if (email?.errors?.['email']) {
+                Please enter a valid email
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- First Name & Last Name (Side by side) -->
+        <div class="name-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input 
+              matInput 
+              formControlName="firstname"
+              placeholder="John"
+              [disabled]="isLoading()"
+            >
+            @if (firstname?.invalid && firstname?.touched) {
+              <mat-error>
+                @if (firstname?.errors?.['required']) {
+                  Required
+                } @else if (firstname?.errors?.['minlength']) {
+                  Too short
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input 
+              matInput 
+              formControlName="lastname"
+              placeholder="Doe"
+              [disabled]="isLoading()"
+            >
+            @if (lastname?.invalid && lastname?.touched) {
+              <mat-error>
+                @if (lastname?.errors?.['required']) {
+                  Required
+                } @else if (lastname?.errors?.['minlength']) {
+                  Too short
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input 
+            matInput 
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Create a strong password"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>lock</mat-icon>
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="togglePasswordVisibility()"
+          >
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (password?.invalid && password?.touched) {
+            <mat-error>
+              @if (password?.errors?.['required']) {
+                Password is required
+              } @else if (password?.errors?.['minlength']) {
+                Password must be at least 6 characters
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Confirm Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input 
+            matInput 
+            [type]="hideConfirmPassword() ? 'password' : 'text'"
+            formControlName="confirmPassword"
+            placeholder="Re-enter your password"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>lock</mat-icon>
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+          >
+            <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched) {
+            <mat-error>Passwords do not match</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          class="full-width submit-btn"
+          [disabled]="isLoading()"
+        >
+          @if (isLoading()) {
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Creating account...</span>
+          } @else {
+            <span>Create Account</span>
+          }
+        </button>
+      </form>
+
+      <!-- Login Link -->
+      <div class="login-link">
+        <p>
+          Already have an account? 
+          <a routerLink="/auth/login" mat-button color="accent">
+            Sign in here
+          </a>
+        </p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

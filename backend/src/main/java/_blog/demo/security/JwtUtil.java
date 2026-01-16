@@ -36,9 +36,9 @@ public class JwtUtil {
 
     public String generateToken(CustomUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        System.out.println("am failing here1");
+        // System.out.println("am failing here1");
         claims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
-        System.out.println("am failing here2");
+        // System.out.println("am failing here2");
 
         long expiration = 100000 * 60 * 60; 
         return Jwts.builder()

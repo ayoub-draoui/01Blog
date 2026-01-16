@@ -11,12 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.annotation.Lazy;
 
 // import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+// @AllArgsConstructor
 
 public class NotificationService {
 
@@ -24,6 +25,18 @@ public class NotificationService {
     private UserRepository userRepo;
     private PostRepository postRepo;
     private SubscriptionService subscriptionService;
+
+
+     public NotificationService(
+            NotificationRepository notificationRepo,
+            UserRepository userRepo,
+            PostRepository postRepo,
+            @Lazy SubscriptionService subscriptionService) {  
+        this.notificationRepo = notificationRepo;
+        this.userRepo = userRepo;
+        this.postRepo = postRepo;
+        this.subscriptionService = subscriptionService;
+    }
 
 
     // post notifications;

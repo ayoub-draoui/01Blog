@@ -2,7 +2,6 @@ package _blog.demo.service;
 
 import _blog.demo.exceptions.ResourceNotFoundException;
 import _blog.demo.model.Post;
-import _blog.demo.model.Report;
 import _blog.demo.model.ReportStatus;
 import _blog.demo.model.User;
 import _blog.demo.repository.*;

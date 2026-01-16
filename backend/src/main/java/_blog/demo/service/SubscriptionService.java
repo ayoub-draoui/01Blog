@@ -5,17 +5,28 @@ import _blog.demo.exceptions.UserAlreadyExistsException;
 import _blog.demo.model.Subscription;
 import _blog.demo.repository.SubscriptionRepository;
 import _blog.demo.repository.UserRepository;
-import lombok.AllArgsConstructor;
+// import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+// @AllArgsConstructor
 public class SubscriptionService {
     private SubscriptionRepository subscriptionRepo;
     private UserRepository userRepo;
     private NotificationService notificationService;
+
+
+     public SubscriptionService(
+            SubscriptionRepository subscriptionRepo,
+            UserRepository userRepo,
+            @Lazy NotificationService notificationService) {  
+        this.subscriptionRepo = subscriptionRepo;
+        this.userRepo = userRepo;
+        this.notificationService = notificationService;
+    }
 
 
     public Subscription follow(Long followerId, Long followingId) {
