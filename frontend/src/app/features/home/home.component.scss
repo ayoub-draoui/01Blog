@@ -1,0 +1,233 @@
+.home-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  .toolbar-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: 700;
+    }
+  }
+
+  .toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.main-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.feed-selector {
+  margin-bottom: 24px;
+
+  mat-chip-listbox {
+    display: flex;
+    justify-content: center;
+  }
+
+  mat-chip-option {
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
+
+.loading-container,
+.error-container,
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    color: #333;
+    margin: 16px 0 8px;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 24px;
+  }
+}
+
+.posts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-card {
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  mat-card-header {
+    cursor: pointer;
+
+    .post-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e0e0e0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        color: #666;
+      }
+    }
+
+    mat-card-title:hover {
+      color: #3f51b5;
+    }
+  }
+
+  .post-media {
+    margin: 16px 0;
+
+    img, video {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    video {
+      background-color: #000;
+    }
+  }
+
+  mat-card-content {
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 12px;
+      color: #333;
+    }
+
+    p {
+      color: #666;
+      line-height: 1.6;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+
+  .post-actions {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 8px;
+
+    button {
+      flex: 1;
+
+      mat-icon {
+        margin-right: 4px;
+      }
+
+      &.liked {
+        color: #f44336;
+      }
+    }
+  }
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0;
+
+  button {
+    mat-spinner {
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding: 12px;
+  }
+
+  .post-card {
+    mat-card-content {
+      h3 {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .toolbar {
+    .logo-text {
+      display: none;
+    }
+
+    button span {
+      display: none;
+    }
+  }
+}

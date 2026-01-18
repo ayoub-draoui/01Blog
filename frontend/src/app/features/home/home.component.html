@@ -1,0 +1,175 @@
+<div class="home-container">
+  <!-- Toolbar -->
+  <mat-toolbar color="primary" class="toolbar">
+    <div class="toolbar-content">
+      <div class="logo-section">
+        <mat-icon>article</mat-icon>
+        <span class="logo-text">01Blog</span>
+      </div>
+
+      <div class="toolbar-actions">
+        <button mat-button (click)="createpost()">
+          <mat-icon>add_circle</mat-icon>
+          <span>New Post</span>
+        </button>
+
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+          @if (currentUser()?.avatar) {
+            <img [src]="getMediaUrl(currentUser()!.avatar)" class="avatar-small" alt="Avatar" />
+          } @else {
+            <mat-icon>account_circle</mat-icon>
+          }
+        </button>
+
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item (click)="viewProfile(currentUser()!.username)">
+            <mat-icon>person</mat-icon>
+            <span>My Profile</span>
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Feed Selector -->
+    <div class="feed-selector">
+      <mat-chip-listbox [value]="feedType()" (change)="switchFeed($any($event.value))">
+        <mat-chip-option value="home" [selected]="feedType() === 'home'">
+          <mat-icon>home</mat-icon>
+          Home Feed
+        </mat-chip-option>
+
+        <mat-chip-option value="explore" [selected]="feedType() === 'explore'">
+          <mat-icon>explore</mat-icon>
+          Explore
+        </mat-chip-option>
+      </mat-chip-listbox>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading() && posts().length === 0) {
+      <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading posts...</p>
+      </div>
+    }
+
+    <!-- Error State -->
+    @if (errorMessage()) {
+      <div class="error-container">
+        <mat-icon>error</mat-icon>
+        <p>{{ errorMessage() }}</p>
+        <button mat-raised-button color="primary" (click)="loadPosts()">Retry</button>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (isEmpty()) {
+      <div class="empty-container">
+        <mat-icon>inbox</mat-icon>
+        <h2>No posts yet</h2>
+
+        @if (feedType() === 'home') {
+          <p>Follow some users to see their posts here</p>
+          <button mat-raised-button color="accent" (click)="switchFeed('explore')">
+            Explore Posts
+          </button>
+        } @else {
+          <p>Be the first to create a post!</p>
+          <button mat-raised-button color="primary" (click)="createpost()">Create Post</button>
+        }
+      </div>
+    }
+
+    <!-- Posts List -->
+    <div class="posts-grid">
+      @for (post of posts(); track post.id) {
+        <mat-card class="post-card">
+          <!-- Post Header -->
+          <mat-card-header>
+            <div mat-card-avatar class="post-avatar" (click)="viewProfile(post.authorUsername!)">
+              @if (post.authorAvatar) {
+                <img [src]="getMediaUrl(post.authorAvatar)" alt="Avatar" />
+              } @else {
+                <mat-icon>account_circle</mat-icon>
+              }
+            </div>
+
+            <mat-card-title (click)="viewProfile(post.authorUsername!)">
+              {{ post.authorFirstname }} {{ post.authorLastname }}
+            </mat-card-title>
+
+            <mat-card-subtitle>
+              &#64;{{ post.authorUsername }} · {{ formatDate(post.createdAt) }}
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <!-- Post Media -->
+          @if (post.mediaUrl) {
+            <div class="post-media">
+              @if (post.mediaType === 'IMAGE') {
+                <img
+                  [src]="getMediaUrl(post.mediaUrl)"
+                  [alt]="post.title"
+                  (click)="viewPost(post.id)"
+                />
+              } @else if (post.mediaType === 'VIDEO') {
+                <video controls [src]="getMediaUrl(post.mediaUrl)"></video>
+              }
+            </div>
+          }
+
+          <!-- Post Content -->
+          <mat-card-content (click)="viewPost(post.id)">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+          </mat-card-content>
+
+          <!-- Post Actions -->
+          <mat-card-actions class="post-actions">
+            <button
+              mat-button
+              (click)="togggleLike(post)"
+              [class.liked]="post.isLikedByCurrentUser"
+            >
+              <mat-icon>
+                {{ post.isLikedByCurrentUser ? 'favorite' : 'favorite_border' }}
+              </mat-icon>
+              <span>{{ post.likesCount || 0 }}</span>
+            </button>
+
+            <button mat-button (click)="viewPost(post.id)">
+              <mat-icon>comment</mat-icon>
+              <span>{{ post.commentsCount || 0 }}</span>
+            </button>
+
+            <button mat-button>
+              <mat-icon>share</mat-icon>
+              <span>Share</span>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Load More -->
+    @if (hasMore() && posts().length > 0) {
+      <div class="load-more-container">
+        <button mat-raised-button color="primary" (click)="loadMore()" [disabled]="isLoading()">
+          @if (isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>Loading...</span>
+          } @else {
+            <span>Load More</span>
+          }
+        </button>
+      </div>
+    }
+  </div>
+</div>

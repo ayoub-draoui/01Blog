@@ -1,0 +1,171 @@
+<div class="profile-container">
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading profile...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage()) {
+    <div class="error-container">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage() }}</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        Go Back
+      </button>
+    </div>
+  }
+
+  <!-- Profile Content -->
+  @if (user() && !isLoading()) {
+    <div class="profile-content">
+      <!-- Header -->
+      <div class="profile-header">
+        <button mat-icon-button (click)="goBack()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        
+        <div class="header-info">
+          <h1>{{ user()!.firstname }} {{ user()!.lastname }}</h1>
+          <p class="username">&#64;{{ user()!.username }}</p>
+        </div>
+      </div>
+
+      <!-- Profile Card -->
+      <mat-card class="profile-card">
+        <!-- Cover/Banner (placeholder) -->
+        <div class="profile-banner"></div>
+
+        <!-- Avatar -->
+        <div class="avatar-section">
+          <div class="avatar-large">
+            @if (user()!.avatar) {
+              <img [src]="getAvatarUrl()" alt="Avatar">
+            } @else {
+              <mat-icon>account_circle</mat-icon>
+            }
+          </div>
+        </div>
+
+        <mat-card-content class="profile-info">
+          <!-- Name & Username -->
+          <div class="name-section">
+            <h2>{{ user()!.firstname }} {{ user()!.lastname }}</h2>
+            <p class="username">&#64;{{ user()!.username }}</p>
+          </div>
+
+          <!-- Bio -->
+          @if (user()!.bio) {
+            <p class="bio">{{ user()!.bio }}</p>
+          }
+
+          <!-- Location & Website -->
+          <div class="metadata">
+            @if (user()!.location) {
+              <div class="metadata-item">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ user()!.location }}</span>
+              </div>
+            }
+            @if (user()!.website) {
+              <div class="metadata-item">
+                <mat-icon>link</mat-icon>
+                <a [href]="user()!.website" target="_blank">{{ user()!.website }}</a>
+              </div>
+            }
+          </div>
+
+          <!-- Stats -->
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-value">{{ user()!.postsCount || 0 }}</span>
+              <span class="stat-label">Posts</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ user()!.followersCount || 0 }}</span>
+              <span class="stat-label">Followers</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ user()!.followingCount || 0 }}</span>
+              <span class="stat-label">Following</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="profile-actions">
+            @if (isOwnProfile()) {
+              <button mat-raised-button color="primary" (click)="editProfile()">
+                <mat-icon>edit</mat-icon>
+                Edit Profile
+              </button>
+            } @else {
+              <button 
+                mat-raised-button 
+                [color]="user()!.isFollowing ? 'accent' : 'primary'"
+                (click)="toggleFollow()"
+              >
+                <mat-icon>{{ user()!.isFollowing ? 'person_remove' : 'person_add' }}</mat-icon>
+                {{ user()!.isFollowing ? 'Unfollow' : 'Follow' }}
+              </button>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Posts Section -->
+      <div class="posts-section">
+        <h3>Posts</h3>
+
+        @if (isLoadingPosts()) {
+          <div class="loading-posts">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        }
+
+        @if (!isLoadingPosts() && posts().length === 0) {
+          <div class="empty-posts">
+            <mat-icon>inbox</mat-icon>
+            <p>No posts yet</p>
+          </div>
+        }
+
+        <div class="posts-grid">
+          @for (post of posts(); track post.id) {
+            <mat-card class="post-card" (click)="viewPost(post.id)">
+              @if (post.mediaUrl) {
+                <div class="post-thumbnail">
+                  @if (post.mediaType === 'IMAGE') {
+                    <img [src]="getMediaUrl(post.mediaUrl)" [alt]="post.title">
+                  } @else if (post.mediaType === 'VIDEO') {
+                    <video [src]="getMediaUrl(post.mediaUrl)"></video>
+                    <div class="video-overlay">
+                      <mat-icon>play_circle_filled</mat-icon>
+                    </div>
+                  }
+                </div>
+              }
+
+              <mat-card-content>
+                <h4>{{ post.title }}</h4>
+                <p class="post-preview">{{ post.content }}</p>
+                <div class="post-meta">
+                  <span>
+                    <mat-icon>favorite</mat-icon>
+                    {{ post.likesCount || 0 }}
+                  </span>
+                  <span>
+                    <mat-icon>comment</mat-icon>
+                    {{ post.commentsCount || 0 }}
+                  </span>
+                  <span class="post-date">{{ formatDate(post.createdAt) }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

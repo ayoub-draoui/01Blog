@@ -1,0 +1,134 @@
+<div class="create-post-container">
+  <mat-card class="create-post-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>create</mat-icon>
+        Create New Post
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Error Alert -->
+      @if (errorMessage()) {
+        <div class="error-alert">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <!-- Form -->
+      <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+        <!-- Title -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Post Title</mat-label>
+          <input
+            matInput
+            formControlName="title"
+            placeholder="Give your post a catchy title"
+            [disabled]="isLoading()"
+            maxlength="300"
+          />
+          <mat-hint align="end">{{ title?.value?.length || 0 }} / 300</mat-hint>
+          @if (title?.invalid && title?.touched) {
+            <mat-error>
+              @if (title?.errors?.['required']) {
+                Title is required
+              } @else if (title?.errors?.['maxlength']) {
+                Title is too long
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Content -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Post Content</mat-label>
+          <textarea
+            matInput
+            formControlName="content"
+            placeholder="Share your thoughts, experiences, or learning journey..."
+            rows="10"
+            [disabled]="isLoading()"
+            maxlength="6000"
+          ></textarea>
+          <mat-hint align="end">{{ content?.value?.length || 0 }} / 6000</mat-hint>
+          @if (content?.invalid && content?.touched) {
+            <mat-error>
+              @if (content?.errors?.['required']) {
+                Content is required
+              } @else if (content?.errors?.['maxlength']) {
+                Content is too long
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Media Upload -->
+        <div class="media-section">
+          <h3>Add Media (Optional)</h3>
+
+          @if (!selectedFile()) {
+            <div class="upload-area">
+              <input
+                type="file"
+                #fileInput
+                (change)="onFileSelected($event)"
+                accept="image/*,video/*"
+                style="display: none"
+              />
+              <button
+                mat-raised-button
+                type="button"
+                (click)="fileInput.click()"
+                [disabled]="isLoading()"
+              >
+                <mat-icon>cloud_upload</mat-icon>
+                Upload Image or Video
+              </button>
+              <p class="upload-hint">Max size: 50MB</p>
+            </div>
+          } @else {
+            <div class="media-preview">
+              @if (fileType() === 'image') {
+                <img [src]="previewUrl()!" alt="Preview" />
+              } @else if (fileType() === 'video') {
+                <video [src]="previewUrl()!" controls></video>
+              }
+              <button
+                mat-icon-button
+                class="remove-button"
+                type="button"
+                (click)="removeFile()"
+                [disabled]="isLoading()"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button mat-button type="button" (click)="cancel()" [disabled]="isLoading()">
+            Cancel
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="isLoading() || postForm.invalid"
+          >
+            @if (isLoading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Publishing...</span>
+            } @else {
+              <mat-icon>send</mat-icon>
+              <span>Publish Post</span>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  <!-- <mat-card></mat-card>   -->
+  </mat-card>
+</div>

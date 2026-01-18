@@ -63,9 +63,7 @@ export class LoginComponent {
       next: (response) => {
         console.log('Login successful:', response);
         this.isLoading.set(false);
-        
-        // Get return URL or default to home
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+        const returnUrl = this.route.snapshot.queryParams['/home'] ||'returnUrl' ;
         this.router.navigate([returnUrl]);
       },
       error: (error) => {
