@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, Injectable } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +13,6 @@ import { UserService } from '../../core/services/user.service';
 import { PostService } from '../../core/services/post.service';
 import { User } from '../../shared/models/user.model';
 import { Post } from '../../shared/models/post.model';
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -26,37 +25,31 @@ import { Post } from '../../shared/models/post.model';
     MatProgressSpinnerModule,
     MatTabsModule,
     MatChipsModule,
-    MatDialogModule,
+    MatDialogModule
   ],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
+  styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit {
-    private authService = inject(AuthService);
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
+  private postService = inject(PostService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  
   user = signal<User | null>(null);
   posts = signal<Post[]>([]);
   isLoading = signal(false);
   isLoadingPosts = signal(false);
   errorMessage = signal<string | null>(null);
-currentUser = this.authService.currentUser();
-//   currentUser = computed(() => this.authService.currentUser());
   
+  currentUser = this.authService.currentUser;
   isOwnProfile = computed(() => {
-      return this.user()?.username === this.currentUser?.username;
-    });
-    // console.log(currentUser);
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    // private authService: AuthService,
-    private userService: UserService,
-    private postService: PostService,
-    private dialog: MatDialog,
-  ) {}
+    return this.user()?.username === this.currentUser()?.username;
+  });
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe(params => {
       const username = params['username'];
       if (username) {
         this.loadUserProfile(username);
@@ -65,8 +58,6 @@ currentUser = this.authService.currentUser();
   }
 
   loadUserProfile(username: string): void {
-    console.log(username);
-    
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
@@ -80,9 +71,10 @@ currentUser = this.authService.currentUser();
         console.error('Error loading profile:', error);
         this.errorMessage.set('Failed to load profile');
         this.isLoading.set(false);
-      },
+      }
     });
   }
+
   loadUserPosts(userId: number): void {
     this.isLoadingPosts.set(true);
 
@@ -94,7 +86,7 @@ currentUser = this.authService.currentUser();
       error: (error) => {
         console.error('Error loading posts:', error);
         this.isLoadingPosts.set(false);
-      },
+      }
     });
   }
 
@@ -102,41 +94,45 @@ currentUser = this.authService.currentUser();
     const user = this.user();
     if (!user) return;
 
-    const observable = user.isFollowing
+    const observable = user.isFollowing 
       ? this.userService.unfollowUser(user.id)
       : this.userService.followUser(user.id);
 
     observable.subscribe({
       next: () => {
-        // Update user
-        this.user.update((current) => {
+        this.user.update(current => {
           if (!current) return current;
           return {
             ...current,
             isFollowing: !current.isFollowing,
-            followersCount: current.isFollowing
-              ? (current.followersCount || 1) - 1
-              : (current.followersCount || 0) + 1,
+            followersCount: current.isFollowing 
+              ? (current.followersCount || 1) - 1 
+              : (current.followersCount || 0) + 1
           };
         });
       },
       error: (error) => {
         console.error('Error toggling follow:', error);
-      },
+      }
     });
   }
+
   editProfile(): void {
     this.router.navigate(['/profile/edit']);
   }
+
   viewPost(postId: number): void {
     this.router.navigate(['/posts', postId]);
   }
+
   goBack(): void {
     this.router.navigate(['/home']);
   }
+
   getMediaUrl(filename: string): string {
     return this.postService.getMediaUrl(filename);
   }
+
   getAvatarUrl(): string {
     const avatar = this.user()?.avatar;
     return avatar ? this.getMediaUrl(avatar) : '';

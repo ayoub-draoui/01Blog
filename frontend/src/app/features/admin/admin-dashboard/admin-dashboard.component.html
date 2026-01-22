@@ -1,0 +1,287 @@
+<div class="admin-container">
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="header-content">
+      <h1>
+        <mat-icon>admin_panel_settings</mat-icon>
+        Admin Dashboard
+      </h1>
+      <button mat-raised-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-section">
+    @if (isLoadingStats()) {
+      <div class="loading-stats">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    } @else if (stats()) {
+      <div class="stats-grid">
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon users">people</mat-icon>
+          <div class="stat-content">
+            <h3>{{ stats()!.totalUsers }}</h3>
+            <p>Total Users</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon posts">article</mat-icon>
+          <div class="stat-content">
+            <h3>{{ stats()!.totalPosts }}</h3>
+            <p>Total Posts</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon reports">flag</mat-icon>
+          <div class="stat-content">
+            <h3>{{ stats()!.pendingReports }}</h3>
+            <p>Pending Reports</p>
+          </div>
+        </mat-card>
+
+        <mat-card class="stat-card">
+          <mat-icon class="stat-icon engagement">favorite</mat-icon>
+          <div class="stat-content">
+            <h3>{{ stats()!.totalLikes + stats()!.totalComments }}</h3>
+            <p>Total Engagement</p>
+          </div>
+        </mat-card>
+      </div>
+    }
+  </div>
+
+  <!-- Tabs -->
+  <mat-card class="content-card">
+    <mat-tab-group>
+      <!-- Users Tab -->
+      <mat-tab label="Users">
+        <div class="tab-content">
+          @if (isLoadingUsers()) {
+            <div class="loading-content">
+              <mat-spinner diameter="50"></mat-spinner>
+            </div>
+          } @else {
+            <div class="table-container">
+              <table mat-table [dataSource]="users()" class="admin-table">
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef>ID</th>
+                  <td mat-cell *matCellDef="let user">{{ user.id }}</td>
+                </ng-container>
+
+                <!-- Username Column -->
+                <ng-container matColumnDef="username">
+                  <th mat-header-cell *matHeaderCellDef>Username</th>
+                  <td mat-cell *matCellDef="let user">
+                    <strong>{{ user.username }}</strong>
+                  </td>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                  <th mat-header-cell *matHeaderCellDef>Email</th>
+                  <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+                </ng-container>
+
+                <!-- Role Column -->
+                <ng-container matColumnDef="role">
+                  <th mat-header-cell *matHeaderCellDef>Role</th>
+                  <td mat-cell *matCellDef="let user">
+                    <mat-chip [color]="user.role === 'ROLE_ADMIN' ? 'warn' : 'primary'">
+                      {{ user.role === 'ROLE_ADMIN' ? 'Admin' : 'User' }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let user">
+                    <button mat-icon-button (click)="viewUser(user.id)" matTooltip="View">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    @if (user.role !== 'ROLE_ADMIN') {
+                      <button 
+                        mat-icon-button 
+                        color="warn"
+                        (click)="deleteUser(user.id, user.username)"
+                        matTooltip="Delete"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    }
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: userColumns;"></tr>
+              </table>
+            </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- Posts Tab -->
+      <mat-tab label="Posts">
+        <div class="tab-content">
+          @if (isLoadingPosts()) {
+            <div class="loading-content">
+              <mat-spinner diameter="50"></mat-spinner>
+            </div>
+          } @else {
+            <div class="table-container">
+              <table mat-table [dataSource]="posts()" class="admin-table">
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef>ID</th>
+                  <td mat-cell *matCellDef="let post">{{ post.id }}</td>
+                </ng-container>
+
+                <!-- Title Column -->
+                <ng-container matColumnDef="title">
+                  <th mat-header-cell *matHeaderCellDef>Title</th>
+                  <td mat-cell *matCellDef="let post">
+                    <strong>{{ post.title }}</strong>
+                  </td>
+                </ng-container>
+
+                <!-- Author Column -->
+                <ng-container matColumnDef="author">
+                  <th mat-header-cell *matHeaderCellDef>Author</th>
+                  <td mat-cell *matCellDef="let post">
+                    {{ post.authorUsername || 'User #' + post.authorId }}
+                  </td>
+                </ng-container>
+
+                <!-- Created At Column -->
+                <ng-container matColumnDef="createdAt">
+                  <th mat-header-cell *matHeaderCellDef>Created</th>
+                  <td mat-cell *matCellDef="let post">
+                    {{ formatDate(post.createdAt) }}
+                  </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let post">
+                    <button mat-icon-button (click)="viewPost(post.id)" matTooltip="View">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button 
+                      mat-icon-button 
+                      color="warn"
+                      (click)="deletePost(post.id, post.title)"
+                      matTooltip="Delete"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="postColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: postColumns;"></tr>
+              </table>
+            </div>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- Reports Tab -->
+      <mat-tab label="Reports">
+        <div class="tab-content">
+          @if (isLoadingReports()) {
+            <div class="loading-content">
+              <mat-spinner diameter="50"></mat-spinner>
+            </div>
+          } @else {
+            <div class="table-container">
+              <table mat-table [dataSource]="reports()" class="admin-table">
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef>ID</th>
+                  <td mat-cell *matCellDef="let report">{{ report.id }}</td>
+                </ng-container>
+
+                <!-- Type Column -->
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let report">
+                    <mat-chip>{{ report.reportType }}</mat-chip>
+                  </td>
+                </ng-container>
+
+                <!-- Reporter Column -->
+                <ng-container matColumnDef="reporter">
+                  <th mat-header-cell *matHeaderCellDef>Reporter</th>
+                  <td mat-cell *matCellDef="let report">
+                    {{ report.reporterUsername }}
+                  </td>
+                </ng-container>
+
+                <!-- Reported Column -->
+                <ng-container matColumnDef="reported">
+                  <th mat-header-cell *matHeaderCellDef>Reported</th>
+                  <td mat-cell *matCellDef="let report">
+                    @if (report.reportType === 'USER') {
+                      {{ report.reportedUsername }}
+                    } @else {
+                      {{ report.reportedPostTitle }}
+                    }
+                  </td>
+                </ng-container>
+
+                <!-- Status Column -->
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let report">
+                    <mat-chip [color]="getStatusColor(report.status)">
+                      {{ report.status }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Actions</th>
+                  <td mat-cell *matCellDef="let report">
+                    <button 
+                      mat-icon-button 
+                      [matMenuTriggerFor]="reportMenu"
+                      matTooltip="Actions"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #reportMenu="matMenu">
+                      <button mat-menu-item (click)="updateReportStatus(report, 'REVIEWED')">
+                        <mat-icon>visibility</mat-icon>
+                        Mark as Reviewed
+                      </button>
+                      <button mat-menu-item (click)="updateReportStatus(report, 'RESOLVED')">
+                        <mat-icon>check_circle</mat-icon>
+                        Mark as Resolved
+                      </button>
+                      <button mat-menu-item (click)="updateReportStatus(report, 'DISMISSED')">
+                        <mat-icon>cancel</mat-icon>
+                        Dismiss
+                      </button>
+                    </mat-menu>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="reportColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: reportColumns;"></tr>
+              </table>
+            </div>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

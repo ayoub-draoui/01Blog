@@ -37,11 +37,15 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
   },
-//   {
-//     path: 'admin',
-//     canActivate: [authGuard, adminGuard],
-//     loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES)
-//   },
+  {
+    path: 'posts/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/posts/post-detail/post-detail.component').then(m => m.PostDetailComponent)
+  },
+  {
+    path: 'admin',
+    canActivate: [authGuard, adminGuard],
+    loadComponent: () => import('./features/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)  },
   {
     path: '**',
     redirectTo: '/home'

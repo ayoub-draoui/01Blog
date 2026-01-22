@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -44,7 +44,15 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       usernameOrEmail: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(2)]]
+    });
+
+    effect(() => {
+      if (this.isLoading()) {
+        this.loginForm.disable();
+      } else {
+        this.loginForm.enable();
+      }
     });
   }
 
@@ -63,7 +71,7 @@ export class LoginComponent {
       next: (response) => {
         console.log('Login successful:', response);
         this.isLoading.set(false);
-        const returnUrl = this.route.snapshot.queryParams['/home'] ||'returnUrl' ;
+        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
         this.router.navigate([returnUrl]);
       },
       error: (error) => {
@@ -81,7 +89,6 @@ export class LoginComponent {
     this.hidePassword.update(value => !value);
   }
 
-  // Getter for form controls (for template access)
   get usernameOrEmail() {
     return this.loginForm.get('usernameOrEmail');
   }

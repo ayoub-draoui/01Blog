@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -29,6 +29,10 @@ import { CreatePostRequest } from '../../../shared/models/post.model';
   styleUrl: './create-post.component.scss'
 })
 export class CreatePostComponent {
+
+  private fb = inject(FormBuilder);
+  private postService = inject(PostService);
+  private router = inject(Router);
   postForm: FormGroup
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
@@ -36,11 +40,7 @@ export class CreatePostComponent {
   previewUrl = signal<string | null>(null);
   fileType = signal<'image' | 'video' | null>(null);
 
-  constructor(
-    private fb: FormBuilder,
-    private postService: PostService,
-    private router: Router
-  ) {
+  constructor( ) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(300)]],
       content: ['', [Validators.required, Validators.maxLength(6000)]]

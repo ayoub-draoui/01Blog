@@ -69,7 +69,9 @@ public class FileStorageService {
             throw new RuntimeException("Faild to stor the file try agin later",e );
         }   
     }
+    // 0e978a9e-fa9a-4977-9d4b-2507986061de.jpg
     public byte[] loadFile(String filename){
+        System.out.println("im here");
         try {
             Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
             if (!Files.exists(filePath)) {

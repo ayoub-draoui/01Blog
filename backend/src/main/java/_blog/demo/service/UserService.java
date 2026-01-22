@@ -23,6 +23,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public UserProfileResponse getUserProfile(Long userId, Long currentUserId) {
+        System.out.println("i worked!!!");
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
@@ -56,6 +57,8 @@ public class UserService {
         );
     }
     public UserProfileResponse getUserProfileByUsername(String username, Long currentUserId) {
+        System.out.println("i worked!!! and this is comming from the getUserProfileByUsername");
+
     User user = userRepo.findByUsername(username)
             .orElseThrow(() -> new ResourceNotFoundException("User not found with username: " + username));
 

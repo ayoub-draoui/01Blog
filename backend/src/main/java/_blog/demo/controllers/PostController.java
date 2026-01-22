@@ -69,6 +69,10 @@ public class PostController {
         Post updatedPost = postService.updatePost(id, user.getId(), request, media);
         return ResponseEntity.ok(updatedPost);
     }
+    @GetMapping("/{id}")
+public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+    return ResponseEntity.ok(postService.getPostById(id));
+}
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(

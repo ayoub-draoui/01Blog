@@ -32,21 +32,24 @@ import { Post } from '../../shared/models/post.model';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  private postServices = inject(PostService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  
   posts = signal<Post[]>([]);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   currentPage = signal(0);
   hasMore = signal(true);
-  private authService = inject(AuthService);
-  
   feedType = signal<'home' | 'explore'>('home');
-  isEmpty = computed(() => this.posts().length === 0 && !this.isLoading());
+
   currentUser = this.authService.currentUser;
-  constructor(
-    // public authService: AuthService,
-    private postServices: PostService,
-    private router: Router,
-  ) {}
+  isEmpty = computed(() => this.posts().length === 0 && !this.isLoading());
+  // constructor(
+  //   // public authService: AuthService,
+  //   private postServices: PostService,
+  //   private router: Router,
+  // ) {}
   
   ngOnInit(): void {
     this.loadPosts();
@@ -90,7 +93,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  togggleLike(post: Post): void {
+  toggleLike(post: Post): void {
     const observable = post.isLikedByCurrentUser
       ? this.postServices.unlikePost(post.id)
       : this.postServices.likePost(post.id);

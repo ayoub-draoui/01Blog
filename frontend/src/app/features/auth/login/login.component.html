@@ -23,7 +23,6 @@
             matInput 
             formControlName="usernameOrEmail"
             placeholder="Enter your username or email"
-            [disabled]="isLoading()"
           >
           <mat-icon matPrefix>person</mat-icon>
           
@@ -44,7 +43,6 @@
             [type]="hidePassword() ? 'password' : 'text'"
             formControlName="password"
             placeholder="Enter your password"
-            [disabled]="isLoading()"
           >
           <mat-icon matPrefix>lock</mat-icon>
           <button 
@@ -74,7 +72,7 @@
           color="primary" 
           type="submit"
           class="full-width submit-btn"
-          [disabled]="isLoading()"
+          [disabled]="loginForm.invalid || isLoading()"
         >
           @if (isLoading()) {
             <mat-spinner diameter="24"></mat-spinner>

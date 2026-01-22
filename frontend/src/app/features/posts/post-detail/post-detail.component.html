@@ -1,0 +1,231 @@
+<div class="post-detail-container">
+  <!-- Loading State -->
+  @if (isLoadingPost()) {
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading post...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage() && !isLoadingPost()) {
+    <div class="error-container">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage() }}</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        Go Back
+      </button>
+    </div>
+  }
+
+  <!-- Post Content -->
+  @if (post() && !isLoadingPost()) {
+    <div class="post-content">
+      <!-- Header -->
+      <div class="post-header">
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Post</h2>
+        
+        @if (isAuthor()) {
+          <button mat-icon-button [matMenuTriggerFor]="postMenu" class="ml-auto">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #postMenu="matMenu">
+            <button mat-menu-item (click)="editPost()">
+              <mat-icon>edit</mat-icon>
+              <span>Edit Post</span>
+            </button>
+            <button mat-menu-item (click)="deletePost()">
+              <mat-icon>delete</mat-icon>
+              <span>Delete Post</span>
+            </button>
+          </mat-menu>
+        }
+      </div>
+
+      <!-- Main Post Card -->
+      <mat-card class="main-post-card">
+        <!-- Author Info -->
+        <mat-card-header>
+          <div 
+            mat-card-avatar 
+            class="post-avatar" 
+            (click)="viewProfile(post()!.authorUsername!)"
+          >
+            @if (post()!.authorAvatar) {
+              <img [src]="getMediaUrl(post()!.authorAvatar!)" alt="Avatar">
+            } @else {
+              <mat-icon>account_circle</mat-icon>
+            }
+          </div>
+          <mat-card-title (click)="viewProfile(post()!.authorUsername!)">
+            {{ post()!.authorFirstname }} {{ post()!.authorLastname }}
+          </mat-card-title>
+          <mat-card-subtitle>
+            &#64;{{ post()!.authorUsername }} · {{ formatDate(post()!.createdAt) }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <!-- Post Title -->
+        <mat-card-content>
+          <h1 class="post-title">{{ post()!.title }}</h1>
+
+          <!-- Post Media -->
+          @if (post()!.mediaUrl) {
+            <div class="post-media">
+              @if (post()!.mediaType === 'IMAGE') {
+                <img [src]="getMediaUrl(post()!.mediaUrl!)" [alt]="post()!.title">
+              } @else if (post()!.mediaType === 'VIDEO') {
+                <video controls [src]="getMediaUrl(post()!.mediaUrl!)"></video>
+              }
+            </div>
+          }
+
+          <!-- Post Content -->
+          <div class="post-text">
+            <p>{{ post()!.content }}</p>
+          </div>
+
+          <!-- Stats -->
+          <div class="post-stats">
+            <span>
+              <mat-icon>favorite</mat-icon>
+              {{ post()!.likesCount || 0 }} likes
+            </span>
+            <span>
+              <mat-icon>comment</mat-icon>
+              {{ post()!.commentsCount || 0 }} comments
+            </span>
+          </div>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <!-- Action Buttons -->
+        <mat-card-actions class="post-actions">
+          <button 
+            mat-button 
+            (click)="toggleLike()" 
+            [class.liked]="post()!.isLikedByCurrentUser"
+          >
+            <mat-icon>{{ post()!.isLikedByCurrentUser ? 'favorite' : 'favorite_border' }}</mat-icon>
+            <span>Like</span>
+          </button>
+
+          <button mat-button>
+            <mat-icon>comment</mat-icon>
+            <span>Comment</span>
+          </button>
+
+          <button mat-button (click)="sharePost()">
+            <mat-icon>share</mat-icon>
+            <span>Share</span>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <h3>Comments</h3>
+
+        <!-- Add Comment Form -->
+        <mat-card class="add-comment-card">
+          <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+            <div class="comment-form">
+              <div class="user-avatar">
+                @if (currentUser()?.avatar) {
+                  <img [src]="getMediaUrl(currentUser()!.avatar)" alt="Avatar">
+                } @else {
+                  <mat-icon>account_circle</mat-icon>
+                }
+              </div>
+
+              <mat-form-field appearance="outline" class="comment-input">
+                <mat-label>Add a comment</mat-label>
+                <textarea
+                  matInput
+                  formControlName="content"
+                  placeholder="Share your thoughts..."
+                  rows="3"
+                  [disabled]="isSubmittingComment()"
+                  maxlength="2000"
+                ></textarea>
+                <mat-hint align="end">{{ content?.value?.length || 0 }} / 2000</mat-hint>
+                @if (content?.invalid && content?.touched) {
+                  <mat-error>
+                    @if (content?.errors?.['required']) {
+                      Comment cannot be empty
+                    } @else if (content?.errors?.['maxlength']) {
+                      Comment is too long
+                    }
+                  </mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="comment-actions">
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="commentForm.invalid || isSubmittingComment()"
+              >
+                @if (isSubmittingComment()) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                  <span>Posting...</span>
+                } @else {
+                  <span>Post Comment</span>
+                }
+              </button>
+            </div>
+          </form>
+        </mat-card>
+
+        <!-- Comments List -->
+        @if (isLoadingComments()) {
+          <div class="loading-comments">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Loading comments...</p>
+          </div>
+        }
+
+        @if (!isLoadingComments() && comments().length === 0) {
+          <div class="no-comments">
+            <mat-icon>chat_bubble_outline</mat-icon>
+            <p>No comments yet. Be the first to comment!</p>
+          </div>
+        }
+
+        <div class="comments-list">
+          @for (comment of comments(); track comment.id) {
+            <mat-card class="comment-card">
+              <div class="comment-header">
+                <div class="comment-avatar" (click)="viewProfile(comment.username!)">
+                  @if (comment.userAvatar) {
+                    <img [src]="getMediaUrl(comment.userAvatar)" alt="Avatar">
+                  } @else {
+                    <mat-icon>account_circle</mat-icon>
+                  }
+                </div>
+
+                <div class="comment-info">
+                  <div class="comment-author" (click)="viewProfile(comment.username!)">
+                    <strong>{{ comment.userFirstname }} {{ comment.userLastname }}</strong>
+                    <span class="username">&#64;{{ comment.username }}</span>
+                  </div>
+                  <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
+                </div>
+              </div>
+
+              <div class="comment-content">
+                <p>{{ comment.content }}</p>
+              </div>
+            </mat-card>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

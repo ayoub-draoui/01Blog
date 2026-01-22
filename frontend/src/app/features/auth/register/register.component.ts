@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -69,6 +69,15 @@ export class RegisterComponent {
       ]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
+
+    // Use effect to enable/disable form based on loading state
+    effect(() => {
+      if (this.isLoading()) {
+        this.registerForm.disable();
+      } else {
+        this.registerForm.enable();
+      }
+    });
   }
 
   // Custom validator for password matching
