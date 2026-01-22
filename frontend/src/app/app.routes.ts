@@ -43,6 +43,11 @@ export const routes: Routes = [
     loadComponent: () => import('./features/posts/post-detail/post-detail.component').then(m => m.PostDetailComponent)
   },
   {
+    path: 'profile-edit',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/profile/edit-profile/edit-profile.component').then(m => m.EditProfileComponent)
+  },
+  {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./features/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)  },

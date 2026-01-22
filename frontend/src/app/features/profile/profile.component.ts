@@ -118,8 +118,8 @@ export class ProfileComponent implements OnInit {
   }
 
   editProfile(): void {
-    this.router.navigate(['/profile/edit']);
-  }
+  this.router.navigate(['/profile-edit']);
+}
 
   viewPost(postId: number): void {
     this.router.navigate(['/posts', postId]);

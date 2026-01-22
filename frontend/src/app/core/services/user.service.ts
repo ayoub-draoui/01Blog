@@ -60,4 +60,10 @@ updateProfile(profileData: UpdateProfileRequest): Observable<User> {
     return this.http.get(url);
   }
 
+
+   changePassword(passwordData: { currentPassword: string; newPassword: string }): Observable<any> {
+    const url = `${environment.apiUrl}${environment.apiEndpoints.users.me}/password`;
+    return this.http.put(url, passwordData);
+  }
+
 }

@@ -1,0 +1,300 @@
+<div class="edit-profile-container">
+  <div class="edit-profile-content">
+    <!-- Header -->
+    <div class="profile-header">
+      <button mat-icon-button (click)="cancel()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Edit Profile</h1>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading() && !profileForm.value.firstname) {
+      <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading profile...</p>
+      </div>
+    }
+
+    <!-- Success Message -->
+    @if (successMessage()) {
+      <div class="success-alert">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="error-alert">
+        <mat-icon>error</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <!-- Avatar Section -->
+    <mat-card class="avatar-section">
+      <h2>Profile Picture</h2>
+      
+      <div class="avatar-upload">
+        <div class="avatar-preview">
+          @if (avatarPreviewUrl()) {
+            <img [src]="avatarPreviewUrl()!" alt="Avatar">
+          } @else {
+            <mat-icon>account_circle</mat-icon>
+          }
+        </div>
+
+        <div class="avatar-actions">
+          <input
+            type="file"
+            #avatarInput
+            (change)="onAvatarSelected($event)"
+            accept="image/*"
+            style="display: none"
+          >
+
+          @if (!selectedAvatarFile()) {
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="avatarInput.click()"
+              [disabled]="isUploadingAvatar()"
+            >
+              <mat-icon>cloud_upload</mat-icon>
+              Choose Avatar
+            </button>
+          } @else {
+            <div class="upload-controls">
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="uploadAvatar()"
+                [disabled]="isUploadingAvatar()"
+              >
+                @if (isUploadingAvatar()) {
+                  <mat-spinner diameter="20"></mat-spinner>
+                  <span>Uploading...</span>
+                } @else {
+                  <mat-icon>save</mat-icon>
+                  <span>Upload Avatar</span>
+                }
+              </button>
+
+              <button
+                mat-button
+                (click)="removeAvatar()"
+                [disabled]="isUploadingAvatar()"
+              >
+                Cancel
+              </button>
+            </div>
+          }
+
+          <p class="upload-hint">Max size: 5MB. Formats: JPG, PNG, GIF</p>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Profile Form -->
+    <mat-card class="profile-form-card">
+      <h2>Profile Information</h2>
+
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+        <!-- First Name & Last Name -->
+        <div class="name-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>First Name</mat-label>
+            <input
+              matInput
+              formControlName="firstname"
+              placeholder="John"
+              [disabled]="isLoading()"
+            >
+            @if (firstname?.invalid && firstname?.touched) {
+              <mat-error>
+                @if (firstname?.errors?.['required']) {
+                  First name is required
+                } @else if (firstname?.errors?.['minlength']) {
+                  Too short (min 2 characters)
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Last Name</mat-label>
+            <input
+              matInput
+              formControlName="lastname"
+              placeholder="Doe"
+              [disabled]="isLoading()"
+            >
+            @if (lastname?.invalid && lastname?.touched) {
+              <mat-error>
+                @if (lastname?.errors?.['required']) {
+                  Last name is required
+                } @else if (lastname?.errors?.['minlength']) {
+                  Too short (min 2 characters)
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <!-- Bio -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Bio</mat-label>
+          <textarea
+            matInput
+            formControlName="bio"
+            placeholder="Tell us about yourself..."
+            rows="4"
+            maxlength="500"
+            [disabled]="isLoading()"
+          ></textarea>
+          <mat-hint align="end">{{ bio?.value?.length || 0 }} / 500</mat-hint>
+          @if (bio?.invalid && bio?.touched) {
+            <mat-error>Bio is too long</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Location -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Location</mat-label>
+          <input
+            matInput
+            formControlName="location"
+            placeholder="San Francisco, CA"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>location_on</mat-icon>
+          @if (location?.invalid && location?.touched) {
+            <mat-error>Location is too long</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Website -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Website</mat-label>
+          <input
+            matInput
+            formControlName="website"
+            placeholder="https://yourwebsite.com"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>link</mat-icon>
+          @if (website?.invalid && website?.touched) {
+            <mat-error>Website URL is too long</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button
+            mat-button
+            type="button"
+            (click)="cancel()"
+            [disabled]="isLoading()"
+          >
+            Cancel
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="profileForm.invalid || isLoading()"
+          >
+            @if (isLoading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Saving...</span>
+            } @else {
+              <mat-icon>save</mat-icon>
+              <span>Save Changes</span>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card>
+
+    <!-- Change Password Section -->
+    <mat-card class="password-form-card">
+      <h2>Change Password</h2>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <!-- Current Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Current Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="currentPassword"
+            placeholder="Enter current password"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (currentPassword?.invalid && currentPassword?.touched) {
+            <mat-error>Current password is required</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- New Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>New Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="newPassword"
+            placeholder="Enter new password"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (newPassword?.invalid && newPassword?.touched) {
+            <mat-error>
+              @if (newPassword?.errors?.['required']) {
+                New password is required
+              } @else if (newPassword?.errors?.['minlength']) {
+                Password must be at least 6 characters
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Confirm Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm New Password</mat-label>
+          <input
+            matInput
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Confirm new password"
+            [disabled]="isLoading()"
+          >
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (passwordForm.errors?.['passwordMismatch'] && confirmPassword?.touched) {
+            <mat-error>Passwords do not match</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="warn"
+            type="submit"
+            [disabled]="passwordForm.invalid || isLoading()"
+          >
+            @if (isLoading()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Changing...</span>
+            } @else {
+              <mat-icon>vpn_key</mat-icon>
+              <span>Change Password</span>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

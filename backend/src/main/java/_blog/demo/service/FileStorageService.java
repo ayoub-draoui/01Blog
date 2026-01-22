@@ -25,7 +25,7 @@ public class FileStorageService {
                 Files.createDirectories(uploadPath);
             }
         }catch (IOException e) {
-            throw new RuntimeException("the file could not be created", e);
+            throw new RuntimeException("the file could not be createed", e);
         }
     }
 
@@ -41,17 +41,17 @@ public class FileStorageService {
         }
         if (type.equals("IMAGE")) {
             if (!contenType.startsWith("image/")){
-                throw new IllegalArgumentException("File must be an image");
+                throw new IllegalArgumentException("file must be an image");
             }
              if (file.getSize() > 5 * 1024 * 1024) {
-                throw new IllegalArgumentException("Image file size must not exceed 5MB");
+                throw new IllegalArgumentException("image file size must not exceed 5MB");
             }
         }else if (type.equals("VIDEO")) {
              if (!contenType.startsWith("video/")) {
-                throw new IllegalArgumentException("File must be a video");
+                throw new IllegalArgumentException("file must be a video");
             }
              if (file.getSize() > 50 * 1024 * 1024) {
-                throw new IllegalArgumentException("Video file size must not exceed 50MB");
+                throw new IllegalArgumentException("video file size must not exceed 50MB");
             }
         }
         try {
@@ -66,7 +66,7 @@ public class FileStorageService {
             
 
         }catch (IOException e) {
-            throw new RuntimeException("Faild to stor the file try agin later",e );
+            throw new RuntimeException("faild to stor the file try agin later",e );
         }   
     }
     // 0e978a9e-fa9a-4977-9d4b-2507986061de.jpg
@@ -75,12 +75,13 @@ public class FileStorageService {
         try {
             Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
             if (!Files.exists(filePath)) {
-                throw new ResourceNotFoundException("File not found: " + filename);
+                System.out.println("the issue is here in file doesnt exist");
+                throw new ResourceNotFoundException("file not found: " + filename);
             }
             return Files.readAllBytes(filePath);
             
         }catch (IOException e) {
-            throw new RuntimeException("Failed to load file", e);
+            throw new RuntimeException("failed to load file", e);
         }
     }
     public void deletFile(String filename){
