@@ -81,7 +81,6 @@ export class EditProfileComponent implements OnInit {
   loadCurrentUser(): void {
     this.authService.refreshCurrentUser().subscribe({
       next: (user) => {
-        // Populate form with current user data
         this.profileForm.patchValue({
           firstname: user.firstname,
           lastname: user.lastname,
@@ -151,7 +150,6 @@ uploadAvatar(): void {
         this.selectedAvatarFile.set(null);
         this.avatarPreviewUrl.set(this.getMediaUrl(updatedUser.avatar));
         
-        // Refresh auth service user
         this.authService.refreshCurrentUser().subscribe();
         
         this.snackBar.open('Avatar updated successfully!', 'Close', { duration: 3000 });
@@ -183,12 +181,10 @@ uploadAvatar(): void {
         this.isLoading.set(false);
         this.successMessage.set('Profile updated successfully!');
         
-        // Refresh auth service user
         this.authService.refreshCurrentUser().subscribe();
         
         this.snackBar.open('Profile updated!', 'Close', { duration: 3000 });
-        
-        // Navigate to profile after 1 second
+
         setTimeout(() => {
           this.router.navigate(['/profile', updatedUser.username]);
         }, 1000);
@@ -215,7 +211,6 @@ uploadAvatar(): void {
       newPassword: this.passwordForm.value.newPassword
     };
 
-    // You'll need to add this method to UserService
     this.userService.changePassword(passwordData).subscribe({
       next: () => {
         this.isLoading.set(false);
@@ -254,7 +249,7 @@ uploadAvatar(): void {
 
   passwordMatchValidator(form: any) {
     const newPassword = form.get('newPassword');
-    const confirmPassword = form.get('confirmPassword');
+    const confirmPassword = form.get('confirmPassword ');
 
     if (!newPassword || !confirmPassword) {
       return null;
