@@ -9,6 +9,9 @@ import _blog.demo.model.User;
 import _blog.demo.repository.PostRepository;
 import _blog.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -129,6 +132,17 @@ public class UserService {
 
         return userRepo.save(user);
     }
+
+
+    public Page<User> searchUsers(String query, int page, int size) {
+        return userRepo.findByUsernameContainingIgnoreCase(query, PageRequest.of(page, size));
+    }
+
+
+    public Page<User> getAllUsers(int page, int size) {
+        return userRepo.findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")));
+    }
+
 
     public void changePassword(Long userId, ChangePasswordRequest request) {
         User user = userRepo.findById(userId)

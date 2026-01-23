@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.data.domain.Page;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +24,40 @@ import java.util.Map;
 
 public class UserController {
     private UserService userService;
+
+    // get all the usserss 
+
+          @GetMapping("/all")
+    public ResponseEntity<Page<UserProfileResponse>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        
+        Page<User> users = userService.getAllUsers(page, size);
+        Page<UserProfileResponse> enrichedUsers = users.map(user -> 
+            userService.getUserProfile(user.getId(), currentUser.getId())
+        );
+        
+        return ResponseEntity.ok(enrichedUsers);
+    }
+
+
+
+     @GetMapping("/search")
+    public ResponseEntity<Page<UserProfileResponse>> searchUsers(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        
+        Page<User> users = userService.searchUsers(query, page, size);
+        Page<UserProfileResponse> enrichedUsers = users.map(user -> 
+            userService.getUserProfile(user.getId(), currentUser.getId())
+        );
+        
+        return ResponseEntity.ok(enrichedUsers);
+    }
+
 
 
     // thatss gonna bring the users profile;

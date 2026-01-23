@@ -12,6 +12,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { PostService } from '../../core/services/post.service';
 import { Post } from '../../shared/models/post.model';
 
+import { NotificationPanelComponent } from '../../shared/components/notification-panel/notification-panel.component';
+
 // import { signal } from "rxjs";
 
 @Component({
@@ -27,6 +29,7 @@ import { Post } from '../../shared/models/post.model';
     MatChipsModule,
     MatToolbarModule,
     MatMenuModule,
+    NotificationPanelComponent 
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -126,6 +129,9 @@ export class HomeComponent implements OnInit {
   viewProfile(username: string): void {
     this.router.navigate(['/profile', username]);
   }
+  discoverUsers(): void {
+  this.router.navigate(['/discover']);
+}
 
   createpost(): void {
     this.router.navigate(['posts/create']);

@@ -1,14 +1,43 @@
 import { Injectable , signal } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { User, UpdateProfileRequest } from "../../shared/models/user.model";
+
+
+
+export interface UserPage {
+  content: User[];
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+}
+
 @Injectable({
     providedIn:"root"
 })
 
 export class UserService{
     constructor(private http: HttpClient){}
+
+
+    // this is for listing the userrs 
+    getAllUsers(page: number = 0, size: number = 20): Observable<UserPage> {
+    const url = `${environment.apiUrl}/users/all`;
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<UserPage>(url, { params });
+  }
+
+  searchUsers(query: string, page: number = 0, size: number = 20): Observable<UserPage> {
+    const url = `${environment.apiUrl}/users/search`;
+    const params = new HttpParams()
+      .set('query', query)
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<UserPage>(url, { params });
+  }
 
     //  get profile by userID
     getUserProfile(userId: number): Observable<User> {

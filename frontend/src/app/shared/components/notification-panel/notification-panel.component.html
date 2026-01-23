@@ -1,0 +1,89 @@
+<button 
+  mat-icon-button 
+  [matMenuTriggerFor]="notificationMenu"
+  (menuOpened)="onMenuOpened()"
+  matTooltip="Notifications"
+>
+  <mat-icon [matBadge]="unreadCount()" [matBadgeHidden]="unreadCount() === 0" matBadgeColor="warn">
+    notifications
+  </mat-icon>
+</button>
+
+<mat-menu #notificationMenu="matMenu" class="notification-menu" xPosition="before">
+  <!-- Header -->
+  <div class="notification-header" (click)="$event.stopPropagation()">
+    <h3>Notifications</h3>
+    @if (unreadCount() > 0) {
+      <button mat-button class="mark-all-read" (click)="markAllAsRead()">
+        Mark all as read
+      </button>
+    }
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="notification-loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading notifications...</p>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading() && notifications().length === 0) {
+    <div class="notification-empty">
+      <mat-icon>notifications_none</mat-icon>
+      <p>No notifications yet</p>
+    </div>
+  }
+
+  <!-- Notifications List -->
+  @if (!isLoading() && notifications().length > 0) {
+    <div class="notifications-list">
+      @for (notification of notifications(); track notification.id) {
+        <button 
+          mat-menu-item 
+          class="notification-item"
+          [class.unread]="!notification.isRead"
+          (click)="handleNotificationClick(notification)"
+        >
+          <div class="notification-content">
+            <!-- Avatar -->
+            <div class="notification-avatar">
+              @if (notification.actorAvatar) {
+                <img [src]="getAvatarUrl(notification.actorAvatar)" alt="Avatar">
+              } @else {
+                <mat-icon>account_circle</mat-icon>
+              }
+              
+              <!-- Type Icon Badge -->
+              <div class="type-badge" [class]="getNotificationColor(notification.type)">
+                <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
+              </div>
+            </div>
+
+            <!-- Text -->
+            <div class="notification-text">
+              <p class="notification-message">{{ notification.message }}</p>
+              <span class="notification-time">{{ formatTimeAgo(notification.createdAt) }}</span>
+            </div>
+
+            <!-- Unread Indicator -->
+            @if (!notification.isRead) {
+              <div class="unread-indicator"></div>
+            }
+          </div>
+        </button>
+      }
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- View All Button -->
+    <button mat-menu-item class="view-all-btn" (click)="viewAllNotifications()">
+      <mat-icon>open_in_new</mat-icon>
+      <span>View All Notifications</span>
+    </button>
+  }
+</mat-menu>

@@ -12,7 +12,11 @@
           <mat-icon>add_circle</mat-icon>
           <span>New Post</span>
         </button>
-
+        <button mat-button (click)="discoverUsers()">
+          <mat-icon>people</mat-icon>
+          <span>Discover</span>
+        </button>
+        <app-notification-panel></app-notification-panel>
         <button mat-icon-button [matMenuTriggerFor]="userMenu">
           @if (currentUser()?.avatar) {
             <img [src]="getMediaUrl(currentUser()!.avatar)" class="avatar-small" alt="Avatar" />
@@ -133,11 +137,7 @@
 
           <!-- Post Actions -->
           <mat-card-actions class="post-actions">
-            <button
-              mat-button
-              (click)="toggleLike(post)"
-              [class.liked]="post.isLikedByCurrentUser"
-            >
+            <button mat-button (click)="toggleLike(post)" [class.liked]="post.isLikedByCurrentUser">
               <mat-icon>
                 {{ post.isLikedByCurrentUser ? 'favorite' : 'favorite_border' }}
               </mat-icon>

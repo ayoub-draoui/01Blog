@@ -1,0 +1,120 @@
+<div class="notifications-container">
+  <!-- Header -->
+  <div class="notifications-header">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Notifications</h1>
+    @if (unreadNotifications().length > 0) {
+      <button mat-button (click)="markAllAsRead()" class="mark-all-btn">
+        Mark all as read
+      </button>
+    }
+  </div>
+
+  <!-- Tabs -->
+  <mat-tab-group [(selectedIndex)]="currentTab">
+    <!-- All Notifications Tab -->
+    <mat-tab label="All">
+      @if (isLoadingAll()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading notifications...</p>
+        </div>
+      }
+
+      @if (!isLoadingAll() && allNotifications().length === 0) {
+        <div class="empty-container">
+          <mat-icon>notifications_none</mat-icon>
+          <h2>No notifications yet</h2>
+          <p>When you get notifications, they'll show up here</p>
+        </div>
+      }
+
+      @if (!isLoadingAll() && allNotifications().length > 0) {
+        <div class="notifications-list">
+          @for (notification of allNotifications(); track notification.id) {
+            <mat-card 
+              class="notification-card"
+              [class.unread]="!notification.isRead"
+              (click)="handleNotificationClick(notification)"
+            >
+              <!-- Avatar -->
+              <div class="notification-avatar">
+                @if (notification.actorAvatar) {
+                  <img [src]="getAvatarUrl(notification.actorAvatar)" alt="Avatar">
+                } @else {
+                  <mat-icon>account_circle</mat-icon>
+                }
+                
+                <!-- Type Badge -->
+                <div class="type-badge" [class]="getNotificationColor(notification.type)">
+                  <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="notification-content">
+                <p class="notification-message">{{ notification.message }}</p>
+                <span class="notification-time">{{ formatTimeAgo(notification.createdAt) }}</span>
+              </div>
+
+              <!-- Unread Indicator -->
+              @if (!notification.isRead) {
+                <div class="unread-indicator"></div>
+              }
+            </mat-card>
+          }
+        </div>
+      }
+    </mat-tab>
+
+    <!-- Unread Notifications Tab -->
+    <mat-tab label="Unread">
+      @if (isLoadingUnread()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading unread notifications...</p>
+        </div>
+      }
+
+      @if (!isLoadingUnread() && unreadNotifications().length === 0) {
+        <div class="empty-container">
+          <mat-icon>done_all</mat-icon>
+          <h2>You're all caught up!</h2>
+          <p>No unread notifications</p>
+        </div>
+      }
+
+      @if (!isLoadingUnread() && unreadNotifications().length > 0) {
+        <div class="notifications-list">
+          @for (notification of unreadNotifications(); track notification.id) {
+            <mat-card 
+              class="notification-card unread"
+              (click)="handleNotificationClick(notification)"
+            >
+              <div class="notification-avatar">
+                @if (notification.actorAvatar) {
+                  <img [src]="getAvatarUrl(notification.actorAvatar)" alt="Avatar">
+                } @else {
+                  <mat-icon>account_circle</mat-icon>
+                }
+                
+                <div class="type-badge" [class]="getNotificationColor(notification.type)">
+                  <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
+                </div>
+              </div>
+
+              <div class="notification-content">
+                <p class="notification-message">{{ notification.message }}</p>
+                <span class="notification-time">{{ formatTimeAgo(notification.createdAt) }}</span>
+              </div>
+
+              <div class="unread-indicator"></div>
+            </mat-card>
+          }
+        </div>
+      }
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -1,0 +1,195 @@
+.notifications-container {
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding-bottom: 40px;
+}
+
+.notifications-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 16px;
+
+    h1 {
+        flex: 1;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .mark-all-btn {
+        color: #3f51b5;
+    }
+}
+
+.loading-container,
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+
+    mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: #999;
+        margin-bottom: 16px;
+    }
+
+    h2 {
+        margin: 16px 0 8px;
+        color: #333;
+    }
+
+    p {
+        color: #666;
+    }
+}
+
+.notifications-list {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .notification-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+        border-left: 3px solid transparent;
+
+        &.unread {
+            background-color: #f5f5ff;
+            border-left-color: #3f51b5;
+        }
+
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .notification-avatar {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #e0e0e0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            mat-icon {
+                font-size: 48px;
+                width: 48px;
+                height: 48px;
+                color: #666;
+            }
+
+            .type-badge {
+                position: absolute;
+                bottom: -4px;
+                right: -4px;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background-color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+
+                mat-icon {
+                    font-size: 16px;
+                    width: 16px;
+                    height: 16px;
+                    color: white;
+                }
+
+                &.primary {
+                    background-color: #3f51b5;
+                }
+
+                &.accent {
+                    background-color: #ff4081;
+                }
+
+                &.warn {
+                    background-color: #f44336;
+                }
+            }
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+
+            .notification-message {
+                margin: 0 0 6px;
+                font-size: 15px;
+                line-height: 1.5;
+                color: #333;
+                word-wrap: break-word;
+            }
+
+            .notification-time {
+                font-size: 13px;
+                color: #999;
+            }
+        }
+
+        .unread-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #3f51b5;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .notifications-header {
+        h1 {
+            font-size: 20px;
+        }
+    }
+
+    .notifications-list {
+        padding: 12px;
+
+        .notification-card {
+            padding: 12px;
+
+            .notification-avatar {
+                width: 40px;
+                height: 40px;
+
+                mat-icon {
+                    font-size: 40px;
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        }
+    }
+}

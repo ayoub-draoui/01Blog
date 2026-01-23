@@ -6,53 +6,85 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: '/home',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'auth',
     children: [
       {
         path: 'login',
-        loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
+        loadComponent: () =>
+          import('./features/auth/login/login.component').then((m) => m.LoginComponent),
       },
       {
         path: 'register',
-        loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent)
-      }
-    ]
+        loadComponent: () =>
+          import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
+      },
+    ],
   },
   {
     path: 'home',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
+    loadComponent: () => import('./features/home/home.component').then((m) => m.HomeComponent),
   },
   {
     path: 'posts/create',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/posts/create-post/create-post.component').then(m => m.CreatePostComponent)
+    loadComponent: () =>
+      import('./features/posts/create-post/create-post.component').then(
+        (m) => m.CreatePostComponent,
+      ),
   },
 
   {
     path: 'profile/:username',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent)
+    loadComponent: () =>
+      import('./features/profile/profile.component').then((m) => m.ProfileComponent),
   },
   {
     path: 'posts/:id',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/posts/post-detail/post-detail.component').then(m => m.PostDetailComponent)
+    loadComponent: () =>
+      import('./features/posts/post-detail/post-detail.component').then(
+        (m) => m.PostDetailComponent,
+      ),
+  },
+  {
+    path: 'discover',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/users/discover-users/discover-users.component').then(
+        (m) => m.DiscoverUsersComponent,
+      ),
   },
   {
     path: 'profile-edit',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/profile/edit-profile/edit-profile.component').then(m => m.EditProfileComponent)
+    loadComponent: () =>
+      import('./features/profile/edit-profile/edit-profile.component').then(
+        (m) => m.EditProfileComponent,
+      ),
+  },
+  {
+    path: 'notifications',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/notifications/notifications-page/notifications-page.component').then(
+        (m) => m.NotificationsPageComponent,
+      ),
   },
   {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
-    loadComponent: () => import('./features/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent)  },
+    loadComponent: () =>
+      import('./features/admin/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent,
+      ),
+  },
   {
     path: '**',
-    redirectTo: '/home'
-  }
+    redirectTo: '/home',
+  },
 ];
