@@ -36,7 +36,7 @@ public class PostController {
           Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
-        Post created = postService.creatPost(post, user.getId(), media);
+        Post created = postService.creatPost(post,user.getUsername(), user.getId(), media);
         return ResponseEntity.ok(created);
     }
 

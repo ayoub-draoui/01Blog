@@ -31,8 +31,9 @@ public class PostService {
         this.notificationService = notificationService;
     }
 
-    public Post creatPost(Post post, Long authorId, MultipartFile mediaFile) {
+    public Post creatPost(Post post, String username, Long authorId, MultipartFile mediaFile) {
         post.setAuthorId(authorId);
+        post.setAuthorUsername(username);
 
         if (mediaFile != null && !mediaFile.isEmpty()) {
             String contentType = mediaFile.getContentType();

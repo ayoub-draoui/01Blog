@@ -18,6 +18,13 @@ public class Comment {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(nullable = false)
+    private String authorUsername;
+
+    @Column(name = "userAvatar")
+    private String userAvatar;
+
+
     @Column(name = "post_id", nullable = false)
     private Long postId;
 

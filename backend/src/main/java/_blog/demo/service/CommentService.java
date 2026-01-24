@@ -22,7 +22,7 @@ public class CommentService {
     private PostRepository postRepo;
     private NotificationService notificationService;
 
-    public Comment createComment(Long postId, Long userId, CommentCreateRequest request) {
+    public Comment createComment(Long postId,String username, Long userId, CommentCreateRequest request) {
         // Check if post exists
         if (!postRepo.existsById(postId)) {
             throw new ResourceNotFoundException("Post not found with id: " + postId);
@@ -31,6 +31,7 @@ public class CommentService {
         Comment comment = new Comment();
         comment.setPostId(postId);
         comment.setUserId(userId);
+        comment.setAuthorUsername(username);
         comment.setContent(request.content());
 
         Comment saved = commentRepo.save(comment);

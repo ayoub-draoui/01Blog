@@ -202,7 +202,7 @@
           @for (comment of comments(); track comment.id) {
             <mat-card class="comment-card">
               <div class="comment-header">
-                <div class="comment-avatar" (click)="viewProfile(comment.username!)">
+                <div class="comment-avatar" (click)="viewProfile(comment.authorUsername!)">
                   @if (comment.userAvatar) {
                     <img [src]="getMediaUrl(comment.userAvatar)" alt="Avatar">
                   } @else {
@@ -211,9 +211,9 @@
                 </div>
 
                 <div class="comment-info">
-                  <div class="comment-author" (click)="viewProfile(comment.username!)">
+                  <div class="comment-author" (click)="viewProfile(comment.authorUsername!)">
                     <strong>{{ comment.userFirstname }} {{ comment.userLastname }}</strong>
-                    <span class="username">&#64;{{ comment.username }}</span>
+                    <span class="username">&#64;{{ comment.authorUsername }}</span>
                   </div>
                   <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
                 </div>

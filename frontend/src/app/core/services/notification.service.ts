@@ -49,7 +49,7 @@ export class NotificationService {
   }
 
   getUnreadCount(): Observable<{count: number}>{
-        const url = `${environment.apiUrl}/nonotifications/unread/count`
+        const url = `${environment.apiUrl}/notifications/unread/count`
         return this.http.get<{count:number}>(url).pipe(
             tap(response => this.unreadCount.set(response.count))
         )

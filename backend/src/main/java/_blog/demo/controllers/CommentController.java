@@ -29,7 +29,7 @@ public class CommentController {
             @Valid @RequestBody CommentCreateRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         
-        Comment comment = commentService.createComment(postId, currentUser.getId(), request);
+        Comment comment = commentService.createComment(postId, currentUser.getUsername(), currentUser.getId(), request);
         return ResponseEntity.ok(comment);
     }
 

@@ -22,6 +22,9 @@ public class Post {
     @Column(nullable =  false)
     private Long authorId;
 
+    @Column(nullable = false)
+    private String authorUsername;
+
     @Column(length = 500)
     private String mediaUrl; 
     

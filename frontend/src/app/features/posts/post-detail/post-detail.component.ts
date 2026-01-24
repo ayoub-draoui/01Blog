@@ -16,6 +16,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { PostService } from '../../../core/services/post.service';
 import { Post } from '../../../shared/models/post.model';
 import { CommentWithUser } from '../../../shared/models/comment.model';
+import { response } from 'express';
 
 @Component({
   selector: 'app-post-detail',
@@ -98,6 +99,8 @@ export class PostDetailComponent implements OnInit {
         this.isLoadingPost.set(false);
       }
     });
+    console.log("333333333333333333333333333333333",this.comments);
+
   }
 
   loadComments(postId: number): void {
@@ -105,14 +108,17 @@ export class PostDetailComponent implements OnInit {
 
     this.postService.getComments(postId).subscribe({
       next: (response) => {
+        console.warn(response);
         this.comments.set(response.content || []);
+        console.warn(response.content);
+
         this.isLoadingComments.set(false);
       },
       error: (error) => {
         console.error('Error loading comments:', error);
         this.isLoadingComments.set(false);
       }
-    });
+    }); 
   }
 
   toggleLike(): void {
@@ -185,11 +191,17 @@ export class PostDetailComponent implements OnInit {
     if (!confirm(`Are you sure you want to delete "${post.title}"?`)) {
       return;
     }
+    const username = post.authorUsername;
+    
+    // console.log("333333333333333333333333333333333333333333333333333333333333333330",id);
+    console.log("333333333333333333333333333333333333333333333333333333333333333330",username);
+    console.log("333333333333333333333333333333333333333333333333333333333333333330",post);
+    
 
     this.postService.deletePost(post.id).subscribe({
       next: () => {
         this.snackBar.open('Post deleted successfully', 'Close', { duration: 3000 });
-        this.router.navigate(['/home']);
+        this.router.navigate(['/profile', username]);    
       },
       error: (error) => {
         console.error('Error deleting post:', error);

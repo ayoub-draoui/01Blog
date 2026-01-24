@@ -18,6 +18,7 @@ export interface CommentWithUser {
   postId: number;
   createdAt: string;
   updatedAt: string;
+  authorUsername: string;
 }
 
 
