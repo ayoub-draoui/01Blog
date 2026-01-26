@@ -32,7 +32,7 @@ echo "✅ Docker daemon started in background (log: ~/docker-rootless.log)"
 # Optional: install Docker Compose v2
 echo "📦 Installing Docker Compose v2..."
 mkdir -p ~/.docker/cli-plugins
-curl -SL https://github.com/docker/compose/releases/download/v2.26.1/docker-compose-linux-x86_64 \
+curl -SL https://github.com/docker/compose/releases/download/v5.0.2/docker-compose-linux-x86_64 \
   -o ~/.docker/cli-plugins/docker-compose
 chmod +x ~/.docker/cli-plugins/docker-compose
 
