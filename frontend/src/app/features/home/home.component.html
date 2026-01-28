@@ -2,10 +2,12 @@
   <!-- Toolbar -->
   <mat-toolbar color="primary" class="toolbar">
     <div class="toolbar-content">
-      <div class="logo-section">
-        <mat-icon>article</mat-icon>
-        <span class="logo-text">01Blog</span>
-      </div>
+      <button mat-button (click)="home()">
+        <div class="logo-section">
+          <mat-icon>article</mat-icon>
+          <span class="logo-text">01Blog</span>
+        </div>
+      </button>
 
       <div class="toolbar-actions">
         <button mat-button (click)="createpost()">

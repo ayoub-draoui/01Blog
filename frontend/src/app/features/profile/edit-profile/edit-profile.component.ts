@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router} from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,7 @@ import { UpdateProfileRequest } from '../../../shared/models/user.model';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
+    // RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,

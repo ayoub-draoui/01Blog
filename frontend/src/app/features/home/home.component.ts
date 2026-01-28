@@ -21,7 +21,7 @@ import { NotificationPanelComponent } from '../../shared/components/notification
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
+    // RouterLink,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -132,6 +132,11 @@ export class HomeComponent implements OnInit {
   discoverUsers(): void {
   this.router.navigate(['/discover']);
 }
+  home(): void{
+    console.log("im here!!!!");
+    
+    this.router.navigate(["/home"])
+  }
 
   createpost(): void {
     this.router.navigate(['posts/create']);

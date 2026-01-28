@@ -18,7 +18,7 @@ import { Post } from '../../shared/models/post.model';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
+    // RouterLink,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
