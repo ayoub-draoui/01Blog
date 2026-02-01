@@ -59,6 +59,14 @@ export const routes: Routes = [
         (m) => m.DiscoverUsersComponent,
       ),
   },
+  { path: "posts/edit/:id",
+    canActivate: [authGuard],
+    loadComponent: ()=> 
+      import( "./features/posts/edit-post/edit-post.component").then(
+        (m) => m.EditPostComponent,
+      )
+
+  },
   {
     path: 'profile-edit',
     canActivate: [authGuard],

@@ -1,0 +1,153 @@
+<div class="edit-post-container">
+  <mat-card class="edit-post-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>edit</mat-icon>
+        Edit Post
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Loading State -->
+      @if (isLoadingPost()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading post...</p>
+        </div>
+      } @else {
+        <!-- Error Alert -->
+        @if (errorMessage()) {
+          <div class="error-alert">
+            <mat-icon>error</mat-icon>
+            <span>{{ errorMessage() }}</span>
+          </div>
+        }
+
+        <!-- Form -->
+        <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
+          <!-- Title -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Post Title</mat-label>
+            <input
+              matInput
+              formControlName="title"
+              placeholder="Give your post a catchy title"
+              [disabled]="isLoading()"
+              maxlength="300"
+            />
+            <mat-hint align="end">{{ title?.value?.length || 0 }} / 300</mat-hint>
+            @if (title?.invalid && title?.touched) {
+              <mat-error>
+                @if (title?.errors?.['required']) {
+                  Title is required
+                } @else if (title?.errors?.['maxlength']) {
+                  Title is too long
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Content -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Post Content</mat-label>
+            <textarea
+              matInput
+              formControlName="content"
+              placeholder="Share your thoughts, experiences, or learning journey..."
+              rows="10"
+              [disabled]="isLoading()"
+              maxlength="6000"
+            ></textarea>
+            <mat-hint align="end">{{ content?.value?.length || 0 }} / 6000</mat-hint>
+            @if (content?.invalid && content?.touched) {
+              <mat-error>
+                @if (content?.errors?.['required']) {
+                  Content is required
+                } @else if (content?.errors?.['maxlength']) {
+                  Content is too long
+                }
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Media Upload -->
+          <div class="media-section">
+            <h3>Media</h3>
+
+            @if (!previewUrl()) {
+              <div class="upload-area">
+                <input
+                  type="file"
+                  #fileInput
+                  (change)="onFileSelected($event)"
+                  accept="image/*,video/*"
+                  style="display: none"
+                />
+                <button
+                  mat-raised-button
+                  type="button"
+                  (click)="fileInput.click()"
+                  [disabled]="isLoading()"
+                >
+                  <mat-icon>cloud_upload</mat-icon>
+                  Upload Image or Video
+                </button>
+                <p class="upload-hint">Max size: 20MB</p>
+              </div>
+            } @else {
+              <div class="media-preview">
+                @if (fileType() === 'image') {
+                  <img [src]="previewUrl()!" alt="Preview" />
+                } @else if (fileType() === 'video') {
+                  <video [src]="previewUrl()!" controls></video>
+                }
+                <button
+                  mat-icon-button
+                  class="remove-button"
+                  type="button"
+                  (click)="removeFile()"
+                  [disabled]="isLoading()"
+                  matTooltip="Remove media"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+                @if (existingMediaUrl() && keepExistingMedia()) {
+                  <div class="media-badge">
+                    <mat-icon>info</mat-icon>
+                    <span>Current media</span>
+                  </div>
+                } @else if (selectedFile()) {
+                  <div class="media-badge new-media">
+                    <mat-icon>fiber_new</mat-icon>
+                    <span>New media</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Actions -->
+          <div class="form-actions">
+            <button mat-button type="button" (click)="cancel()" [disabled]="isLoading()">
+              Cancel
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="isLoading() || postForm.invalid"
+            >
+              @if (isLoading()) {
+                <mat-spinner diameter="20"></mat-spinner>
+                <span>Updating...</span>
+              } @else {
+                <mat-icon>save</mat-icon>
+                <span>Update Post</span>
+              }
+            </button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

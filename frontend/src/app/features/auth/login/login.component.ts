@@ -17,7 +17,7 @@ import { LoginRequest } from '../../../shared/models/auth.model';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    // RouterLink,
+    RouterLink,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
