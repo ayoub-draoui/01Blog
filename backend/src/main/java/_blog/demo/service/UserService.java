@@ -26,7 +26,7 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public UserProfileResponse getUserProfile(Long userId, Long currentUserId) {
-        System.out.println("i worked!!!");
+            System.out.println("i worked!!!");
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 

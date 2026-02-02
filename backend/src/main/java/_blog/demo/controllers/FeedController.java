@@ -1,53 +1,66 @@
 package _blog.demo.controllers;
 
-import _blog.demo.dto.PostResponse;
-import _blog.demo.model.Post;
 import _blog.demo.security.CustomUserDetails;
 import _blog.demo.service.FeedService;
-import _blog.demo.service.PostEnrichmentService;
-import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
+/**
+ * REST Controller for Feed operations
+ * Now uses optimized single-query methods - no more N+1 problems!
+ */
 @RestController
 @RequestMapping("/feed")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FeedController {
-    private FeedService feedService;
-    private PostEnrichmentService postEnrichmentService;
-    
-    @GetMapping("/home")
-       public ResponseEntity<Page<PostResponse>> getHomeFeed(
-               @RequestParam(defaultValue = "0") int page,
-               @RequestParam(defaultValue = "10") int size,
-               @AuthenticationPrincipal CustomUserDetails currentUser) {
-           
-           Page<Post> posts = feedService.getPersonalizedFeed(currentUser.getId(), page, size);
-           Page<PostResponse> enrichedPosts = postEnrichmentService.enrichPosts(posts, currentUser.getId());
-           
-           return ResponseEntity.ok(enrichedPosts);
-       }
-    @GetMapping("/personalize")
-    public  ResponseEntity<Page<Post>> getPersonalizedFeed(  
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @AuthenticationPrincipal CustomUserDetails currentUser) {
-        
-        Page<Post> feed = feedService.getPersonalizedFeed(currentUser.getId(), page, size);
-        return ResponseEntity.ok(feed);
+    private final FeedService feedService;
 
-    }
-   @GetMapping("/explore")
-    public ResponseEntity<Page<PostResponse>> getExploreFeed(
+    /**
+     * Get home feed with automatic fallback - OPTIMIZED
+     * Shows personalized feed if user follows people, otherwise shows explore feed
+     * Single query per post!
+     */
+    @GetMapping("/home")
+    public ResponseEntity<Map<String, Object>> getHomeFeed(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         
-        Page<Post> posts = feedService.getExploreFeed(page, size);
-        Page<PostResponse> enrichedPosts = postEnrichmentService.enrichPosts(posts, currentUser.getId());
+        Map<String, Object> feed = feedService.getHomeFeed(currentUser.getId(), page, size);
+        return ResponseEntity.ok(feed);
+    }
+
+    /**
+     * Get personalized feed - OPTIMIZED
+     * Shows posts from users that the current user follows
+     * Returns enriched PostResponse with all data in single query
+     */
+    @GetMapping("/personalize")
+    public ResponseEntity<Map<String, Object>> getPersonalizedFeed(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
         
-        return ResponseEntity.ok(enrichedPosts);
+        Map<String, Object> feed = feedService.getPersonalizedFeed(currentUser.getId(), page, size);
+        return ResponseEntity.ok(feed);
+    }
+
+    /**
+     * Get explore feed - OPTIMIZED
+     * Shows all posts, newest first
+     * Returns enriched PostResponse with all data in single query
+     */
+    @GetMapping("/explore")
+    public ResponseEntity<Map<String, Object>> getExploreFeed(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal CustomUserDetails currentUser) {
+        
+        Map<String, Object> feed = feedService.getExploreFeed(currentUser.getId(), page, size);
+        return ResponseEntity.ok(feed);
     }
 }

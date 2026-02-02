@@ -1,64 +1,135 @@
 package _blog.demo.controllers;
 
+import _blog.demo.dto.PostResponse;
 import _blog.demo.dto.PostUpdateRequest;
 import _blog.demo.model.Post;
 import _blog.demo.security.CustomUserDetails;
 import _blog.demo.service.PostService;
 
-// import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * REST Controller for Post operations
+ * Now uses optimized single-query methods that return PostResponse with all data
+ */
 @RestController
 @RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
-      private final ObjectMapper objectMapper;
 
-    public PostController(PostService postService, ObjectMapper oblObjectMapper) {
+    public PostController(PostService postService) {
         this.postService = postService;
-        this.objectMapper  = oblObjectMapper;
     }
 
-     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Post> createPost(
-             @RequestParam("title") String title,
+    /**
+     * Create a new post with optional media
+     */
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<PostResponse> createPost(
+            @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam(value = "media", required = false) MultipartFile media,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-          Post post = new Post();
+        Post post = new Post();
         post.setTitle(title);
         post.setContent(content);
-        Post created = postService.creatPost(post,user.getUsername(), user.getId(), media);
-        return ResponseEntity.ok(created);
+        
+        Post created = postService.creatPost(post, user.getUsername(), user.getId(), media);
+        
+        // Fetch the enriched post data using optimized query
+        PostResponse enrichedPost = postService.getPostById(created.getId(), user.getId());
+        
+        return ResponseEntity.ok(enrichedPost);
     }
 
+    /**
+     * Get all posts with pagination - OPTIMIZED
+     * Returns enriched posts with author info, likes count, comments count, and user interaction
+     * Single query per post - no N+1 problem!
+     */
     @GetMapping
-    public ResponseEntity<Page<Post>> getAllPosts(
+    public ResponseEntity<Map<String, Object>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        return ResponseEntity.ok(postService.allPosts(page, size));
+        Long currentUserId = user != null ? user.getId() : null;
+        
+        // Get posts using optimized query
+        List<PostResponse> posts = postService.allPosts(currentUserId, page, size);
+        long totalPosts = postService.getTotalPostsCount();
+        
+        // Build pagination response
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", posts);
+        response.put("currentPage", page);
+        response.put("totalItems", totalPosts);
+        response.put("totalPages", (int) Math.ceil((double) totalPosts / size));
+        response.put("pageSize", size);
+        
+        return ResponseEntity.ok(response);
     }
 
+    /**
+     * Get posts by specific author with pagination - OPTIMIZED
+     * Returns enriched posts with all necessary data
+     */
     @GetMapping("/author/{authorId}")
-    public ResponseEntity<Page<Post>> getPostsByAuthor(
+    public ResponseEntity<Map<String, Object>> getPostsByAuthor(
             @PathVariable Long authorId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        return ResponseEntity.ok(postService.getByAuthor(authorId, page, size));
+        Long currentUserId = user != null ? user.getId() : null;
+        
+        // Get posts using optimized query
+        List<PostResponse> posts = postService.getByAuthor(authorId, currentUserId, page, size);
+        long totalPosts = postService.getTotalPostsCount(); // You might want to add countByAuthorId
+        
+        // Build pagination response
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", posts);
+        response.put("currentPage", page);
+        response.put("totalItems", totalPosts);
+        response.put("totalPages", (int) Math.ceil((double) totalPosts / size));
+        response.put("pageSize", size);
+        
+        return ResponseEntity.ok(response);
     }
 
-      @PutMapping(value = "/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<Post> updatePost(
+    /**
+     * Get a single post by ID - OPTIMIZED
+     * Returns enriched post with all necessary data
+     * Single query - no N+1 problem!
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponse> getPostById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        Long currentUserId = user != null ? user.getId() : null;
+        
+        // Get post using optimized query
+        PostResponse post = postService.getPostById(id, currentUserId);
+        
+        return ResponseEntity.ok(post);
+    }
+
+    /**
+     * Update an existing post
+     */
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<PostResponse> updatePost(
             @PathVariable Long id,
             @RequestParam("title") String title,
             @RequestParam("content") String content,
@@ -67,13 +138,16 @@ public class PostController {
     ) {
         PostUpdateRequest request = new PostUpdateRequest(title, content);
         Post updatedPost = postService.updatePost(id, user.getId(), request, media);
-        return ResponseEntity.ok(updatedPost);
+        
+        // Fetch the enriched post data using optimized query
+        PostResponse enrichedPost = postService.getPostById(updatedPost.getId(), user.getId());
+        
+        return ResponseEntity.ok(enrichedPost);
     }
-    @GetMapping("/{id}")
-public ResponseEntity<Post> getPostById(@PathVariable Long id) {
-    return ResponseEntity.ok(postService.getPostById(id));
-}
 
+    /**
+     * Delete a post
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long id,

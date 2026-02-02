@@ -35,7 +35,7 @@ public class AuthService {
         user.setEmail(req.email());
         user.setFirstname(req.firstname());
         user.setLastname(req.lastname());
-        user.setAvatar("");  
+        user.setAvatar("default_image.jpg");  
         user.setPassword(encoder.encode(req.password()));
         user.setRole(Role.ROLE_USER);
         userRepo.save(user);

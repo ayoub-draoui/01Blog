@@ -1,0 +1,61 @@
+package _blog.demo.repository;
+
+import _blog.demo.model.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface PostRepository extends JpaRepository<Post, Long> {
+    
+    // 
+    //    find a post by ID with author information eagerly loaded
+    //   this avoids N+1 query problem when accessing author data
+     
+    @Query("SELECT p FROM Post p JOIN FETCH p.author WHERE p.id = :postId")
+    Optional<Post> findByIdWithAuthor(@Param("postId") Long postId);
+    
+    //   find all posts with author information (paginated)
+    //   using LEFT JOIN FETCH to eagerly load author data
+    
+    @Query(value = "SELECT DISTINCT p FROM Post p LEFT JOIN FETCH p.author ORDER BY p.createdAt DESC",
+           countQuery = "SELECT COUNT(p) FROM Post p")
+    Page<Post> findAllWithAuthor(Pageable pageable);
+    
+    /**
+     * Find posts by author ID with author information
+     */
+    @Query(value = "SELECT p FROM Post p LEFT JOIN FETCH p.author WHERE p.author.id = :authorId ORDER BY p.createdAt DESC",
+           countQuery = "SELECT COUNT(p) FROM Post p WHERE p.author.id = :authorId")
+    Page<Post> findAllByAuthorIdWithAuthor(@Param("authorId") Long authorId, Pageable pageable);
+    
+     
+    //  Count posts by author ID
+    
+    long countByAuthorId(Long authorId);
+    
+    // find posts by following users (for feed)
+    // this query will be used with the list of user IDs that the current user follows
+      
+    @Query(value = "SELECT DISTINCT p FROM Post p LEFT JOIN FETCH p.author WHERE p.author.id IN :followingIds ORDER BY p.createdAt DESC",
+           countQuery = "SELECT COUNT(p) FROM Post p WHERE p.author.id IN :followingIds")
+    Page<Post> findPostsByFollowingUsersWithAuthor(@Param("followingIds") List<Long> followingIds, Pageable pageable);
+    
+    /**
+     * Alternative: Direct join query with Subscription table (uncomment when you're ready to use it)
+     * This is more efficient as it doesn't require fetching follower IDs first
+     */
+    // @Query(value = "SELECT DISTINCT p FROM Post p " +
+    //        "LEFT JOIN FETCH p.author " +
+    //        "JOIN Subscription s ON p.author.id = s.followingId " +
+    //        "WHERE s.followerId = :userId " +
+    //        "ORDER BY p.createdAt DESC",
+    //        countQuery = "SELECT COUNT(DISTINCT p) FROM Post p " +
+    //                     "JOIN Subscription s ON p.author.id = s.followingId " +
+    //                     "WHERE s.followerId = :userId")
+    // Page<Post> findFeedForUser(@Param("userId") Long userId, Pageable pageable);
+}
