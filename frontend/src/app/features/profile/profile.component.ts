@@ -82,6 +82,8 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         this.posts.set(response.content);
         this.isLoadingPosts.set(false);
+        console.log("lcouuuuuuuuoooouuouount",response.content.length);
+        
       },
       error: (error) => {
         console.error('Error loading posts:', error);
