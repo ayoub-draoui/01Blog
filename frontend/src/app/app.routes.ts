@@ -1,13 +1,23 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
-
+ 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: '/home',
     pathMatch: 'full',
   },
+  {
+    path: 'admin',
+    canActivate: [adminGuard],
+    loadComponent:  () =>
+       import('./features/admin/admin-dashboard/admin-dashboard.component').then(
+        (m) => m.AdminDashboardComponent,
+      )
+    },
+    // component: AdminDashboardComponent
+  
   {
     path: 'auth',
     children: [
@@ -36,12 +46,13 @@ export const routes: Routes = [
         (m) => m.CreatePostComponent,
       ),
   },
-
   {
-    path: 'profile/:username',
+    path: 'posts/edit/:id',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+      import('./features/posts/edit-post/edit-post.component').then(
+        (m) => m.EditPostComponent,
+      ),
   },
   {
     path: 'posts/:id',
@@ -52,27 +63,25 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'discover',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/users/discover-users/discover-users.component').then(
-        (m) => m.DiscoverUsersComponent,
-      ),
-  },
-  { path: "posts/edit/:id",
-    canActivate: [authGuard],
-    loadComponent: ()=> 
-      import( "./features/posts/edit-post/edit-post.component").then(
-        (m) => m.EditPostComponent,
-      )
-
-  },
-  {
     path: 'profile-edit',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./features/profile/edit-profile/edit-profile.component').then(
         (m) => m.EditProfileComponent,
+      ),
+  },
+  {
+    path: 'profile/:username',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+  },
+  {
+    path: 'discover',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/users/discover-users/discover-users.component').then(
+        (m) => m.DiscoverUsersComponent,
       ),
   },
   {
@@ -84,15 +93,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'admin',
-    canActivate: [authGuard, adminGuard],
-    loadComponent: () =>
-      import('./features/admin/admin-dashboard/admin-dashboard.component').then(
-        (m) => m.AdminDashboardComponent,
-      ),
-  },
-  {
     path: '**',
-    redirectTo: '/home' ,
+    redirectTo: '/home',
   },
 ];

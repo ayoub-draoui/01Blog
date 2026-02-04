@@ -10,6 +10,9 @@ export const authInterceptor : HttpInterceptorFn = (req, next) => {
 
 
     if (token && ! authService.isTokenExpired()){
+        console.log("im here this is comming from auth intercepters");
+        console.log(req.url);
+        
         const cloneReq = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`

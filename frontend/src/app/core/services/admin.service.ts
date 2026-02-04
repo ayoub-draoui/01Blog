@@ -63,7 +63,9 @@ export class AdminService {
       .set('size', size.toString());
     return this.http.get<Page<User>>(`${this.baseUrl}/users/search`, { params });
   }
-
+  getUserById(userId: number): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/users/${userId}`);
+  }
   deleteUser(userId: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/users/${userId}`);
   }

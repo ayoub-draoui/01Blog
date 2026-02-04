@@ -55,6 +55,7 @@ export class HomeComponent implements OnInit {
   // ) {}
   
   ngOnInit(): void {
+    console.log("Hanni fel home");
     this.loadPosts();
   }
 
@@ -134,8 +135,7 @@ export class HomeComponent implements OnInit {
 }
   home(): void{
     console.log("im here!!!!");
-    
-    this.router.navigate(["/home"])
+    this.router.navigate(["home"])
   }
 
   createpost(): void {

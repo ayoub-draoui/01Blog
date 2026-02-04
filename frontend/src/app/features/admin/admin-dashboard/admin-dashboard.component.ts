@@ -44,7 +44,8 @@ import { MatMenuModule } from '@angular/material/menu';
   styleUrl: './admin-dashboard.component.scss',
 })
 export class AdminDashboardComponent implements OnInit {
-
+  
+  
   private authService = inject(AuthService); 
   stats = signal<DashboardStats | null>(null);
   users = signal<User[]>([]);
@@ -55,11 +56,11 @@ export class AdminDashboardComponent implements OnInit {
   isLoadingPosts = signal(false);
   isLoadingReports = signal(false);
   searchQuery = signal('');
-
+  
   userColumns = ['id', 'username', 'email', 'role', 'actions'];
   postColumns = ['id', 'title', 'author', 'createdAt', 'actions'];
   reportColumns = ['id', 'type', 'reporter', 'reported', 'status', 'actions'];
-
+  
   constructor(
     private adminService: AdminService,
     
@@ -67,8 +68,9 @@ export class AdminDashboardComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) {}
-
+  
   ngOnInit(): void {
+    console.log("i reached this point this is comming from admin compooo !!!!!");
     this.loadDashboardStats();
     this.loadUsers();
     this.loadPosts();
@@ -79,11 +81,13 @@ export class AdminDashboardComponent implements OnInit {
     this.isLoadingStats.set(true);
     this.adminService.getDashboardStats().subscribe({
       next: (stats) => {
+        console.log("this is comming from load stats");
+        
         this.stats.set(stats);
         this.isLoadingStats.set(false);
       },
       error: (error) => {
-        console.error('Error loading stats:', error);
+        console.log('Error loading stats:', error);
         this.isLoadingStats.set(false);
       },
     });
@@ -97,7 +101,8 @@ export class AdminDashboardComponent implements OnInit {
         this.isLoadingUsers.set(false);
       },
       error: (error) => {
-        console.error('Error loading users:', error);
+        console.log('Error loading users:', error);
+
         this.isLoadingUsers.set(false);
       },
     });
@@ -111,7 +116,7 @@ export class AdminDashboardComponent implements OnInit {
         this.isLoadingPosts.set(false);
       },
       error: (error) => {
-        console.error('Error loading posts:', error);
+        console.log('Error loading posts:', error);
         this.isLoadingPosts.set(false);
       },
     });
@@ -124,7 +129,7 @@ export class AdminDashboardComponent implements OnInit {
         this.isLoadingReports.set(false);
       },
       error: (error) => {
-        console.error('Error loading reports:', error);
+        console.log('Error loading reports:', error);
         this.isLoadingReports.set(false);
       },
     });
@@ -178,14 +183,22 @@ export class AdminDashboardComponent implements OnInit {
         this.loadDashboardStats();
       },
       error: (error) => {
-        console.error('Error updating report:', error);
+        console.log('Error updating report:', error);
         this.snackBar.open('Failed to update report', 'Close', { duration: 3000 });
       },
     });
   }
 
   viewUser(userId: number): void {
-    // Navigate to user profile or open dialog
+    this.adminService.getUserById(userId).subscribe({
+      next: (user) => {
+        console.log('User details:', user);
+        this.router.navigate(['/profile', user.username]);
+      },
+      error: (error) => {
+        console.log('Error fetching user details:', error);
+      },
+    });
     console.log('View user:', userId);
   }
 

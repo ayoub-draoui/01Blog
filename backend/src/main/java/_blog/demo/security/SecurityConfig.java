@@ -36,7 +36,6 @@ public class SecurityConfig {
             CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:4200",
-            "http://localhost:3000",
             "http://127.0.0.1:4200"
         ));
             configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

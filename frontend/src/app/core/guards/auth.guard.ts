@@ -9,14 +9,28 @@ export const authGuard: CanActivateFn = (route, state) => {
   const platformId = inject(PLATFORM_ID);
   const isBrowser = isPlatformBrowser(platformId);
 
+  console.log('🔐 Auth Guard triggered for:', state.url);
+
   if (!isBrowser) {
+    console.log('⚠️ Not in browser, allowing');
     return true;
   }
 
-  if (authService.isAuthenticated() && !authService.isTokenExpired()) {
+  const isAuthenticated = authService.isAuthenticated();
+  const isTokenValid = !authService.isTokenExpired();
+
+  console.log('Auth Guard Check:', {
+    isAuthenticated,
+    isTokenValid,
+    currentUser: authService.currentUser()
+  });
+
+  if (isAuthenticated && isTokenValid) {
+    console.log('✅ Auth guard passed');
     return true;
   }
 
+  console.log('❌ Auth guard failed - redirecting to login');
   router.navigate(['/auth/login'], { 
     queryParams: { returnUrl: state.url }
   });

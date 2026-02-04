@@ -36,6 +36,7 @@ public class AdminService {
      */
     @Transactional(readOnly = true)
     public Page<User> getAllUsers(int page, int size) {
+        System.out.println("this shiiiit iss comming from loading users for admim panel ");
         return userRepo.findAll(
             PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
         );
@@ -52,15 +53,12 @@ public class AdminService {
         );
     }
 
-    /**
-     * Get all posts with enriched data - OPTIMIZED
-     * Uses single query to get all post details
-     */
+   
     @Transactional(readOnly = true)
     public Map<String, Object> getAllPosts(Long adminUserId, int page, int size) {
         int offset = page * size;
+        System.out.println("this shiiiit iss comming from loading postsss for admim panel ");
         
-        // Get posts using optimized query
         List<Object[]> results = postRepo.findAllPostsWithDetails(adminUserId, size, offset);
         
         // Convert to PostResponse
@@ -68,10 +66,8 @@ public class AdminService {
             .map(postService::mapToPostResponse)
             .collect(Collectors.toList());
         
-        // Get total count
         long totalPosts = postRepo.countAllPosts();
         
-        // Build pagination response
         Map<String, Object> response = new HashMap<>();
         response.put("content", posts);
         response.put("currentPage", page);
@@ -82,9 +78,7 @@ public class AdminService {
         return response;
     }
 
-    /**
-     * Delete user and all associated data
-     */
+ 
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepo.findById(userId)
@@ -95,65 +89,46 @@ public class AdminService {
             fileStorageService.deletFile(user.getAvatar());
         }
 
-        // Delete all user's posts and their media
-        // Page<Post> userPosts = postRepo.findAllByAuthorId(userId, PageRequest.of(0, 1000));
+        Page<Post> userPosts = postRepo.findAllByAuthorId(userId, PageRequest.of(0, 10));
         
-        // for (Post post : userPosts) {
-        //     if (post.getMediaUrl() != null) {
-        //         fileStorageService.deletFile(post.getMediaUrl());
-        //     }
-        //     likeRepo.deleteByPostId(post.getId());
-        //     commentRepo.deleteByPostId(post.getId());
-        // }
-
-        // postRepo.deleteAll(userPosts);
-
-        // Delete subscriptions
+        for (Post post : userPosts) {
+            if (post.getMediaUrl() != null) {
+                fileStorageService.deletFile(post.getMediaUrl());
+            }
+            likeRepo.deleteByPostId(post.getId());
+            commentRepo.deleteByPostId(post.getId());
+        }
+ 
         subscriptionRepo.deleteByFollowerId(userId);
         subscriptionRepo.deleteByFollowingId(userId);
-
-        // Delete likes and comments
         likeRepo.deleteByUserId(userId);
         commentRepo.deleteByUserId(userId);
-
-        // Delete notifications
         notificationRepo.deleteByUserId(userId);
         notificationRepo.deleteByActorId(userId);
-
-        // Delete reports
         reportRepo.deleteByReporterId(userId);
         reportRepo.deleteByReportedUserId(userId);
 
-        // Finally delete the user
         userRepo.delete(user);
     }
 
-    /**
-     * Delete post and all associated data
-     */
+     
     @Transactional
     public void deletePost(Long postId) {
         Post post = postRepo.findById(postId)
             .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
-        // Delete media file
         if (post.getMediaUrl() != null) {
             fileStorageService.deletFile(post.getMediaUrl());
         }
 
-        // Delete associated data
         likeRepo.deleteByPostId(postId);
         commentRepo.deleteByPostId(postId);
         notificationRepo.deleteByRelatedPostId(postId);
         reportRepo.deleteByReportedPostId(postId);
 
-        // Delete the post
         postRepo.delete(post);
     }
 
-    /**
-     * Get dashboard statistics
-     */
     @Transactional(readOnly = true)
     public Map<String, Object> getDashboardStats() {
         Map<String, Object> stats = new HashMap<>();

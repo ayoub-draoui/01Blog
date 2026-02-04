@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Admin Controller - now with optimized queries!
- */
+ 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -29,23 +27,18 @@ public class AdminController {
     private final ReportService reportService;
     private final AdminService adminService;
 
-    // ==================== USER MANAGEMENT ====================
-
-    /**
-     * Get all users with pagination
-     */
+   
+    
     @GetMapping("/users")
     public ResponseEntity<Page<User>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        
+        System.out.println("IM HERE THIS IS COMMING FROM ADMIN CONNTROLLER BACK-END");
         Page<User> users = adminService.getAllUsers(page, size);
         return ResponseEntity.ok(users);
     }
 
-    /**
-     * Get user by ID with profile details
-     */
+    
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserProfileResponse> getUserById(
             @PathVariable Long userId,
@@ -55,9 +48,7 @@ public class AdminController {
         return ResponseEntity.ok(user);
     }
 
-    /**
-     * Search users by username
-     */
+    
     @GetMapping("/users/search")
     public ResponseEntity<Page<User>> searchUsers(
             @RequestParam String query,
@@ -68,9 +59,7 @@ public class AdminController {
         return ResponseEntity.ok(users);
     }
 
-    /**
-     * Delete user (admin only)
-     */
+     
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<Map<String, String>> deleteUser(@PathVariable Long userId) {
         adminService.deleteUser(userId);
@@ -80,12 +69,7 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    // ==================== POST MANAGEMENT ====================
-
-    /**
-     * Get all posts with enriched data - OPTIMIZED
-     * Single query per post!
-     */
+    
     @GetMapping("/posts")
     public ResponseEntity<Map<String, Object>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
@@ -95,10 +79,7 @@ public class AdminController {
         Map<String, Object> posts = adminService.getAllPosts(currentUser.getId(), page, size);
         return ResponseEntity.ok(posts);
     }
-
-    /**
-     * Delete post by ID
-     */
+ 
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<Map<String, String>> deletePost(@PathVariable Long postId) {
         adminService.deletePost(postId);
@@ -108,11 +89,7 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    // ==================== REPORT MANAGEMENT ====================
-
-    /**
-     * Get all reports with pagination
-     */
+    
     @GetMapping("/reports")
     public ResponseEntity<Page<ReportResponse>> getAllReports(
             @RequestParam(defaultValue = "0") int page,
@@ -123,9 +100,7 @@ public class AdminController {
         return ResponseEntity.ok(enriched);
     }
 
-    /**
-     * Get reports by status
-     */
+    
     @GetMapping("/reports/status/{status}")
     public ResponseEntity<Page<ReportResponse>> getReportsByStatus(
             @PathVariable ReportStatus status,
@@ -137,9 +112,7 @@ public class AdminController {
         return ResponseEntity.ok(enriched);
     }
 
-    /**
-     * Get pending reports
-     */
+    
     @GetMapping("/reports/pending")
     public ResponseEntity<Page<ReportResponse>> getPendingReports(
             @RequestParam(defaultValue = "0") int page,
@@ -150,9 +123,7 @@ public class AdminController {
         return ResponseEntity.ok(enriched);
     }
 
-    /**
-     * Get report by ID
-     */
+    
     @GetMapping("/reports/{reportId}")
     public ResponseEntity<ReportResponse> getReportById(@PathVariable Long reportId) {
         Report report = reportService.getReportById(reportId);
@@ -160,9 +131,7 @@ public class AdminController {
         return ResponseEntity.ok(enriched);
     }
 
-    /**
-     * Update report status
-     */
+    
     @PutMapping("/reports/{reportId}")
     public ResponseEntity<Report> updateReport(
             @PathVariable Long reportId,
@@ -172,10 +141,7 @@ public class AdminController {
         Report updated = reportService.updateReport(reportId, currentUser.getId(), request);
         return ResponseEntity.ok(updated);
     }
-
-    /**
-     * Delete report by ID
-     */
+ 
     @DeleteMapping("/reports/{reportId}")
     public ResponseEntity<Map<String, String>> deleteReport(@PathVariable Long reportId) {
         reportService.deleteReport(reportId);
@@ -185,11 +151,7 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
-    // ==================== DASHBOARD STATS ====================
-
-    /**
-     * Get dashboard statistics
-     */
+     
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getDashboardStats() {
         Map<String, Object> stats = adminService.getDashboardStats();
