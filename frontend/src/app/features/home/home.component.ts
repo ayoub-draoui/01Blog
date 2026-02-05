@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, signal, computed, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -12,7 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { PostService } from '../../core/services/post.service';
 import { Post } from '../../shared/models/post.model';
 import { ReportDialogComponent } from '../../shared/components/reports/report-dialog.component';
-import { ReportService } from '../../core/services/report.service'; 
+import { ReportService } from '../../core/services/report.service';
 
 import { NotificationPanelComponent } from '../../shared/components/notification-panel/notification-panel.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +30,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatChipsModule,
     MatToolbarModule,
     MatMenuModule,
-    NotificationPanelComponent 
+    NotificationPanelComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -42,7 +42,8 @@ export class HomeComponent implements OnInit {
   private router = inject(Router);
   private reportService = inject(ReportService);
   private snackBar = inject(MatSnackBar);
-  
+  constructor(private cdr: ChangeDetectorRef) {}
+
   posts = signal<Post[]>([]);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
@@ -52,18 +53,28 @@ export class HomeComponent implements OnInit {
 
   currentUser = this.authService.currentUser;
   isEmpty = computed(() => this.posts().length === 0 && !this.isLoading());
+  isAuthor = signal(false);
+  userId = computed(() => {
+    const user = this.currentUser();
+    console.log('__________________________________________________________________-');
+    console.log(user?.id);
+    return user ? user.id : null;
+  });
+
   // constructor(
   //   // public authService: AuthService,
   //   private postServices: PostService,
   //   private router: Router,
   // ) {}
-  
+
   ngOnInit(): void {
-    console.log("Hanni fel home");
+    console.log('Hanni fel home');
     this.loadPosts();
   }
 
   loadPosts(append: boolean = false): void {
+    console.log('Posts____________________________________________');
+
     this.isLoading.set(true);
     this.errorMessage.set(null);
     const page = append ? this.currentPage() + 1 : 0;
@@ -73,11 +84,13 @@ export class HomeComponent implements OnInit {
         : this.postServices.getExploreFeed(page);
     feedObservable.subscribe({
       next: (response) => {
+
         if (append) {
           this.posts.update((current) => [...current, ...response.content]);
         } else {
           this.posts.set(response.content);
         }
+        this.isAuthor.set(this.currentUser()?.username === response.content[0]?.authorUsername);
         this.currentPage.set(page);
         this.hasMore.set(!response.last);
         this.isLoading.set(false);
@@ -101,15 +114,20 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  // sharePost(): void {
+  //   const post = this.posts();
+  //   if (!post) return;
 
-  sharePost(): void {
-    const post = this.posts();
-    if (!post) return;
+  //   const url = window.location.href;
+  //   navigator.clipboard.writeText(url).then(() => {
+  //     this.snackBar.open('Link copied to clipboard!', 'Close', { duration: 2000 });
+  //   });
+  // }
 
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-      this.snackBar.open('Link copied to clipboard!', 'Close', { duration: 2000 });
-    });
+   isMyPost = signal<boolean>(false);
+  private setIsMyPost(authorId: number): void {
+    const userId = this.userId();
+    this.isMyPost.set(userId !== null && authorId != undefined && authorId === userId)  ;
   }
   toggleLike(post: Post): void {
     const observable = post.isLikedByCurrentUser
@@ -145,11 +163,11 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/profile', username]);
   }
   discoverUsers(): void {
-  this.router.navigate(['/discover']);
-}
-  home(): void{
-    console.log("im here!!!!");
-    this.router.navigate(["home"])
+    this.router.navigate(['/discover']);
+  }
+  home(): void {
+    console.log('im here!!!!');
+    this.router.navigate(['home']);
   }
 
   createpost(): void {
@@ -162,34 +180,31 @@ export class HomeComponent implements OnInit {
   getMediaUrl(filename: string): string {
     return this.postServices.getMediaUrl(filename);
   }
-  
 
-   reportPost(post: Post): void {
+  reportPost(post: Post): void {
     const dialogRef = this.dialog.open(ReportDialogComponent, {
       width: '600px',
       maxWidth: '95vw',
       data: {
         postId: post.id,
-        postTitle: post.title
-      }
+        postTitle: post.title,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         // User submitted the report
         this.reportService.reportPost(result).subscribe({
           next: () => {
-            this.snackBar.open(
-              'Report submitted successfully. Our team will review it.', 
-              'Close', 
-              { duration: 5000 }
-            );
+            this.snackBar.open('Report submitted successfully. Our team will review it.', 'Close', {
+              duration: 5000,
+            });
           },
           error: (error) => {
             console.error('Error submitting report:', error);
             const message = error.error?.message || 'Failed to submit report. Please try again.';
             this.snackBar.open(message, 'Close', { duration: 5000 });
-          }
+          },
         });
       }
     });

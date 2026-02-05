@@ -99,23 +99,27 @@
         <mat-card class="post-card">
           <!-- Post Header -->
           <mat-card-header>
-            <div mat-card-avatar class="post-avatar" (click)="viewProfile(post.authorUsername!)">
-              @if (post.authorAvatar) {
-                <img [src]="getMediaUrl(post.authorAvatar)" alt="Avatar" />
-              } @else {
-                <mat-icon>account_circle</mat-icon>
-              }
+            <div>
+              <div mat-card-avatar class="post-avatar" (click)="viewProfile(post.authorUsername!)">
+                @if (post.authorAvatar) {
+                  <img [src]="getMediaUrl(post.authorAvatar)" alt="Avatar" />
+                } @else {
+                  <mat-icon>account_circle</mat-icon>
+                }
+              </div>
+  
+              <mat-card-title (click)="viewProfile(post.authorUsername!)">
+                {{ post.authorFirstname }} {{ post.authorLastname }}
+              </mat-card-title>
+  
+              <mat-card-subtitle>
+                &#64;{{ post.authorUsername }} · {{ formatDate(post.createdAt) }}
+              </mat-card-subtitle>
+              
             </div>
 
-            <mat-card-title (click)="viewProfile(post.authorUsername!)">
-              {{ post.authorFirstname }} {{ post.authorLastname }}
-            </mat-card-title>
-
-            <mat-card-subtitle>
-              &#64;{{ post.authorUsername }} · {{ formatDate(post.createdAt) }}
-            </mat-card-subtitle>
-
             <!-- Post Menu (Three dots) -->
+            <div>
             <button 
               mat-icon-button 
               [matMenuTriggerFor]="postMenu" 
@@ -124,22 +128,23 @@
             >
               <mat-icon>more_vert</mat-icon>
             </button>
-            
-            <mat-menu #postMenu="matMenu">
-              <!-- Only show Report if NOT the author -->
-              @if (post.authorId !== currentUser()?.id) {
-                <button mat-menu-item (click)="reportPost(post)">
-                  <mat-icon color="warn">flag</mat-icon>
-                  <span>Report Post</span>
-                </button>
-              }
-              
-              <!-- Additional menu items can go here -->
-              <button mat-menu-item (click)="sharePost(post)">
-                <mat-icon>share</mat-icon>
-                <span>Share</span>
-              </button>
-            </mat-menu>
+              <mat-menu #postMenu="matMenu">
+                <!-- Only show Report if NOT the author -->
+                @if (!isMyPost(post.authorId)) {
+                  <button mat-menu-item (click)="reportPost(post)">
+                    <mat-icon color="warn">flag</mat-icon>
+                    <span>Report Post</span>
+                  </button>
+                } @else{
+                  <button mat-menu-item >
+                    <mat-icon>share</mat-icon>
+                    <span>Share</span>
+                  </button>
+                }
+                
+                <!-- Additional menu items can go here -->
+              </mat-menu>
+              </div>
           </mat-card-header>
 
           <!-- Post Media -->
@@ -177,10 +182,10 @@
               <span>{{ post.commentsCount || 0 }}</span>
             </button>
 
-            <button mat-button (click)="sharePost(post)">
+            <!-- <button mat-button (click)="sharePost(post)">
               <mat-icon>share</mat-icon>
               <span>Share</span>
-            </button>
+            </button> -->
           </mat-card-actions>
         </mat-card>
       }

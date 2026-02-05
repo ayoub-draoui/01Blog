@@ -58,24 +58,31 @@ export class PostDetailComponent implements OnInit {
   isLoadingComments = signal(false);
   isSubmittingComment = signal(false);
   errorMessage = signal<string | null>(null);
+  isAuthor = signal(false);
 
   // Form
   commentForm: FormGroup;
 
-  // Computed
-  currentUser = this.authService.currentUser;
-  isAuthor = computed(() => {
-    const post = this.post();
-    const user = this.currentUser();
-    return post && user && post.authorId === user.id;
-  });
 
+  currentUser = this.authService.currentUser;
+  userid = computed(() => {
+    console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk im here");
+    
+    // const post = this.post();
+    const user = this.currentUser();
+    // console.log(post);
+    // console.log(user?.id);
+    
+    return  user?.id;
+  });
+  
+  
   constructor() {
     this.commentForm = this.fb.group({
       content: ['', [Validators.required, Validators.maxLength(2000)]]
     });
   }
-
+  
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       const postId = +params['id'];
@@ -85,15 +92,18 @@ export class PostDetailComponent implements OnInit {
       }
     });
   }
-
+  
   loadPost(postId: number): void {
+    // console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",this.isAuthor());
     this.isLoadingPost.set(true);
     this.errorMessage.set(null);
 
     this.postService.getPostById(postId).subscribe({
       next: (post) => {
         this.post.set(post);
+        this.isAuthor.set(this.currentUser()?.username === post.authorUsername);
         this.isLoadingPost.set(false);
+        
       },
       error: (error) => {
         console.error('Error loading post:', error);
