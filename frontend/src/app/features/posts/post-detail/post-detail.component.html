@@ -28,11 +28,13 @@
         </button>
         <h2>Post</h2>
         
-        @if (isAuthor()) {
-          <button mat-icon-button [matMenuTriggerFor]="postMenu" class="ml-auto">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #postMenu="matMenu">
+        <!-- Post Menu (Always show, content changes based on author) -->
+        <button mat-icon-button [matMenuTriggerFor]="postMenu" class="ml-auto">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #postMenu="matMenu">
+          @if (isAuthor()) {
+            <!-- Author options -->
             <button mat-menu-item (click)="editPost()">
               <mat-icon>edit</mat-icon>
               <span>Edit Post</span>
@@ -41,8 +43,19 @@
               <mat-icon>delete</mat-icon>
               <span>Delete Post</span>
             </button>
-          </mat-menu>
-        }
+          } @else {
+            <!-- Non-author options -->
+            <button mat-menu-item (click)="reportPost()">
+              <mat-icon color="warn">flag</mat-icon>
+              <span>Report Post</span>
+            </button>
+          }
+          <!-- Common options -->
+          <button mat-menu-item (click)="sharePost()">
+            <mat-icon>share</mat-icon>
+            <span>Share</span>
+          </button>
+        </mat-menu>
       </div>
 
       <!-- Main Post Card -->
@@ -123,6 +136,13 @@
             <mat-icon>share</mat-icon>
             <span>Share</span>
           </button>
+
+          @if (!isAuthor()) {
+            <button mat-button color="warn" (click)="reportPost()">
+              <mat-icon>flag</mat-icon>
+              <span>Report</span>
+            </button>
+          }
         </mat-card-actions>
       </mat-card>
 

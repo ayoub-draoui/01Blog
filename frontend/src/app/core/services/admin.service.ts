@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User } from '../../shared/models/user.model';
 import { Post, Page } from '../../shared/models/post.model';
+import { Report } from '../../shared/models/reports.model';
 export interface DashboardStats {
   totalUsers: number;
   totalPosts: number;
@@ -20,23 +21,6 @@ export interface DashboardStats {
   };
 }
 
-export interface Report {
-  id: number;
-  reporterId: number;
-  reporterUsername: string;
-  reportedUserId?: number;
-  reportedUsername?: string;
-  reportedPostId?: number;
-  reportedPostTitle?: string;
-  reportType: 'USER' | 'POST';
-  reason: string;
-  status: 'PENDING' | 'REVIEWED' | 'RESOLVED' | 'DISMISSED';
-  adminNotes?: string;
-  reviewedBy?: number;
-  reviewedByUsername?: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +65,7 @@ export class AdminService {
     return this.http.delete(`${this.baseUrl}/posts/${postId}`);
   }
 
-   getAllReports(page: number = 0, size: number = 20): Observable<Page<Report>> {
+   getAllReports(page: number = 0, size: number = 20): Observable<Page<Report>> {  
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());

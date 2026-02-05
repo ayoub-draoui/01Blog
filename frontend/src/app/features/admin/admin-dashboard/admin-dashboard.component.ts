@@ -14,7 +14,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { AdminService, DashboardStats, Report } from '../../../core/services/admin.service';
+import { AdminService, DashboardStats,} from '../../../core/services/admin.service';
+import { Report } from '../../../shared/models/reports.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../shared/models/user.model';
 import { Post } from '../../../shared/models/post.model';
@@ -127,6 +128,8 @@ export class AdminDashboardComponent implements OnInit {
       next: (response) => {
         this.reports.set(response.content);
         this.isLoadingReports.set(false);
+        console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",this.reports); 
+        
       },
       error: (error) => {
         console.log('Error loading reports:', error);

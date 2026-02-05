@@ -16,7 +16,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { PostService } from '../../../core/services/post.service';
 import { Post } from '../../../shared/models/post.model';
 import { CommentWithUser } from '../../../shared/models/comment.model';
-import { response } from 'express';
+import { ReportService } from '../../../core/services/report.service';
+import { ReportDialogComponent } from '../../../shared/components/reports/report-dialog.component';
 
 @Component({
   selector: 'app-post-detail',
@@ -47,7 +48,8 @@ export class PostDetailComponent implements OnInit {
   private authService = inject(AuthService);
   private postService = inject(PostService);
   private snackBar = inject(MatSnackBar);
-//   private dialog = inject(MatDialog);
+  private dialog = inject(MatDialog);
+  private reportService = inject(ReportService);
 
   // Signals
   post = signal<Post | null>(null);
@@ -180,6 +182,40 @@ export class PostDetailComponent implements OnInit {
         console.error('Error adding comment:', error);
         this.isSubmittingComment.set(false);
         this.snackBar.open('Failed to add comment', 'Close', { duration: 3000 });
+      }
+    });
+  }
+   reportPost(): void {
+    const post = this.post();
+    if (!post) return;
+
+    const dialogRef = this.dialog.open(ReportDialogComponent
+      , {
+      width: '600px',
+      maxWidth: '95vw',
+      data: {
+        postId: post.id,
+        postTitle: post.title
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // User submitted the report
+        this.reportService.reportPost(result).subscribe({
+          next: () => {
+            this.snackBar.open(
+              'Report submitted successfully. Our team will review it.', 
+              'Close', 
+              { duration: 5000 }
+            );
+          },
+          error: (error) => {
+            console.error('Error submitting report:', error);
+            const message = error.error?.message || 'Failed to submit report. Please try again.';
+            this.snackBar.open(message, 'Close', { duration: 5000 });
+          }
+        });
       }
     });
   }

@@ -11,8 +11,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '../../core/services/auth.service';
 import { PostService } from '../../core/services/post.service';
 import { Post } from '../../shared/models/post.model';
+import { ReportDialogComponent } from '../../shared/components/reports/report-dialog.component';
+import { ReportService } from '../../core/services/report.service'; 
 
 import { NotificationPanelComponent } from '../../shared/components/notification-panel/notification-panel.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -34,7 +38,10 @@ import { NotificationPanelComponent } from '../../shared/components/notification
 export class HomeComponent implements OnInit {
   private postServices = inject(PostService);
   private authService = inject(AuthService);
+  private dialog = inject(MatDialog);
   private router = inject(Router);
+  private reportService = inject(ReportService);
+  private snackBar = inject(MatSnackBar);
   
   posts = signal<Post[]>([]);
   isLoading = signal(false);
@@ -94,6 +101,16 @@ export class HomeComponent implements OnInit {
     }
   }
 
+
+  sharePost(): void {
+    const post = this.posts();
+    if (!post) return;
+
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      this.snackBar.open('Link copied to clipboard!', 'Close', { duration: 2000 });
+    });
+  }
   toggleLike(post: Post): void {
     const observable = post.isLikedByCurrentUser
       ? this.postServices.unlikePost(post.id)
@@ -144,6 +161,38 @@ export class HomeComponent implements OnInit {
   }
   getMediaUrl(filename: string): string {
     return this.postServices.getMediaUrl(filename);
+  }
+  
+
+   reportPost(post: Post): void {
+    const dialogRef = this.dialog.open(ReportDialogComponent, {
+      width: '600px',
+      maxWidth: '95vw',
+      data: {
+        postId: post.id,
+        postTitle: post.title
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // User submitted the report
+        this.reportService.reportPost(result).subscribe({
+          next: () => {
+            this.snackBar.open(
+              'Report submitted successfully. Our team will review it.', 
+              'Close', 
+              { duration: 5000 }
+            );
+          },
+          error: (error) => {
+            console.error('Error submitting report:', error);
+            const message = error.error?.message || 'Failed to submit report. Please try again.';
+            this.snackBar.open(message, 'Close', { duration: 5000 });
+          }
+        });
+      }
+    });
   }
   formatDate(dateString: string): string {
     const date = new Date(dateString);

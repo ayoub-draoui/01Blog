@@ -1,0 +1,92 @@
+<div class="report-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title>
+      <mat-icon>flag</mat-icon>
+      Report Post
+    </h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <div class="post-info">
+      <mat-icon>info</mat-icon>
+      <div>
+        <p class="info-title">You're reporting:</p>
+        <p class="post-title">"{{ data.postTitle }}"</p>
+      </div>
+    </div>
+
+    <form [formGroup]="reportForm">
+      <!-- Category Selection -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>What's the issue?</mat-label>
+        <mat-select formControlName="category" [disabled]="isSubmitting()">
+          <mat-option value="">Select a reason</mat-option>
+          @for (reason of reportReasons; track reason.value) {
+            <mat-option [value]="reason.value">
+              {{ reason.label }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (category?.invalid && category?.touched) {
+          <mat-error>Please select a reason</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- Detailed Reason -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Additional details</mat-label>
+        <textarea
+          matInput
+          formControlName="reason"
+          placeholder="Please provide more details about why you're reporting this post..."
+          rows="6"
+          [disabled]="isSubmitting()"
+          maxlength="1000"
+        ></textarea>
+        <mat-hint align="end">{{ reason?.value?.length || 0 }} / 1000 (min 10 characters)</mat-hint>
+        @if (reason?.invalid && reason?.touched) {
+          <mat-error>
+            @if (reason?.errors?.['required']) {
+              Please provide details
+            } @else if (reason?.errors?.['minlength']) {
+              Reason must be at least 10 characters
+            } @else if (reason?.errors?.['maxlength']) {
+              Reason is too long
+            }
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <div class="warning-message">
+        <mat-icon>warning</mat-icon>
+        <p>
+          Your report will be reviewed by our team. Please provide accurate information. 
+          False reports may result in action against your account.
+        </p>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()" [disabled]="isSubmitting()">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      color="warn" 
+      (click)="onSubmit()"
+      [disabled]="reportForm.invalid || isSubmitting()"
+    >
+      @if (isSubmitting()) {
+        <mat-spinner diameter="20"></mat-spinner>
+        <span>Submitting...</span>
+      } @else {
+        <mat-icon>flag</mat-icon>
+        <span>Submit Report</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

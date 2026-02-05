@@ -114,6 +114,32 @@
             <mat-card-subtitle>
               &#64;{{ post.authorUsername }} · {{ formatDate(post.createdAt) }}
             </mat-card-subtitle>
+
+            <!-- Post Menu (Three dots) -->
+            <button 
+              mat-icon-button 
+              [matMenuTriggerFor]="postMenu" 
+              class="post-menu-button"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            
+            <mat-menu #postMenu="matMenu">
+              <!-- Only show Report if NOT the author -->
+              @if (post.authorId !== currentUser()?.id) {
+                <button mat-menu-item (click)="reportPost(post)">
+                  <mat-icon color="warn">flag</mat-icon>
+                  <span>Report Post</span>
+                </button>
+              }
+              
+              <!-- Additional menu items can go here -->
+              <button mat-menu-item (click)="sharePost(post)">
+                <mat-icon>share</mat-icon>
+                <span>Share</span>
+              </button>
+            </mat-menu>
           </mat-card-header>
 
           <!-- Post Media -->
@@ -151,7 +177,7 @@
               <span>{{ post.commentsCount || 0 }}</span>
             </button>
 
-            <button mat-button>
+            <button mat-button (click)="sharePost(post)">
               <mat-icon>share</mat-icon>
               <span>Share</span>
             </button>
