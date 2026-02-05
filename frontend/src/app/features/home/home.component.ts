@@ -13,9 +13,6 @@ import { PostService } from '../../core/services/post.service';
 import { Post } from '../../shared/models/post.model';
 
 import { NotificationPanelComponent } from '../../shared/components/notification-panel/notification-panel.component';
-
-// import { signal } from "rxjs";
-
 @Component({
   selector: 'app-home',
   standalone: true,
