@@ -42,8 +42,6 @@ export class HomeComponent implements OnInit {
   private router = inject(Router);
   private reportService = inject(ReportService);
   private snackBar = inject(MatSnackBar);
-  constructor(private cdr: ChangeDetectorRef) {}
-
   posts = signal<Post[]>([]);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
@@ -60,13 +58,16 @@ export class HomeComponent implements OnInit {
     console.log(user?.id);
     return user ? user.id : null;
   });
-
+  isAdmin = computed(() => this.currentUser()?.role === 'ROLE_ADMIN');
   // constructor(
   //   // public authService: AuthService,
   //   private postServices: PostService,
   //   private router: Router,
   // ) {}
-
+  switchTheme(theme: 'light' | 'dark'): void {
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(theme);
+  }
   ngOnInit(): void {
     console.log('Hanni fel home');
     this.loadPosts();
@@ -90,7 +91,11 @@ export class HomeComponent implements OnInit {
         } else {
           this.posts.set(response.content);
         }
-        this.isAuthor.set(this.currentUser()?.username === response.content[0]?.authorUsername);
+        for (const post of response.content) {
+          // console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvPost ID:', post.id);
+          
+          console.log('vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvAuthor ID:', post.authorId);
+        }
         this.currentPage.set(page);
         this.hasMore.set(!response.last);
         this.isLoading.set(false);
@@ -114,21 +119,26 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // sharePost(): void {
-  //   const post = this.posts();
-  //   if (!post) return;
+  sharePost(): void {
+    const post = this.posts();
+    if (!post) return;
 
-  //   const url = window.location.href;
-  //   navigator.clipboard.writeText(url).then(() => {
-  //     this.snackBar.open('Link copied to clipboard!', 'Close', { duration: 2000 });
-  //   });
-  // }
-
-   isMyPost = signal<boolean>(false);
-  private setIsMyPost(authorId: number): void {
-    const userId = this.userId();
-    this.isMyPost.set(userId !== null && authorId != undefined && authorId === userId)  ;
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      this.snackBar.open('Link copied to clipboard!', 'Close', { duration: 2000 });
+    });
   }
+
+
+  goToAdminPanel(): void {
+    this.router.navigate(['/admin']);
+  }
+
+  //  isMyPost = signal<boolean>(false);
+  // private setIsMyPost(authorId: number): void {
+  //   const userId = this.userId();
+  //   this.isMyPost.set(userId !== null && authorId != undefined && authorId === userId)  ;
+  // }
   toggleLike(post: Post): void {
     const observable = post.isLikedByCurrentUser
       ? this.postServices.unlikePost(post.id)

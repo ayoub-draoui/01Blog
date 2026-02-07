@@ -2,7 +2,7 @@
   <div class="dialog-header">
     <h2 mat-dialog-title>
       <mat-icon>flag</mat-icon>
-      Report Post
+      {{ dialogTitle }}
     </h2>
     <button mat-icon-button mat-dialog-close>
       <mat-icon>close</mat-icon>
@@ -10,11 +10,20 @@
   </div>
 
   <mat-dialog-content>
-    <div class="post-info">
-      <mat-icon>info</mat-icon>
+    <div class="target-info">
+      <mat-icon>{{ data.type === 'POST' ? 'article' : 'person' }}</mat-icon>
       <div>
-        <p class="info-title">You're reporting:</p>
-        <p class="post-title">"{{ data.postTitle }}"</p>
+        <p class="info-title">{{ infoText }}</p>
+        <p class="target-title">
+          @if (data.type === 'POST') {
+            "{{ data.targetTitle }}"
+          } @else {
+            {{ data.targetTitle }}
+            @if (data.targetDescription) {
+              <span class="target-description">{{ data.targetDescription }}</span>
+            }
+          }
+        </p>
       </div>
     </div>
 
@@ -41,7 +50,9 @@
         <textarea
           matInput
           formControlName="reason"
-          placeholder="Please provide more details about why you're reporting this post..."
+          [placeholder]="data.type === 'POST' 
+            ? 'Please provide more details about why you\'re reporting this post...' 
+            : 'Please provide more details about why you\'re reporting this user...'"
           rows="6"
           [disabled]="isSubmitting()"
           maxlength="1000"

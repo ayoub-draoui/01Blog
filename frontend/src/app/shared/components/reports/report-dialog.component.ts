@@ -10,8 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export interface ReportDialogData {
-  postId: number;
-  postTitle: string;
+  type: 'POST' | 'USER';
+  targetId: number;
+  targetTitle: string; // For posts: title, For users: username or full name
+  targetDescription?: string; // Optional extra info
 }
 
 @Component({
@@ -35,17 +37,44 @@ export class ReportDialogComponent {
   reportForm: FormGroup;
   isSubmitting = signal(false);
 
-  // Predefined report reasons
-  reportReasons = [
+  // Report reasons for POSTS
+  postReasons = [
     { value: 'spam', label: 'Spam or misleading' },
     { value: 'harassment', label: 'Harassment or bullying' },
     { value: 'hate-speech', label: 'Hate speech or discrimination' },
     { value: 'violence', label: 'Violence or dangerous content' },
-    { value: 'inappropriate', label: 'Inappropriate or offensive' },
+    { value: 'inappropriate', label: 'Inappropriate or offensive content' },
     { value: 'copyright', label: 'Copyright infringement' },
     { value: 'misinformation', label: 'False information' },
     { value: 'other', label: 'Other (please specify)' }
   ];
+
+  // Report reasons for USERS
+  userReasons = [
+    { value: 'harassment', label: 'Harassment or bullying' },
+    { value: 'impersonation', label: 'Impersonation or fake account' },
+    { value: 'hate-speech', label: 'Hate speech or discrimination' },
+    { value: 'spam', label: 'Spam or bot activity' },
+    { value: 'inappropriate', label: 'Inappropriate behavior' },
+    { value: 'threats', label: 'Threats or violence' },
+    { value: 'underage', label: 'Underage user (under 13)' },
+    { value: 'other', label: 'Other (please specify)' }
+  ];
+
+  // Get reasons based on report type
+  get reportReasons() {
+    return this.data.type === 'POST' ? this.postReasons : this.userReasons;
+  }
+
+  // Get dialog title
+  get dialogTitle() {
+    return this.data.type === 'POST' ? 'Report Post' : 'Report User';
+  }
+
+  // Get info text
+  get infoText() {
+    return this.data.type === 'POST' ? "You're reporting:" : "You're reporting:";
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -66,8 +95,9 @@ export class ReportDialogComponent {
       if (value && value !== 'other') {
         const selectedReason = this.reportReasons.find(r => r.value === value);
         if (selectedReason) {
+          const targetType = this.data.type === 'POST' ? 'post' : 'user';
           this.reportForm.patchValue({
-            reason: `I am reporting this post because it contains ${selectedReason.label.toLowerCase()}.`
+            reason: `I am reporting this ${targetType} because it contains ${selectedReason.label.toLowerCase()}.`
           });
         }
       }
@@ -83,7 +113,8 @@ export class ReportDialogComponent {
       this.isSubmitting.set(true);
       
       const reportData = {
-        reportedPostId: this.data.postId,
+        type: this.data.type,
+        targetId: this.data.targetId,
         reason: this.reportForm.value.reason
       };
 

@@ -36,6 +36,16 @@
             <mat-icon>logout</mat-icon>
             <span>Logout</span>
           </button>
+          <button mat-menu-item (click)="switchTheme('dark')">
+            <mat-icon>dark_mode</mat-icon>
+            <span>Light Mode</span>
+          </button>
+            @if (isAdmin()) {
+          <button mat-menu-item (click)="goToAdminPanel()">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin Panel</span>
+          </button>
+          }
         </mat-menu>
       </div>
     </div>
@@ -99,7 +109,7 @@
         <mat-card class="post-card">
           <!-- Post Header -->
           <mat-card-header>
-            <div>
+          
               <div mat-card-avatar class="post-avatar" (click)="viewProfile(post.authorUsername!)">
                 @if (post.authorAvatar) {
                   <img [src]="getMediaUrl(post.authorAvatar)" alt="Avatar" />
@@ -115,11 +125,8 @@
               <mat-card-subtitle>
                 &#64;{{ post.authorUsername }} · {{ formatDate(post.createdAt) }}
               </mat-card-subtitle>
-              
-            </div>
-
             <!-- Post Menu (Three dots) -->
-            <div>
+            <!-- <div>
             <button 
               mat-icon-button 
               [matMenuTriggerFor]="postMenu" 
@@ -129,8 +136,8 @@
               <mat-icon>more_vert</mat-icon>
             </button>
               <mat-menu #postMenu="matMenu">
-                <!-- Only show Report if NOT the author -->
-                @if (!isMyPost(post.authorId)) {
+                Only show Report if NOT the author
+                @if (post.authorId && post.authorId !== userId() ) {
                   <button mat-menu-item (click)="reportPost(post)">
                     <mat-icon color="warn">flag</mat-icon>
                     <span>Report Post</span>
@@ -142,9 +149,9 @@
                   </button>
                 }
                 
-                <!-- Additional menu items can go here -->
+                Additional menu items can go here
               </mat-menu>
-              </div>
+              </div> -->
           </mat-card-header>
 
           <!-- Post Media -->
@@ -182,10 +189,10 @@
               <span>{{ post.commentsCount || 0 }}</span>
             </button>
 
-            <!-- <button mat-button (click)="sharePost(post)">
+            <button mat-button (click)="sharePost()">
               <mat-icon>share</mat-icon>
               <span>Share</span>
-            </button> -->
+            </button>
           </mat-card-actions>
         </mat-card>
       }

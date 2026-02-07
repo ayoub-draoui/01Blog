@@ -16,4 +16,14 @@ export class ReportService {
   reportUser(request: ReportUserRequest): Observable<Report> {
     return this.http.post<Report>(`${this.apiUrl}/user`, request);
   }
+
+  submitReport(type: 'POST' | 'USER', targetId: number, reason: string): Observable<Report> {
+    if (type === 'POST') {
+      return this.reportPost({ reportedPostId: targetId, reason });
+    } else {
+      return this.reportUser({ reportedUserId: targetId, reason });
+    }
+  }
+
+
 }

@@ -230,6 +230,46 @@ export class PostDetailComponent implements OnInit {
     });
   }
 
+
+
+
+  reportUser(): void {
+    const post = this.post();
+    if (!post) return;
+
+    const dialogRef = this.dialog.open(ReportDialogComponent, {
+      width: '600px',
+      maxWidth: '95vw',
+      data: {
+        type: 'USER',
+        targetId: post.authorId,
+        targetTitle: `${post.authorFirstname} ${post.authorLastname}`,
+        targetDescription: `@${post.authorUsername}`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Use the generic submitReport method
+        this.reportService.submitReport(result.type, result.targetId, result.reason).subscribe({
+          next: () => {
+            this.snackBar.open(
+              'User report submitted successfully. Our team will review it.', 
+              'Close', 
+              { duration: 5000 }
+            );
+          },
+          error: (error) => {
+            console.error('Error submitting user report:', error);
+            const message = error.error?.message || 'Failed to submit report. Please try again.';
+            this.snackBar.open(message, 'Close', { duration: 5000 });
+          }
+        });
+      }
+    });
+  }
+
+
   deletePost(): void {
     const post = this.post();
     if (!post) return;

@@ -49,8 +49,14 @@
               <mat-icon color="warn">flag</mat-icon>
               <span>Report Post</span>
             </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="reportUser()">
+              <mat-icon color="warn">report</mat-icon>
+              <span>Report User</span>
+            </button>
           }
           <!-- Common options -->
+          <mat-divider></mat-divider>
           <button mat-menu-item (click)="sharePost()">
             <mat-icon>share</mat-icon>
             <span>Share</span>

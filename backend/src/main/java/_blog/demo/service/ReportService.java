@@ -28,11 +28,18 @@ public class ReportService {
         if (!userRepository.existsById(request.reportedUserId())) {
             throw new ResourceNotFoundException("User not found with id: " + request.reportedUserId());
         }
-
-        // Can't report yourself
+        
         if (reporterId.equals(request.reportedUserId())) {
             throw new IllegalArgumentException("You cannot report yourself");
         }
+
+
+        // User isAdmin = userRepository.findRoleByUserID(request.reportedUserId()).orElseThrow();
+        // if (isAdmin.getRole().toString() == "ROLE_ADMIN") {
+        //     throw new IllegalArgumentException("You cannot report an admin");
+        // }
+
+        
 
         // Check if already reported
         if (reportRepository.existsByReporterIdAndReportedUserId(reporterId, request.reportedUserId())) {
@@ -58,10 +65,13 @@ public class ReportService {
         if (!postRepository.existsById(request.reportedPostId())) {
             throw new ResourceNotFoundException("Post not found with id: " + request.reportedPostId());
         }
+        if (reporterId.equals(postRepository.findById(request.reportedPostId()).orElseThrow().getAuthorId())) {
+            throw new BadRequest("u cannot report your own post u selly M.F");
+        }
 
         // Check if already reported
         if (reportRepository.existsByReporterIdAndReportedPostId(reporterId, request.reportedPostId())) {
-            throw new BadRequest("You have already reported this post");
+            throw new BadRequest("u have already reported this post");
         }
 
         Report report = new Report();

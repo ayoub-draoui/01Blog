@@ -30,7 +30,7 @@
     max-height: 70vh;
     overflow-y: auto;
 
-    .post-info {
+    .target-info {
       display: flex;
       gap: 12px;
       padding: 16px;
@@ -39,9 +39,12 @@
       border-radius: 4px;
       margin-bottom: 24px;
 
-      mat-icon {
+      > mat-icon {
         color: #2196f3;
         flex-shrink: 0;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
       }
 
       .info-title {
@@ -52,12 +55,21 @@
         letter-spacing: 0.5px;
       }
 
-      .post-title {
+      .target-title {
         margin: 0;
         font-size: 14px;
         font-weight: 500;
         color: #333;
         font-style: italic;
+
+        .target-description {
+          display: block;
+          font-size: 13px;
+          font-weight: 400;
+          font-style: normal;
+          color: #666;
+          margin-top: 4px;
+        }
       }
     }
 
@@ -124,8 +136,8 @@
     }
 
     mat-dialog-content {
-      .post-info {
-        .post-title {
+      .target-info {
+        .target-title {
           font-size: 13px;
         }
       }
