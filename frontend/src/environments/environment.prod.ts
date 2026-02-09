@@ -1,8 +1,7 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.yourdomain.com',
+  apiUrl: 'https://api.mydomain.com',
   apiEndpoints: {
-    // Same structure as above
     auth: {
       login: '/auth/login',
       register: '/auth/register',

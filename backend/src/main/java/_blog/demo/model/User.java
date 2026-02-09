@@ -15,38 +15,46 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String username;
-    
-    @Column(unique =  true , nullable =  false)
+
+    @Column(unique = true, nullable = false)
     private String email;
-   
-    @Column(nullable =  false)
+
+    @Column(nullable = false)
     private String firstname;
-   
-    @Column(nullable =  false)
+
+    @Column(nullable = false)
     private String lastname;
-   
-    @Column( nullable =  false , columnDefinition = "TEXT DEFAULT ''")
-    private String avatar ;
-   
-   @Column(columnDefinition = "TEXT")
-   private String bio;
 
-   @Column(length = 100)
-   private String location;
-   
-   @Column(length =  100)
-   private String website;
+    @Column(nullable = false, columnDefinition = "TEXT DEFAULT ''")
+    private String avatar;
 
-   
-   
-   @Column(nullable = false)
-   private String password;
-   
-   
-   @Enumerated(EnumType.STRING)
-   @Column(nullable = false)
-   private Role role;
-   
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    @Column(length = 100)
+    private String location;
+
+    @Column(length = 100)
+    private String website;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(name = "banned", nullable = false)
+    private boolean isBanned = false;
+    public boolean getIsBanned() {
+        return isBanned;
+    }
+    public void setIsBanned(boolean isBanned) {
+        this.isBanned = isBanned;
+    }
+
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

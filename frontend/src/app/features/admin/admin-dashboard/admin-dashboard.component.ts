@@ -20,6 +20,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { User } from '../../../shared/models/user.model';
 import { Post } from '../../../shared/models/post.model';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -40,6 +41,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatTooltipModule,
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrl: './admin-dashboard.component.scss',
@@ -122,6 +124,34 @@ export class AdminDashboardComponent implements OnInit {
       },
     });
   }
+
+
+
+  toggleUserBan(userId: number, username: string, currentlyBanned: boolean): void {
+    const action = currentlyBanned ? 'unban' : 'ban';
+    const message = `Are you sure you want to ${action} user "${username}"?`;
+    
+    if (!confirm(message)) {
+      return;
+    }
+
+    this.adminService.toggleUserBan(userId).subscribe({
+      next: (response) => {
+        this.snackBar.open(
+          `User "${username}" ${currentlyBanned ? 'unbanned' : 'banned'} successfully`, 
+          'Close', 
+          { duration: 3000 }
+        );
+        this.loadUsers();
+        this.loadDashboardStats();
+      },
+      error: (error) => {
+        console.error('Error toggling user ban:', error);
+        this.snackBar.open(`Failed to ${action} user`, 'Close', { duration: 3000 });
+      },
+    });
+  }
+
   loadReports(): void {
     this.isLoadingReports.set(true);
     this.adminService.getPendingReports(0, 50).subscribe({

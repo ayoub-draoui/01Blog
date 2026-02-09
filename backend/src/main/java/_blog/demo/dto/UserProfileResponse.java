@@ -11,6 +11,7 @@ public record UserProfileResponse(
     String location,
     String website,
     String role,
+    Boolean isBanned,
     Long followersCount,
     Long followingCount,
     Long postCount,

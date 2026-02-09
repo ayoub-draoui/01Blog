@@ -9,5 +9,6 @@ public record AuthResponse(
     String lastname,
     String avatar,
     String role,
-    String message
+    String message,
+    boolean isBanned
 ) {}

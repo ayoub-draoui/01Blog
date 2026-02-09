@@ -45,13 +45,14 @@ public class AuthService {
         return new AuthResponse(
                 token,
                 user.getId(),
-                 user.getUsername(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getAvatar(),
                 user.getRole().name(),
-                "the user has been added successfully");
+                "the user has been added successfully",
+                user.getIsBanned());
     }
 
     public AuthResponse login(LoginRequest req) {
@@ -78,7 +79,8 @@ public class AuthService {
                 user.getLastname(),
                 user.getAvatar(),
                 user.getRole().name(),
-                "Login successsfull"
+                "Login successsfull",
+                user.getIsBanned()
             );
         
         System.out.println("✅ AuthResponse role: " + response.role());
@@ -87,7 +89,7 @@ public class AuthService {
 
     }
 
-//     public record AuthResponse(
+// public record AuthResponse(
 //    String token,
 //     Long userId,
 //     String username,
@@ -96,7 +98,8 @@ public class AuthService {
 //     String lastname,
 //     String avatar,
 //     String role,
-//     String message
+//     String message,
+//     boolean isBanned
 // ) {}
 
 }

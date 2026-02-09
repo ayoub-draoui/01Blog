@@ -72,6 +72,12 @@ export class AdminService {
     return this.http.get<Page<Report>>(`${this.baseUrl}/reports`, { params });
   }
 
+
+  toggleUserBan(userId: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/users/${userId}/toggle-ban`, {});
+  }
+
+
   getPendingReports(page: number = 0, size: number = 20): Observable<Page<Report>> {
     const params = new HttpParams()
       .set('page', page.toString())

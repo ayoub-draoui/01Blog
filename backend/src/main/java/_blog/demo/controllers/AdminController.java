@@ -123,6 +123,19 @@ public class AdminController {
         return ResponseEntity.ok(enriched);
     }
 
+        // handle banning user 
+    @PutMapping("/users/{userId}/toggle-ban")
+    public ResponseEntity<Map<String, Object>> toggleUserBan(@PathVariable Long userId) {
+        User user = adminService.toggleUserBan(userId);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", user.getIsBanned() ? "User banned successfully" : "User unbanned successfully");
+        response.put("user", user);
+        return ResponseEntity.ok(response);
+    }
+
+
+
     
     @GetMapping("/reports/{reportId}")
     public ResponseEntity<ReportResponse> getReportById(@PathVariable Long reportId) {

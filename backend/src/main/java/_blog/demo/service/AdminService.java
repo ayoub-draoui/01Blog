@@ -31,58 +31,48 @@ public class AdminService {
     private final FileStorageService fileStorageService;
     private final PostService postService;
 
-    /**
-     * Get all users with pagination
-     */
     @Transactional(readOnly = true)
     public Page<User> getAllUsers(int page, int size) {
         System.out.println("this shiiiit iss comming from loading users for admim panel ");
         return userRepo.findAll(
-            PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))
-        );
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
-    /**
-     * Search users by username
-     */
     @Transactional(readOnly = true)
     public Page<User> searchUsers(String query, int page, int size) {
         return userRepo.findByUsernameContainingIgnoreCase(
-            query, 
-            PageRequest.of(page, size)
-        );
+                query,
+                PageRequest.of(page, size));
     }
 
-   
     @Transactional(readOnly = true)
     public Map<String, Object> getAllPosts(Long adminUserId, int page, int size) {
         int offset = page * size;
         System.out.println("this shiiiit iss comming from loading postsss for admim panel ");
-        
+
         List<Object[]> results = postRepo.findAllPostsWithDetails(adminUserId, size, offset);
-        
+
         // Convert to PostResponse
         List<PostResponse> posts = results.stream()
-            .map(postService::mapToPostResponse)
-            .collect(Collectors.toList());
-        
+                .map(postService::mapToPostResponse)
+                .collect(Collectors.toList());
+
         long totalPosts = postRepo.countAllPosts();
-        
+
         Map<String, Object> response = new HashMap<>();
         response.put("content", posts);
         response.put("currentPage", page);
         response.put("totalItems", totalPosts);
         response.put("totalPages", (int) Math.ceil((double) totalPosts / size));
         response.put("pageSize", size);
-        
+
         return response;
     }
 
- 
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepo.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         // Delete user's avatar
         if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
@@ -90,7 +80,7 @@ public class AdminService {
         }
 
         Page<Post> userPosts = postRepo.findAllByAuthorId(userId, PageRequest.of(0, 10));
-        
+
         for (Post post : userPosts) {
             if (post.getMediaUrl() != null) {
                 fileStorageService.deletFile(post.getMediaUrl());
@@ -98,7 +88,7 @@ public class AdminService {
             likeRepo.deleteByPostId(post.getId());
             commentRepo.deleteByPostId(post.getId());
         }
- 
+
         subscriptionRepo.deleteByFollowerId(userId);
         subscriptionRepo.deleteByFollowingId(userId);
         likeRepo.deleteByUserId(userId);
@@ -111,11 +101,19 @@ public class AdminService {
         userRepo.delete(user);
     }
 
-     
+    @Transactional
+    public User toggleUserBan(Long userId) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        user.setIsBanned(!user.getIsBanned());
+        return userRepo.save(user);
+    }
+
     @Transactional
     public void deletePost(Long postId) {
         Post post = postRepo.findById(postId)
-            .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
 
         if (post.getMediaUrl() != null) {
             fileStorageService.deletFile(post.getMediaUrl());
