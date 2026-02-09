@@ -1,7 +1,7 @@
 import { Component, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router} from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,6 @@ import { RegisterRequest } from '../../../shared/models/auth.model';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    // RouterLink,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,

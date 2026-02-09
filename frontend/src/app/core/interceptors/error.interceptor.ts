@@ -13,18 +13,14 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       let errorMessage = 'An error occurred';
 
       if (error.error instanceof HttpErrorResponse) {
-        // Client-side error
         errorMessage = `Error: ${error.error.message}`;
       } else {
-        // Server-side error
         switch (error.status) {
           case 401:
-            // Unauthorized - token expired or invalid
             errorMessage = 'Session expired. Please login again.';
             authService.logout();
             break;
           case 403:
-            // Forbidden
             errorMessage = 'You do not have permission to access this resource.';
             router.navigate(['/']);
             break;

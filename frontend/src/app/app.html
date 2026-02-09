@@ -1,2 +1,7 @@
+@if (showNavbar) {
+  <app-navbar></app-navbar>
+}
 
-<router-outlet />
+<div [class.with-navbar]="showNavbar" class="app-container">
+  <router-outlet />
+</div>

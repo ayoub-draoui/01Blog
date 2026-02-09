@@ -1,0 +1,77 @@
+<mat-toolbar color="primary" class="navbar">
+  <div class="navbar-content">
+    <!-- Logo / Brand -->
+    <button mat-button (click)="navigateHome()" class="logo-button">
+      <div class="logo-section">
+        <mat-icon>article</mat-icon>
+        <span class="logo-text">01Blog</span>
+      </div>
+    </button>
+
+    <!-- Spacer for desktop -->
+    <span class="spacer"></span>
+
+    <!-- Navigation Actions -->
+    <div class="navbar-actions">
+      <!-- Create Post Button -->
+      <button mat-button (click)="createPost()" class="nav-button">
+        <mat-icon>add_circle</mat-icon>
+        <span class="button-text">New Post</span>
+      </button>
+
+      <!-- Discover Users Button -->
+      <button mat-button (click)="discoverUsers()" class="nav-button">
+        <mat-icon>people</mat-icon>
+        <span class="button-text">Discover</span>
+      </button>
+
+      <!-- Notifications Panel -->
+      <app-notification-panel></app-notification-panel>
+
+      <!-- User Menu -->
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-menu-button">
+        @if (currentUser()?.avatar) {
+          <img [src]="getMediaUrl(currentUser()!.avatar)" class="avatar-small" alt="Avatar" />
+        } @else {
+          <mat-icon>account_circle</mat-icon>
+        }
+      </button>
+
+      <mat-menu #userMenu="matMenu">
+        <!-- My Profile -->
+        <button mat-menu-item (click)="viewProfile()">
+          <mat-icon>person</mat-icon>
+          <span>My Profile</span>
+        </button>
+
+        <!-- Theme Switcher -->
+        <button mat-menu-item (click)="switchTheme('dark')">
+          <mat-icon>dark_mode</mat-icon>
+          <span>Dark Mode</span>
+        </button>
+
+        <button mat-menu-item (click)="switchTheme('light')">
+          <mat-icon>light_mode</mat-icon>
+          <span>Light Mode</span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+        <!-- Admin Panel (only for admins) -->
+        @if (isAdmin()) {
+          <button mat-menu-item (click)="goToAdminPanel()">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin Panel</span>
+          </button>
+          <mat-divider></mat-divider>
+        }
+
+        <!-- Logout -->
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

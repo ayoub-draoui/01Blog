@@ -1,0 +1,130 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.logo-button {
+  padding: 0 8px;
+  
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+    
+    .logo-text {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .nav-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .user-menu-button {
+    .avatar-small {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .navbar-content {
+    padding: 0 8px;
+  }
+
+  .logo-section .logo-text {
+    font-size: 18px;
+  }
+
+  .navbar-actions {
+    gap: 4px;
+
+    .nav-button {
+      // Hide text on mobile, show only icons
+      .button-text {
+        display: none;
+      }
+
+      mat-icon {
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-section .logo-text {
+    display: none; // Hide logo text on very small screens
+  }
+
+  .navbar-actions {
+    .nav-button:last-of-type {
+      // Could hide discover button on very small screens if needed
+      // display: none;
+    }
+  }
+}
+
+// Optional: Add active route indicator
+.navbar-actions .nav-button.active {
+  background-color: rgba(255, 255, 255, 0.2);
+}

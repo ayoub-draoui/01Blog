@@ -63,7 +63,11 @@ export class ProfileComponent implements OnInit {
 
     this.userService.getUserByUsername(username).subscribe({
       next: (user) => {
+        console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj this is the  user infoooooooooooooooooooooooooooooooooooooo:", user);
+        
         this.user.set(user);
+        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",this.user()?.followingCount);
+        
         this.isLoading.set(false);
         this.loadUserPosts(user.id);
       },

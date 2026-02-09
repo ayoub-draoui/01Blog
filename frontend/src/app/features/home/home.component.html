@@ -1,57 +1,4 @@
 <div class="home-container">
-  <!-- Toolbar -->
-  <mat-toolbar color="primary" class="toolbar">
-    <div class="toolbar-content">
-      <button mat-button (click)="home()">
-        <div class="logo-section">
-          <mat-icon>article</mat-icon>
-          <span class="logo-text">01Blog</span>
-        </div>
-      </button>
-
-      <div class="toolbar-actions">
-        <button mat-button (click)="createpost()">
-          <mat-icon>add_circle</mat-icon>
-          <span>New Post</span>
-        </button>
-        <button mat-button (click)="discoverUsers()">
-          <mat-icon>people</mat-icon>
-          <span>Discover</span>
-        </button>
-        <app-notification-panel></app-notification-panel>
-        <button mat-icon-button [matMenuTriggerFor]="userMenu">
-          @if (currentUser()?.avatar) {
-            <img [src]="getMediaUrl(currentUser()!.avatar)" class="avatar-small" alt="Avatar" />
-          } @else {
-            <mat-icon>account_circle</mat-icon>
-          }
-        </button>
-
-        <mat-menu #userMenu="matMenu">
-          <button mat-menu-item (click)="viewProfile(currentUser()!.username)">
-            <mat-icon>person</mat-icon>
-            <span>My Profile</span>
-          </button>
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>logout</mat-icon>
-            <span>Logout</span>
-          </button>
-          <button mat-menu-item (click)="switchTheme('dark')">
-            <mat-icon>dark_mode</mat-icon>
-            <span>Light Mode</span>
-          </button>
-            @if (isAdmin()) {
-          <button mat-menu-item (click)="goToAdminPanel()">
-            <mat-icon>admin_panel_settings</mat-icon>
-            <span>Admin Panel</span>
-          </button>
-          }
-        </mat-menu>
-      </div>
-    </div>
-  </mat-toolbar>
-
-  <!-- Main Content -->
   <div class="main-content">
     <!-- Feed Selector -->
     <div class="feed-selector">
@@ -98,7 +45,7 @@
           </button>
         } @else {
           <p>Be the first to create a post!</p>
-          <button mat-raised-button color="primary" (click)="createpost()">Create Post</button>
+          <!-- <button mat-raised-button color="primary" (click)="createpost()">Create Post</button> -->
         }
       </div>
     }
@@ -109,49 +56,21 @@
         <mat-card class="post-card">
           <!-- Post Header -->
           <mat-card-header>
-          
-              <div mat-card-avatar class="post-avatar" (click)="viewProfile(post.authorUsername!)">
-                @if (post.authorAvatar) {
-                  <img [src]="getMediaUrl(post.authorAvatar)" alt="Avatar" />
-                } @else {
-                  <mat-icon>account_circle</mat-icon>
-                }
-              </div>
-  
-              <mat-card-title (click)="viewProfile(post.authorUsername!)">
-                {{ post.authorFirstname }} {{ post.authorLastname }}
-              </mat-card-title>
-  
-              <mat-card-subtitle>
-                &#64;{{ post.authorUsername }} · {{ formatDate(post.createdAt) }}
-              </mat-card-subtitle>
-            <!-- Post Menu (Three dots) -->
-            <!-- <div>
-            <button 
-              mat-icon-button 
-              [matMenuTriggerFor]="postMenu" 
-              class="post-menu-button"
-              (click)="$event.stopPropagation()"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-              <mat-menu #postMenu="matMenu">
-                Only show Report if NOT the author
-                @if (post.authorId && post.authorId !== userId() ) {
-                  <button mat-menu-item (click)="reportPost(post)">
-                    <mat-icon color="warn">flag</mat-icon>
-                    <span>Report Post</span>
-                  </button>
-                } @else{
-                  <button mat-menu-item >
-                    <mat-icon>share</mat-icon>
-                    <span>Share</span>
-                  </button>
-                }
-                
-                Additional menu items can go here
-              </mat-menu>
-              </div> -->
+            <div mat-card-avatar class="post-avatar" (click)="viewProfile(post.authorUsername!)">
+              @if (post.authorAvatar) {
+                <img [src]="getMediaUrl(post.authorAvatar)" alt="Avatar" />
+              } @else {
+                <mat-icon>account_circle</mat-icon>
+              }
+            </div>
+
+            <mat-card-title (click)="viewProfile(post.authorUsername!)">
+              {{ post.authorFirstname }} {{ post.authorLastname }}
+            </mat-card-title>
+
+            <mat-card-subtitle>
+              &#64;{{ post.authorUsername }} · {{ formatDate(post.createdAt) }}
+            </mat-card-subtitle>
           </mat-card-header>
 
           <!-- Post Media -->
@@ -198,7 +117,6 @@
       }
     </div>
 
-    <!-- Load More -->
     @if (hasMore() && posts().length > 0) {
       <div class="load-more-container">
         <button mat-raised-button color="primary" (click)="loadMore()" [disabled]="isLoading()">

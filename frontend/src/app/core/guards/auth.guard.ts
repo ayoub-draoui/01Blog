@@ -9,10 +9,10 @@ export const authGuard: CanActivateFn = (route, state) => {
   const platformId = inject(PLATFORM_ID);
   const isBrowser = isPlatformBrowser(platformId);
 
-  console.log('🔐 Auth Guard triggered for:', state.url);
+  console.log( 'authtriggered for:', state.url);
 
   if (!isBrowser) {
-    console.log('⚠️ Not in browser, allowing');
+    console.log('not in browser allowing');
     return true;
   }
 
@@ -26,7 +26,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   });
 
   if (isAuthenticated && isTokenValid) {
-    console.log('✅ Auth guard passed');
+    console.log('auth guard passed');
     return true;
   }
 

@@ -1,36 +1,27 @@
-import { Component, OnInit, signal, computed, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../core/services/auth.service';
 import { PostService } from '../../core/services/post.service';
 import { Post } from '../../shared/models/post.model';
-import { ReportDialogComponent } from '../../shared/components/reports/report-dialog.component';
-import { ReportService } from '../../core/services/report.service';
 
-import { NotificationPanelComponent } from '../../shared/components/notification-panel/notification-panel.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     CommonModule,
-    // RouterLink,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatToolbarModule,
-    MatMenuModule,
-    NotificationPanelComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
@@ -38,10 +29,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class HomeComponent implements OnInit {
   private postServices = inject(PostService);
   private authService = inject(AuthService);
-  private dialog = inject(MatDialog);
   private router = inject(Router);
-  private reportService = inject(ReportService);
   private snackBar = inject(MatSnackBar);
+  // private dialog = inject(MatDialog);
+  // private reportService = inject(ReportService);
   posts = signal<Post[]>([]);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
@@ -58,16 +49,13 @@ export class HomeComponent implements OnInit {
     console.log(user?.id);
     return user ? user.id : null;
   });
-  isAdmin = computed(() => this.currentUser()?.role === 'ROLE_ADMIN');
+  // isAdmin = computed(() => this.currentUser()?.role === 'ROLE_ADMIN');
   // constructor(
   //   // public authService: AuthService,
   //   private postServices: PostService,
   //   private router: Router,
   // ) {}
-  switchTheme(theme: 'light' | 'dark'): void {
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(theme);
-  }
+ 
   ngOnInit(): void {
     console.log('Hanni fel home');
     this.loadPosts();
@@ -129,10 +117,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-
-  goToAdminPanel(): void {
-    this.router.navigate(['/admin']);
-  }
+ 
 
   //  isMyPost = signal<boolean>(false);
   // private setIsMyPost(authorId: number): void {
@@ -165,60 +150,52 @@ export class HomeComponent implements OnInit {
       },
     });
   }
-
+  createPost(): void {
+    this.router.navigate(['/posts/create']);
+  }
+  
   viewPost(postId: number): void {
     this.router.navigate(['/posts', postId]);
   }
   viewProfile(username: string): void {
     this.router.navigate(['/profile', username]);
   }
-  discoverUsers(): void {
-    this.router.navigate(['/discover']);
-  }
-  home(): void {
-    console.log('im here!!!!');
-    this.router.navigate(['home']);
-  }
-
-  createpost(): void {
-    this.router.navigate(['posts/create']);
-  }
-
-  logout(): void {
-    this.authService.logout();
-  }
+  
+ 
   getMediaUrl(filename: string): string {
     return this.postServices.getMediaUrl(filename);
   }
 
-  reportPost(post: Post): void {
-    const dialogRef = this.dialog.open(ReportDialogComponent, {
-      width: '600px',
-      maxWidth: '95vw',
-      data: {
-        postId: post.id,
-        postTitle: post.title,
-      },
-    });
+  // reportPost(post: Post): void {
+  //   const dialogRef = this.dialog.open(ReportDialogComponent, {
+  //     width: '600px',
+  //     maxWidth: '95vw',
+  //     data: {
+  //       postId: post.id,
+  //       postTitle: post.title,
+  //     },
+  //   });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // User submitted the report
-        this.reportService.reportPost(result).subscribe({
-          next: () => {
-            this.snackBar.open('Report submitted successfully. Our team will review it.', 'Close', {
-              duration: 5000,
-            });
-          },
-          error: (error) => {
-            console.error('Error submitting report:', error);
-            const message = error.error?.message || 'Failed to submit report. Please try again.';
-            this.snackBar.open(message, 'Close', { duration: 5000 });
-          },
-        });
-      }
-    });
-  }
+  //   dialogRef.afterClosed().subscribe((result) => {
+  //     if (result) {
+  //       // User submitted the report
+  //       this.reportService.reportPost(result).subscribe({
+  //         next: () => {
+  //           this.snackBar.open('Report submitted successfully. Our team will review it.', 'Close', {
+  //             duration: 5000,
+  //           });
+  //         },
+  //         error: (error) => {
+  //           console.error('Error submitting report:', error);
+  //           const message = error.error?.message || 'Failed to submit report. Please try again.';
+  //           this.snackBar.open(message, 'Close', { duration: 5000 });
+  //         },
+  //       });
+  //     }
+  //   });
+  // }
+
+
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();

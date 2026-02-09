@@ -1,0 +1,27 @@
+.app-container {
+  min-height: 100vh;
+  
+  &.with-navbar {
+    padding-top: 64px; // Height of navbar
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  
+  &.dark {
+    background-color: #121212;
+    color: #ffffff;
+  }
+
+  &.light {
+    background-color: #fafafa;
+    color: #000000;
+  }
+}

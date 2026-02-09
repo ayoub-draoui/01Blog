@@ -29,12 +29,12 @@ import { LoginRequest } from '../../../shared/models/auth.model';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+
   loginForm: FormGroup;
-  
-  // Signals for reactive state
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   hidePassword = signal(true);
+  isUserHaveSession = signal(false);
   
   constructor(
     private fb: FormBuilder,
@@ -47,6 +47,13 @@ export class LoginComponent {
       password: ['', [Validators.required, Validators.minLength(2)]]
     });
 
+    this.isUserHaveSession.set(this.authService.isAuthenticated().valueOf());
+    console.log("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",this.isUserHaveSession);
+    if (this.isUserHaveSession()) {
+      const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+      this.router.navigate([returnUrl]);
+    }
+    
     effect(() => {
       if (this.isLoading()) {
         this.loginForm.disable();

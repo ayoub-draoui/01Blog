@@ -12,7 +12,7 @@ public record UserProfileResponse(
     String website,
     String role,
     Long followersCount,
-    Long followingConnt,
+    Long followingCount,
     Long postCount,
     Boolean isFollowing
 ) {
