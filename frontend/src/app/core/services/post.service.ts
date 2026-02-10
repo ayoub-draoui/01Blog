@@ -1,4 +1,4 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable} from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable,tap } from "rxjs";
 import { environment } from "../../../environments/environment";
@@ -8,7 +8,7 @@ import { Post,Page,CreatePostRequest } from "../../shared/models/post.model";
 })
  
 export class PostService{
-    private postCache = signal<Post[]>([]);
+    // private postCache = signal<Post[]>([]);
     constructor(private http: HttpClient) {}
 //  geet posts of ppl whom you're following ;
     getFeed(page :number = 0 , size : number =10):Observable<Page<Post>> {
@@ -92,19 +92,12 @@ getComments(postId: number, page: number = 0, size: number = 20): Observable<any
     return this.http.get(url, { params });
   }
 
-//   add a post comment
 
  addComment(postId: number, content: string): Observable<any> {
     const url = `${environment.apiUrl}${environment.apiEndpoints.posts.base}/${postId}/comments`;
     return this.http.post(url, { content });
   }
-            // get meedia url ;
    getMediaUrl(filename: string): string {
     return `${environment.apiUrl}/files/${filename}`;
   }
-
-
-
-
-
 }

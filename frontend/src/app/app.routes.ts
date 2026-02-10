@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
- 
+
 export const routes: Routes = [
   {
     path: '',
@@ -11,13 +11,13 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [adminGuard],
-    loadComponent:  () =>
-       import('./features/admin/admin-dashboard/admin-dashboard.component').then(
+    loadComponent: () =>
+      import('./features/admin/admin-dashboard/admin-dashboard.component').then(
         (m) => m.AdminDashboardComponent,
-      )
-    },
-    // component: AdminDashboardComponent
-  
+      ),
+  },
+  // component: AdminDashboardComponent
+
   {
     path: 'auth',
     children: [
@@ -50,9 +50,7 @@ export const routes: Routes = [
     path: 'posts/edit/:id',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/posts/edit-post/edit-post.component').then(
-        (m) => m.EditPostComponent,
-      ),
+      import('./features/posts/edit-post/edit-post.component').then((m) => m.EditPostComponent),
   },
   {
     path: 'posts/:id',
@@ -93,7 +91,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: '404',
+    loadComponent: () =>
+      import('./shared/components/not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
+
+  {
     path: '**',
-    redirectTo: '/home',
+    redirectTo: '/404',
   },
 ];

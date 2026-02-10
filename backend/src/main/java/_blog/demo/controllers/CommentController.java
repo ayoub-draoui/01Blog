@@ -1,8 +1,9 @@
 package _blog.demo.controllers;
 
 import _blog.demo.dto.CommentCreateRequest;
-import _blog.demo.dto.CommentUpdateRequest;
-import _blog.demo.model.Comment;
+import _blog.demo.dto.CommentResponse;
+// import _blog.demo.dto.CommentUpdateRequest;
+// import _blog.demo.model.Comment;
 import _blog.demo.security.CustomUserDetails;
 import _blog.demo.service.CommentService;
 import jakarta.validation.Valid;
@@ -24,26 +25,26 @@ public class CommentController {
 
     // Create a comment
     @PostMapping
-    public ResponseEntity<Comment> createComment(
+    public ResponseEntity<CommentResponse> createComment(
             @PathVariable Long postId,
             @Valid @RequestBody CommentCreateRequest request,
             @AuthenticationPrincipal CustomUserDetails currentUser) {
         
-        Comment comment = commentService.createComment(postId, currentUser.getUsername(), currentUser.getId(), request);
+        CommentResponse comment = commentService.createComment(postId, currentUser.getUsername(), currentUser.getId(), request);
         return ResponseEntity.ok(comment);
     }
 
     // Update a comment
-    @PutMapping("/{commentId}")
-    public ResponseEntity<Comment> updateComment(
-            @PathVariable Long postId,
-            @PathVariable Long commentId,
-            @Valid @RequestBody CommentUpdateRequest request,
-            @AuthenticationPrincipal CustomUserDetails currentUser) {
+    // @PutMapping("/{commentId}")
+    // public ResponseEntity<Comment> updateComment(
+    //         @PathVariable Long postId,
+    //         @PathVariable Long commentId,
+    //         @Valid @RequestBody CommentUpdateRequest request,
+    //         @AuthenticationPrincipal CustomUserDetails currentUser) {
         
-        Comment comment = commentService.updateComment(commentId, currentUser.getId(), request);
-        return ResponseEntity.ok(comment);
-    }
+    //     Comment comment = commentService.updateComment(commentId, currentUser.getId(), request);
+    //     return ResponseEntity.ok(comment);
+    // }
 
     // Delete a comment
     @DeleteMapping("/{commentId}")
@@ -62,7 +63,7 @@ public class CommentController {
 
     // Get all comments for a post (paginated)
     @GetMapping
-    public ResponseEntity<Page<Comment>> getPostComments(
+    public ResponseEntity<Page<CommentResponse>> getPostComments(
             @PathVariable Long postId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
@@ -70,9 +71,10 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getPostComments(postId, page, size));
     }
 
+
     // Get all comments without pagination
     @GetMapping("/all")
-    public ResponseEntity<List<Comment>> getAllPostComments(@PathVariable Long postId) {
+    public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable Long postId) {
         return ResponseEntity.ok(commentService.getPostCommentsAll(postId));
     }
 

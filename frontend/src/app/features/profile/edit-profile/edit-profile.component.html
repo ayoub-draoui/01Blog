@@ -76,7 +76,9 @@
                   <mat-spinner diameter="20"></mat-spinner>
                   <span>Uploading...</span>
                 } @else {
-                  <mat-icon>save</mat-icon>
+                  <ng-container>
+                    <mat-icon>save</mat-icon>
+                  </ng-container>
                   <span>Upload Avatar</span>
                 }
               </button>
@@ -210,7 +212,9 @@
               <mat-spinner diameter="20"></mat-spinner>
               <span>Saving...</span>
             } @else {
-              <mat-icon>save</mat-icon>
+              <ng-container>
+                <mat-icon>save</mat-icon>
+              </ng-container>
               <span>Save Changes</span>
             }
           </button>
@@ -289,7 +293,9 @@
               <mat-spinner diameter="20"></mat-spinner>
               <span>Changing...</span>
             } @else {
-              <mat-icon>vpn_key</mat-icon>
+              <ng-container>
+                <mat-icon>vpn_key</mat-icon>
+              </ng-container>
               <span>Change Password</span>
             }
           </button>

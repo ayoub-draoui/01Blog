@@ -15,15 +15,9 @@ public class Comment {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
-    @Column(nullable = false)
-    private String authorUsername;
-
-    @Column(name = "userAvatar")
-    private String userAvatar;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "post_id", nullable = false)
     private Long postId;

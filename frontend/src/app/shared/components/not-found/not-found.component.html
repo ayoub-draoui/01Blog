@@ -1,0 +1,62 @@
+<div class="not-found-container">
+  <div class="not-found-content">
+    <!-- Animated 404 -->
+    <div class="error-code">
+      <span class="digit digit-1">4</span>
+      <span class="digit digit-0">0</span>
+      <span class="digit digit-2">4</span>
+    </div>
+
+    <!-- Animated Icon -->
+    <div class="error-icon">
+      <mat-icon class="bounce">sentiment_very_dissatisfied</mat-icon>
+    </div>
+
+    <!-- Message -->
+    <h1 class="error-title">Page Not Found</h1>
+    <p class="error-message">
+      Oops! The page you're looking for doesn't exist or has been moved.
+    </p>
+
+    <!-- Helpful Suggestions -->
+    <mat-card class="suggestions-card">
+      <mat-card-content>
+        <h3>Here's what you can do:</h3>
+        <div class="suggestions-grid">
+          <button mat-raised-button color="primary" (click)="goHome()" class="suggestion-btn">
+            <mat-icon>home</mat-icon>
+            <span>Go Home</span>
+          </button>
+
+          <button mat-raised-button (click)="goBack()" class="suggestion-btn">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Go Back</span>
+          </button>
+
+          <button mat-raised-button color="accent" (click)="discoverUsers()" class="suggestion-btn">
+            <mat-icon>people</mat-icon>
+            <span>Discover Users</span>
+          </button>
+
+          <button mat-raised-button (click)="createPost()" class="suggestion-btn">
+            <mat-icon>add_circle</mat-icon>
+            <span>Create Post</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Fun Message -->
+    <div class="fun-message">
+      <mat-icon>lightbulb</mat-icon>
+      <p>Lost in the blog? Let us help you find your way back!</p>
+    </div>
+  </div>
+
+  <!-- Decorative Elements -->
+  <div class="decorative-circles">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+  </div>
+</div>

@@ -122,7 +122,9 @@
               <mat-spinner diameter="20"></mat-spinner>
               <span>Publishing...</span>
             } @else {
-              <mat-icon>send</mat-icon>
+              <ng-container>
+                <mat-icon>send</mat-icon>
+              </ng-container>
               <span>Publish Post</span>
             }
           </button>

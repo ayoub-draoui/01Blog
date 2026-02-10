@@ -141,7 +141,9 @@
                 <mat-spinner diameter="20"></mat-spinner>
                 <span>Updating...</span>
               } @else {
-                <mat-icon>save</mat-icon>
+                <ng-container>
+                  <mat-icon>save</mat-icon>
+                </ng-container>
                 <span>Update Post</span>
               }
             </button>

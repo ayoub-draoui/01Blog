@@ -228,18 +228,18 @@
           @for (comment of comments(); track comment.id) {
             <mat-card class="comment-card">
               <div class="comment-header">
-                <div class="comment-avatar" (click)="viewProfile(comment.authorUsername!)">
-                  @if (comment.userAvatar) {
-                    <img [src]="getMediaUrl(comment.userAvatar)" alt="Avatar">
+                <div class="comment-avatar" (click)="viewProfile(comment.username!)">
+                  @if (comment.avatar) {
+                    <img [src]="getMediaUrl(comment.avatar)" alt="Avatar">
                   } @else {
                     <mat-icon>account_circle</mat-icon>
                   }
                 </div>
 
                 <div class="comment-info">
-                  <div class="comment-author" (click)="viewProfile(comment.authorUsername!)">
-                    <strong>{{ comment.userFirstname }} {{ comment.userLastname }}</strong>
-                    <span class="username">&#64;{{ comment.authorUsername }}</span>
+                  <div class="comment-author" (click)="viewProfile(comment.username!)">
+                    <!-- <strong>{{ comment.userFirstname }} {{ comment.userLastname }}</strong> -->
+                    <span class="username">&#64;{{ comment.username }}</span>
                   </div>
                   <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
                 </div>

@@ -14,7 +14,7 @@ export interface CommentWithUser {
   username?: string;
   userFirstname?: string;
   userLastname?: string;
-  userAvatar?: string;
+  avatar?: string;
   postId: number;
   createdAt: string;
   updatedAt: string;

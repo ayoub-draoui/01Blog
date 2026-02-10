@@ -122,6 +122,8 @@ export class PostDetailComponent implements OnInit {
       next: (response) => {
         console.warn(response);
         this.comments.set(response.content || []);
+        console.log( "ccccccccccccccccccccccccccccccccccccccccccccccccccccc",this.comments());
+        
         console.warn(response.content);
 
         this.isLoadingComments.set(false);
