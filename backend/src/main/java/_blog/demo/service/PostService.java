@@ -67,11 +67,7 @@ public class PostService {
         return savedPost;
     }
 
-    /**
-     * Get all posts with pagination - OPTIMIZED SINGLE QUERY
-     * Returns PostResponse with all data (author info, likes count, comments count,
-     * is liked)
-     */
+   
     @Transactional(readOnly = true)
     public List<PostResponse> allPosts(Long currentUserId, int page, int size) {
         int offset = page * size;
@@ -82,18 +78,12 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get total count of posts for pagination
-     */
+    
     @Transactional(readOnly = true)
     public long getTotalPostsCount() {
         return postRepository.countAllPosts();
     }
-
-    /**
-     * Get single post by ID - OPTIMIZED SINGLE QUERY
-     * Returns PostResponse with all data
-     */
+ 
     @Transactional(readOnly = true)
     public PostResponse getPostById(Long postId, Long currentUserId) {
         Object[] result = postRepository.findPostWithDetailsByIdAndUserId(postId, currentUserId)
@@ -102,10 +92,7 @@ public class PostService {
         return mapToPostResponse(result);
     }
 
-    /**
-     * Get posts by author - OPTIMIZED SINGLE QUERY
-     * Returns PostResponse with all data
-     */
+    
     @Transactional(readOnly = true)
     public List<PostResponse> getByAuthor(Long authorId, Long currentUserId, int page, int size) {
         int offset = page * size;
@@ -115,10 +102,7 @@ public class PostService {
                 .map(this::mapToPostResponse)
                 .collect(Collectors.toList());
     }
-
-    /**
-     * Update an existing post
-     */
+ 
     @Transactional
     public Post updatePost(
             Long postId,

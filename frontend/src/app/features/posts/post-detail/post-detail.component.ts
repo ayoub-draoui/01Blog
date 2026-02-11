@@ -72,7 +72,6 @@ export class PostDetailComponent implements OnInit {
     const user = this.currentUser();
     // console.log(post);
     // console.log(user?.id);
-    
     return  user?.id;
   });
   
@@ -94,7 +93,7 @@ export class PostDetailComponent implements OnInit {
   }
   
   loadPost(postId: number): void {
-    // console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",this.isAuthor());
+    console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",this.isAuthor());
     this.isLoadingPost.set(true);
     this.errorMessage.set(null);
 
@@ -231,7 +230,7 @@ export class PostDetailComponent implements OnInit {
       }
     });
   }
-
+  
 
 
 

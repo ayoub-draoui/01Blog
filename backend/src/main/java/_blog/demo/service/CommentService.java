@@ -97,7 +97,9 @@ public class CommentService {
                 comment.getCreatedAt(),
                 comment.getUser().getId(),
                 comment.getUser().getUsername(),
-                comment.getUser().getAvatar()
+                comment.getUser().getAvatar(),
+                comment.getUser().getFirstname(),
+                comment.getUser().getLastname()
         );
     }
 }

@@ -238,7 +238,8 @@
 
                 <div class="comment-info">
                   <div class="comment-author" (click)="viewProfile(comment.username!)">
-                    <!-- <strong>{{ comment.userFirstname }} {{ comment.userLastname }}</strong> -->
+                    <strong>{{ comment.userFirstname }} {{ comment.userLastname }}</strong>
+                    <br>
                     <span class="username">&#64;{{ comment.username }}</span>
                   </div>
                   <span class="comment-time">{{ formatDate(comment.createdAt)  }}</span>
