@@ -1,6 +1,6 @@
 import { Injectable} from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Observable,tap } from "rxjs";
+import { Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { Post,Page,CreatePostRequest } from "../../shared/models/post.model";
 @Injectable({
@@ -90,6 +90,11 @@ getComments(postId: number, page: number = 0, size: number = 20): Observable<any
       .set('size', size.toString());
 
     return this.http.get(url, { params });
+  }
+       // http://localhost:8080/posts/1/comments/19
+  deleteComment(postId: number,commentId: number): Observable<void> {
+    const url = `${environment.apiUrl}${environment.apiEndpoints.posts.base}/${postId}/comments/${commentId}`;
+    return this.http.delete<void>(url);
   }
 
 

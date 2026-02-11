@@ -227,6 +227,12 @@
         <div class="comments-list">
           @for (comment of comments(); track comment.id) {
             <mat-card class="comment-card">
+              @if (comment.userId === currentUser()?.id) {
+                <button mat-menu-item (click)="deleteComment(post()?.id || 0, comment.id)">
+                  <mat-icon color="warn">delete</mat-icon>
+                  <span>Delete Comment</span>
+                </button>
+              } 
               <div class="comment-header">
                 <div class="comment-avatar" (click)="viewProfile(comment.username!)">
                   @if (comment.avatar) {

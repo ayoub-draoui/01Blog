@@ -51,11 +51,8 @@ public class CommentController {
     public ResponseEntity<Map<String, String>> deleteComment(
             @PathVariable Long postId,
             @PathVariable Long commentId,
-            @AuthenticationPrincipal CustomUserDetails currentUser) {
-        
-        String role = currentUser.getAuthorities().iterator().next().getAuthority();
-        commentService.deleteComment(commentId, currentUser.getId(), role);
-        
+            @AuthenticationPrincipal CustomUserDetails currentUser) {        
+        commentService.deleteComment(commentId, currentUser.getId());
         Map<String, String> response = new HashMap<>();
         response.put("message", "Comment deleted successfully");
         return ResponseEntity.ok(response);

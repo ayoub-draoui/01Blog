@@ -113,7 +113,23 @@ export class PostDetailComponent implements OnInit {
     console.log("333333333333333333333333333333333",this.comments);
 
   }
+  deleteComment(postId: number, commentId: number): void {
+    if (!confirm('Are you sure you want to delete this comment?')) {
+      return;
+    }
+   
 
+    this.postService.deleteComment(postId, commentId).subscribe({
+      next: () => {
+        this.loadComments(postId);
+        this.snackBar.open('Comment deleted', 'Close', { duration: 2000 });
+      },
+      error: (error) => {
+        console.error('Error deleting comment:', error);
+        this.snackBar.open('Failed to delete comment', 'Close', { duration: 3000 });
+      }
+    });
+  }
   loadComments(postId: number): void {
     this.isLoadingComments.set(true);
 

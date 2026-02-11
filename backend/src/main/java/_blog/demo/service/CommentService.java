@@ -61,12 +61,11 @@ public class CommentService {
     //     return commentRepo.save(comment);
     // }
 
-    public void deleteComment(Long commentId, Long userId, String userRole) {
+    public void deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepo.findById(commentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
 
-        // Owner or admin can delete
-        if (!comment.getUser().getId().equals(userId) && !userRole.equals("ROLE_ADMIN")) {
+        if (!comment.getUser().getId().equals(userId)) {
             throw new UnauthorizedException("You are not authorized to delete this comment");
         }
         commentRepo.delete(comment);
