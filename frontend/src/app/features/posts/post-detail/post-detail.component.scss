@@ -264,11 +264,13 @@
 
 .comment-card {
   padding: 16px;
+  position: relative;
 
   .comment-header {
     display: flex;
     gap: 12px;
     margin-bottom: 12px;
+    align-items: flex-start;
 
     .comment-avatar {
       width: 40px;
@@ -298,11 +300,9 @@
 
     .comment-info {
       flex: 1;
+      min-width: 0;
 
       .comment-author {
-        // display: flex;
-        align-items: center;
-        gap: 8px;
         margin-bottom: 4px;
         cursor: pointer;
 
@@ -324,14 +324,31 @@
       .comment-time {
         color: #999;
         font-size: 12px;
+        display: block;
+      }
+    }
+
+    .comment-menu-button {
+      flex-shrink: 0;
+      margin: -8px -8px -8px 8px;
+
+      mat-icon {
+        color: #999;
+      }
+
+      &:hover mat-icon {
+        color: #666;
       }
     }
   }
 
   .comment-content {
+    padding-left: 52px;
+
     p {
       margin: 0;
       color: #333;
+      font-size: 15px;
       line-height: 1.6;
       white-space: pre-wrap;
       word-wrap: break-word;
@@ -365,6 +382,13 @@
       .comment-input {
         width: 100%;
       }
+    }
+  }
+
+  .comment-card {
+    .comment-content {
+      padding-left: 0;
+      margin-top: 8px;
     }
   }
 }

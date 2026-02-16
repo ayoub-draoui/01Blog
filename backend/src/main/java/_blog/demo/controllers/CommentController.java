@@ -59,23 +59,23 @@ public class CommentController {
     }
 
     // Get all comments for a post (paginated)
-    @GetMapping
-    public ResponseEntity<Page<CommentResponse>> getPostComments(
-            @PathVariable Long postId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+    // @GetMapping
+    // public ResponseEntity<Page<CommentResponse>> getPostComments(
+    //         @PathVariable Long postId,
+    //         @RequestParam(defaultValue = "0") int page,
+    //         @RequestParam(defaultValue = "20") int size) {
         
-        return ResponseEntity.ok(commentService.getPostComments(postId, page, size));
-    }
+    //     return ResponseEntity.ok(commentService.getPostComments(postId, page, size));
+    // }
 
 
-    // Get all comments without pagination
+    // jiib all comments without pagination
     @GetMapping("/all")
     public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable Long postId) {
         return ResponseEntity.ok(commentService.getPostCommentsAll(postId));
     }
 
-    // Get comments count
+    // jiib l comments count
     @GetMapping("/count")
     public ResponseEntity<Map<String, Long>> getCommentsCount(@PathVariable Long postId) {
         Map<String, Long> response = new HashMap<>();

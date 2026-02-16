@@ -12,8 +12,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export interface ReportDialogData {
   type: 'POST' | 'USER';
   targetId: number;
-  targetTitle: string; // For posts: title, For users: username or full name
-  targetDescription?: string; // Optional extra info
+  targetTitle: string; 
+  targetDescription?: string;  
 }
 
 @Component({
@@ -37,7 +37,6 @@ export class ReportDialogComponent {
   reportForm: FormGroup;
   isSubmitting = signal(false);
 
-  // Report reasons for POSTS
   postReasons = [
     { value: 'spam', label: 'Spam or misleading' },
     { value: 'harassment', label: 'Harassment or bullying' },
@@ -49,7 +48,6 @@ export class ReportDialogComponent {
     { value: 'other', label: 'Other (please specify)' }
   ];
 
-  // Report reasons for USERS
   userReasons = [
     { value: 'harassment', label: 'Harassment or bullying' },
     { value: 'impersonation', label: 'Impersonation or fake account' },
@@ -61,17 +59,14 @@ export class ReportDialogComponent {
     { value: 'other', label: 'Other (please specify)' }
   ];
 
-  // Get reasons based on report type
   get reportReasons() {
     return this.data.type === 'POST' ? this.postReasons : this.userReasons;
   }
 
-  // Get dialog title
   get dialogTitle() {
     return this.data.type === 'POST' ? 'Report Post' : 'Report User';
   }
 
-  // Get info text
   get infoText() {
     return this.data.type === 'POST' ? "You're reporting:" : "You're reporting:";
   }

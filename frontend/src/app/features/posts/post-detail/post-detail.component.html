@@ -227,12 +227,6 @@
         <div class="comments-list">
           @for (comment of comments(); track comment.id) {
             <mat-card class="comment-card">
-              @if (comment.userId === currentUser()?.id) {
-                <button mat-menu-item (click)="deleteComment(post()?.id || 0, comment.id)">
-                  <mat-icon color="warn">delete</mat-icon>
-                  <span>Delete Comment</span>
-                </button>
-              } 
               <div class="comment-header">
                 <div class="comment-avatar" (click)="viewProfile(comment.username!)">
                   @if (comment.avatar) {
@@ -248,8 +242,26 @@
                     <br>
                     <span class="username">&#64;{{ comment.username }}</span>
                   </div>
-                  <span class="comment-time">{{ formatDate(comment.createdAt)  }}</span>
+                  <span class="comment-time">{{ formatDate(comment.createdAt) }}</span>
                 </div>
+
+                <!-- Delete button for comment owner -->
+                @if (comment.userId === currentUser()?.id) {
+                  <button 
+                    mat-icon-button 
+                    [matMenuTriggerFor]="commentMenu" 
+                    class="comment-menu-button"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #commentMenu="matMenu">
+                    <button mat-menu-item (click)="deleteComment(post()?.id || 0, comment.id)">
+                      <mat-icon color="warn">delete</mat-icon>
+                      <span>Delete Comment</span>
+                    </button>
+                  </mat-menu>
+                }
               </div>
 
               <div class="comment-content">

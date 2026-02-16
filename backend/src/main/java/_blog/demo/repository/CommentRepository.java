@@ -11,8 +11,8 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     
-    // Get all comments for a post (with pagination)
-    Page<Comment> findByPostIdOrderByCreatedAtDesc(Long postId, Pageable pageable);
+    // get all comments for a post (with pagination)
+    // Page<Comment> findByPostIdOrderByCreatedAtDesc(Long postId, Pageable pageable);
     
     // Get all comments for a post (no pagination)
     @Query("SELECT c FROM Comment c JOIN FETCH c.user WHERE c.postId = :postId ORDER BY c.createdAt DESC")

@@ -15,10 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * REST Controller for Post operations
- * Now uses optimized single-query methods that return PostResponse with all data
- */
+ 
 @RestController
 @RequestMapping("/posts")
 public class PostController {
@@ -29,9 +26,7 @@ public class PostController {
         this.postService = postService;
     }
 
-    /**
-     * Create a new post with optional media
-     */
+    
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<PostResponse> createPost(
             @RequestParam("title") String title,
@@ -51,11 +46,7 @@ public class PostController {
         return ResponseEntity.ok(enrichedPost);
     }
 
-    /**
-     * Get all posts with pagination - OPTIMIZED
-     * Returns enriched posts with author info, likes count, comments count, and user interaction
-     * Single query per post - no N+1 problem!
-     */
+     
     @GetMapping
     public ResponseEntity<Map<String, Object>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
@@ -63,12 +54,9 @@ public class PostController {
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Long currentUserId = user != null ? user.getId() : null;
-        
-        // Get posts using optimized query
         List<PostResponse> posts = postService.allPosts(currentUserId, page, size);
         long totalPosts = postService.getTotalPostsCount();
         
-        // Build pagination response
         Map<String, Object> response = new HashMap<>();
         response.put("content", posts);
         response.put("currentPage", page);
@@ -79,10 +67,7 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Get posts by specific author with pagination - OPTIMIZED
-     * Returns enriched posts with all necessary data
-     */
+    
     @GetMapping("/author/{authorId}")
     public ResponseEntity<Map<String, Object>> getPostsByAuthor(
             @PathVariable Long authorId,
@@ -106,12 +91,7 @@ public class PostController {
         
         return ResponseEntity.ok(response);
     }
-
-    /**
-     * Get a single post by ID - OPTIMIZED
-     * Returns enriched post with all necessary data
-     * Single query - no N+1 problem!
-     */
+ 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPostById(
             @PathVariable Long id,
@@ -125,9 +105,7 @@ public class PostController {
         return ResponseEntity.ok(post);
     }
 
-    /**
-     * Update an existing post
-     */
+  
     @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<PostResponse> updatePost(
             @PathVariable Long id,
@@ -139,15 +117,11 @@ public class PostController {
         PostUpdateRequest request = new PostUpdateRequest(title, content);
         Post updatedPost = postService.updatePost(id, user.getId(), request, media);
         
-        // Fetch the enriched post data using optimized query
         PostResponse enrichedPost = postService.getPostById(updatedPost.getId(), user.getId());
         
         return ResponseEntity.ok(enrichedPost);
     }
-
-    /**
-     * Delete a post
-     */
+ 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long id,

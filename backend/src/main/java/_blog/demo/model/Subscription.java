@@ -14,10 +14,10 @@ public class Subscription {
     private Long id;
 
     @Column(name = "follower_id", nullable = false)
-    private Long followerId; // User who follows
+    private Long followerId;  
 
     @Column(name = "following_id", nullable = false)
-    private Long followingId; // User being followed
+    private Long followingId;  
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

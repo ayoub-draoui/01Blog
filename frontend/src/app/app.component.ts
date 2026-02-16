@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { ThemeService } from './core/services/theme.service';
+
 
 @Component({
   selector: 'app-root',
@@ -16,6 +18,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
   styleUrl: './app.scss'
 })
 export class AppComponent {
+   private themeService = inject(ThemeService);
   showNavbar = true;
 
   constructor(private router: Router) {

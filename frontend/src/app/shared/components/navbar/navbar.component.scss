@@ -4,7 +4,8 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--shadow-color);
+  transition: box-shadow 0.3s ease;
 }
 
 .navbar-content {
@@ -68,6 +69,19 @@
     }
   }
 
+  .theme-toggle-button {
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
   .user-menu-button {
     .avatar-small {
       width: 32px;
@@ -85,7 +99,35 @@
   }
 }
 
-// Mobile responsive
+.theme-menu-item {
+  mat-icon {
+    animation: fadeIn 0.3s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+body.dark {
+  .navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  }
+
+  .logo-button:hover,
+  .nav-button:hover,
+  .theme-toggle-button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
 @media (max-width: 768px) {
   .navbar-content {
     padding: 0 8px;
@@ -99,7 +141,6 @@
     gap: 4px;
 
     .nav-button {
-      // Hide text on mobile, show only icons
       .button-text {
         display: none;
       }
@@ -108,23 +149,31 @@
         margin: 0;
       }
     }
+
+    .theme-toggle-button {
+      display: none;
+    }
   }
 }
 
 @media (max-width: 480px) {
   .logo-section .logo-text {
-    display: none; // Hide logo text on very small screens
-  }
-
-  .navbar-actions {
-    .nav-button:last-of-type {
-      // Could hide discover button on very small screens if needed
-      // display: none;
-    }
+    display: none;  
   }
 }
 
-// Optional: Add active route indicator
 .navbar-actions .nav-button.active {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+body.light .navbar {
+  .avatar-small {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+body.dark .navbar {
+  .avatar-small {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
 }

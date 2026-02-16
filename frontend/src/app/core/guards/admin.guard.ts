@@ -32,18 +32,18 @@ export const adminGuard: CanActivateFn = (route, state) => {
   });
 
   if (isAuthenticated && isTokenValid && isAdmin) {
-    console.log('✅ ADMIN GUARD PASSED - Loading admin dashboard');
+    console.log('ADMIN GUARD PASSED - Loading admin dashboard');
     return true;
   }
 
-  console.log('❌ ADMIN GUARD FAILED');
+  console.log('ADMIN GUARD FAILED');
   console.log('Reason:', {
     notAuthenticated: !isAuthenticated,
     tokenExpired: !isTokenValid,
     notAdmin: !isAdmin
   });
   
-  console.log('Redirecting to home...');
+  // console.log('Redirecting to home...');
   router.navigate(['/']);
   return false;
 };

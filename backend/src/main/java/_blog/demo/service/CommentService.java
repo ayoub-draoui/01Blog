@@ -71,10 +71,10 @@ public class CommentService {
         commentRepo.delete(comment);
     }
 
-    public Page<CommentResponse> getPostComments(Long postId, int page, int size) {
-        Page<Comment> comments = commentRepo.findByPostIdOrderByCreatedAtDesc(postId, PageRequest.of(page, size));
-        return comments.map(this::mapToResponse);
-    }
+    // public Page<CommentResponse> getPostComments(Long postId, int page, int size) {
+    //     Page<Comment> comments = commentRepo.findByPostIdOrderByCreatedAtDesc(postId, PageRequest.of(page, size));
+    //     return comments.map(this::mapToResponse);
+    // }
    public List<CommentResponse> getPostCommentsAll(Long postId) {
         List<Comment> comments = commentRepo.findByPostIdOrderByCreatedAtDesc(postId);
         return comments.stream()

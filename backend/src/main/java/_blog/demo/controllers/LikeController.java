@@ -44,13 +44,13 @@ public class LikeController {
         return ResponseEntity.ok(response);
     }
 
-    // Get all likes for a post
+    // get all likes for a post
     @GetMapping
     public ResponseEntity<List<Like>> getPostLikes(@PathVariable Long postId) {
         return ResponseEntity.ok(likeService.getPostLikes(postId));
     }
 
-    // Get likes count
+    // get likes count
     @GetMapping("/count")
     public ResponseEntity<Map<String, Long>> getLikesCount(@PathVariable Long postId) {
         Map<String, Long> response = new HashMap<>();
@@ -58,7 +58,7 @@ public class LikeController {
         return ResponseEntity.ok(response);
     }
 
-    // Check if current user liked the post
+    // check if current user liked the post
     @GetMapping("/check")
     public ResponseEntity<Map<String, Boolean>> checkIfLiked(
             @PathVariable Long postId,

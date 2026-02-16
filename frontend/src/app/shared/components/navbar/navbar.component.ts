@@ -1,14 +1,16 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../../core/services/auth.service';
 import { PostService } from '../../../core/services/post.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { NotificationPanelComponent } from '../notification-panel/notification-panel.component';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-navbar',
@@ -19,8 +21,9 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
+    MatDividerModule,
     NotificationPanelComponent,
-    MatDividerModule
+    MatTooltipModule
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -28,10 +31,15 @@ import { MatDividerModule } from '@angular/material/divider';
 export class NavbarComponent {
   private authService = inject(AuthService);
   private postService = inject(PostService);
+  private themeService = inject(ThemeService);
   private router = inject(Router);
 
   currentUser = this.authService.currentUser;
   isAdmin = computed(() => this.currentUser()?.role === 'ROLE_ADMIN');
+  
+ 
+  currentTheme = this.themeService.currentTheme;
+  isDarkMode = computed(() => this.currentTheme() === 'dark');
 
   navigateHome(): void {
     this.router.navigate(['/home']);
@@ -64,9 +72,13 @@ export class NavbarComponent {
     this.authService.logout();
   }
 
-  switchTheme(theme: 'light' | 'dark'): void {
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(theme);
+ 
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+ 
+  setTheme(theme: 'light' | 'dark'): void {
+    this.themeService.setTheme(theme);
   }
 
   getMediaUrl(filename: string): string {
