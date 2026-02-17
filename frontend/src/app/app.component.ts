@@ -15,7 +15,7 @@ import { ThemeService } from './core/services/theme.service';
     NavbarComponent
   ],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']
 })
 export class AppComponent {
    private themeService = inject(ThemeService);

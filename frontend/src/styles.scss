@@ -149,6 +149,18 @@ body.dark {
     background: #4d4d4d;
   }
 }
+
+/* Strong global override to ensure the app container and root elements
+   pick up the theme variables when the theme class is applied. This
+   helps when component styles or third-party CSS increase specificity. */
+html.dark,
+body.dark,
+html.dark .app-container,
+body.dark .app-container,
+.app-container.dark {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
  
 .mat-mdc-card {
   background-color: var(--surface-color) !important;
