@@ -34,7 +34,7 @@
       display: flex;
       gap: 12px;
       padding: 16px;
-      background-color: #f5f5f5;
+      // background-color: var(--bg-secondary);
       border-left: 4px solid #2196f3;
       border-radius: 4px;
       margin-bottom: 24px;
@@ -50,7 +50,7 @@
       .info-title {
         margin: 0 0 4px;
         font-size: 12px;
-        color: #666;
+        color: var(--text-secondary);
         text-transform: uppercase;
         letter-spacing: 0.5px;
       }
@@ -59,7 +59,7 @@
         margin: 0;
         font-size: 14px;
         font-weight: 500;
-        color: #333;
+        color: var(--text-primary);
         font-style: italic;
 
         .target-description {
@@ -67,7 +67,7 @@
           font-size: 13px;
           font-weight: 400;
           font-style: normal;
-          color: #666;
+          color: var(--text-secondary);
           margin-top: 4px;
         }
       }
@@ -82,7 +82,7 @@
       display: flex;
       gap: 12px;
       padding: 12px 16px;
-      background-color: #fff3e0;
+      // background-color: var(--surface-color)3e0;
       border-left: 4px solid #ff9800;
       border-radius: 4px;
       margin-top: 8px;
@@ -99,7 +99,7 @@
         margin: 0;
         font-size: 13px;
         line-height: 1.5;
-        color: #666;
+        color: var(--text-secondary);
       }
     }
   }
@@ -109,7 +109,7 @@
     justify-content: flex-end;
     gap: 12px;
     padding: 16px 24px;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--border-color);
     margin: 0;
 
     button {

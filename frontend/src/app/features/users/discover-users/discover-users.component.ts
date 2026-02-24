@@ -61,8 +61,8 @@ export class DiscoverUsersComponent implements OnInit {
     setupSearch(): void {
     this.searchControl.valueChanges
       .pipe(
-        debounceTime(500), // Wait 500ms after user stops typing
-        distinctUntilChanged() // Only emit if value changed
+        debounceTime(500),
+        distinctUntilChanged()  
       )
       .subscribe(query => {
         if (query && query.trim().length > 0) {

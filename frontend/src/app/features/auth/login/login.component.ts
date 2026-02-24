@@ -84,8 +84,7 @@ export class LoginComponent {
       error: (error) => {
         console.error('Login failed:', error);
         this.isLoading.set(false);
-        this.errorMessage.set(
-          error.error?.message || 
+        this.errorMessage.set( 
           'Login failed. Please check your credentials.'
         );
       }

@@ -29,9 +29,9 @@
       <app-notification-panel></app-notification-panel>
 
       <!-- Theme Toggle Button (Desktop) -->
-      <button 
-        mat-icon-button 
-        (click)="toggleTheme()" 
+      <button
+        mat-icon-button
+        (click)="toggleTheme()"
         class="theme-toggle-button"
         [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
         matTooltip="{{ isDarkMode() ? 'Light Mode' : 'Dark Mode' }}"
@@ -64,10 +64,14 @@
         <!-- Theme Switcher (Mobile alternative) -->
         <button mat-menu-item (click)="toggleTheme()" class="theme-menu-item">
           @if (isDarkMode()) {
-            <mat-icon>light_mode</mat-icon>
+            <ng-container>
+              <mat-icon>light_mode</mat-icon>
+            </ng-container>
             <span>Light Mode</span>
           } @else {
-            <mat-icon>dark_mode</mat-icon>
+            <ng-container>
+              <mat-icon>dark_mode</mat-icon>
+            </ng-container>
             <span>Dark Mode</span>
           }
         </button>

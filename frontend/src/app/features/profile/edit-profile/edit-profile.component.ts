@@ -192,7 +192,7 @@ uploadAvatar(): void {
       error: (error) => {
         console.error('Error updating profile:', error);
         this.isLoading.set(false);
-        this.errorMessage.set(error.error?.message || 'Failed to update profile');
+        this.errorMessage.set('Failed to update profile');
       }
     });
   }

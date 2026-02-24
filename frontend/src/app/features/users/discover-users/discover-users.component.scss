@@ -1,6 +1,6 @@
 .discover-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  // background-color: var(--bg-secondary);
   padding-bottom: 40px;
 }
 
@@ -8,8 +8,8 @@
   display: flex;
   align-items: center;
   padding: 16px 20px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  // background-color: white;
+  box-shadow: 0 2px 4px var(--shadow-color);
   gap: 16px;
 
   h1 {
@@ -28,7 +28,7 @@
     width: 100%;
     
     mat-icon {
-      color: #666;
+      color: var(--text-secondary);
     }
   }
 }
@@ -47,17 +47,17 @@
     font-size: 64px;
     width: 64px;
     height: 64px;
-    color: #999;
+    color: var(--text-disabled);
     margin-bottom: 16px;
   }
 
   h2 {
     margin: 16px 0 8px;
-    color: #333;
+    color: var(--text-primary);
   }
 
   p {
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 24px;
   }
 }
@@ -80,7 +80,7 @@
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 16px var(--shadow-hover);
     }
 
     .user-avatar {
@@ -88,7 +88,7 @@
       height: 80px;
       border-radius: 50%;
       overflow: hidden;
-      background-color: #e0e0e0;
+      background-color: var(--bg-tertiary);
       margin-bottom: 16px;
       cursor: pointer;
       display: flex;
@@ -110,7 +110,7 @@
         font-size: 80px;
         width: 80px;
         height: 80px;
-        color: #666;
+        color: var(--text-secondary);
       }
     }
 
@@ -122,7 +122,7 @@
         margin: 0 0 4px;
         font-size: 18px;
         font-weight: 700;
-        color: #333;
+        color: var(--text-primary);
         cursor: pointer;
         transition: color 0.2s;
 
@@ -134,13 +134,13 @@
       .username {
         margin: 0 0 12px;
         font-size: 14px;
-        color: #666;
+        color: var(--text-secondary);
       }
 
       .bio {
         margin: 0 0 16px;
         font-size: 14px;
-        color: #333;
+        color: var(--text-primary);
         line-height: 1.5;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -152,8 +152,8 @@
         display: flex;
         justify-content: space-around;
         padding: 12px 0;
-        border-top: 1px solid #e0e0e0;
-        border-bottom: 1px solid #e0e0e0;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
 
         .stat {
           display: flex;
@@ -163,12 +163,12 @@
           .stat-value {
             font-size: 18px;
             font-weight: 700;
-            color: #333;
+            color: var(--text-primary);
           }
 
           .stat-label {
             font-size: 12px;
-            color: #666;
+            color: var(--text-secondary);
             margin-top: 2px;
           }
         }

@@ -125,10 +125,7 @@ export class RegisterComponent {
           const errorMessages = Object.values(errors).join(', ');
           this.errorMessage.set(errorMessages);
         } else {
-          this.errorMessage.set(
-            error.error?.message || 
-            'Registration failed. Please try again.'
-          );
+          this.errorMessage.set('Registration failed. Please try again.');
         }
       }
     });

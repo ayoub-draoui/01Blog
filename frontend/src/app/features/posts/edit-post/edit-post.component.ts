@@ -96,7 +96,7 @@ export class EditPostComponent implements OnInit {
       },
       error: (error) => {
         console.log("Couldn't load post:", error);
-        this.errorMessage.set(error.error?.message || 'Failed to load post');
+        this.errorMessage.set('Failed to load post');
         this.isLoadingPost.set(false);
       }
     });
@@ -181,9 +181,7 @@ export class EditPostComponent implements OnInit {
       error: (error) => {
         console.log("Post can't be updated:", error);
         this.isLoading.set(false);
-        this.errorMessage.set(
-          error.error?.message || 'Failed to update post. Try again later.'
-        );
+        this.errorMessage.set('Failed to update post. Try again later.');
       }
     });
   }

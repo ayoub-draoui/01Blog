@@ -1,6 +1,6 @@
 .notifications-container {
     min-height: 100vh;
-    background-color: #f5f5f5;
+    background-color: var(--bg-secondary);
     padding-bottom: 40px;
 }
 
@@ -8,8 +8,8 @@
     display: flex;
     align-items: center;
     padding: 16px 20px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    // background-color: white;
+    box-shadow: 0 2px 4px var(--shadow-color);
     gap: 16px;
 
     h1 {
@@ -37,17 +37,17 @@
         font-size: 64px;
         width: 64px;
         height: 64px;
-        color: #999;
+        color: var(--text-disabled);
         margin-bottom: 16px;
     }
 
     h2 {
         margin: 16px 0 8px;
-        color: #333;
+        color: var(--text-primary);
     }
 
     p {
-        color: #666;
+        color: var(--text-secondary);
     }
 }
 
@@ -75,7 +75,7 @@
         }
 
         &:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px var(--shadow-hover);
             transform: translateY(-2px);
         }
 
@@ -85,7 +85,7 @@
             height: 48px;
             border-radius: 50%;
             overflow: hidden;
-            background-color: #e0e0e0;
+            background-color: var(--bg-tertiary);
             flex-shrink: 0;
             display: flex;
             align-items: center;
@@ -101,7 +101,7 @@
                 font-size: 48px;
                 width: 48px;
                 height: 48px;
-                color: #666;
+                color: var(--text-secondary);
             }
 
             .type-badge {
@@ -111,7 +111,7 @@
                 width: 24px;
                 height: 24px;
                 border-radius: 50%;
-                background-color: white;
+                // background-color: white;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -146,13 +146,13 @@
                 margin: 0 0 6px;
                 font-size: 15px;
                 line-height: 1.5;
-                color: #333;
+                color: var(--text-primary);
                 word-wrap: break-word;
             }
 
             .notification-time {
                 font-size: 13px;
-                color: #999;
+                color: var(--text-disabled);
             }
         }
 

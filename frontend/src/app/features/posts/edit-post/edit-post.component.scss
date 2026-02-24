@@ -1,6 +1,6 @@
 .edit-post-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: var(--bg-secondary);
   padding: 40px 20px;
   display: flex;
   justify-content: center;
@@ -39,7 +39,7 @@
   gap: 20px;
 
   p {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 16px;
     margin: 0;
   }
@@ -73,7 +73,7 @@
     margin: 0 0 16px;
     font-size: 16px;
     font-weight: 600;
-    color: #333;
+    color: var(--text-primary);
   }
 
   .upload-area {
@@ -83,7 +83,7 @@
     padding: 40px 20px;
     border: 2px dashed #ccc;
     border-radius: 8px;
-    background-color: #fafafa;
+    background-color: var(--bg-secondary);
 
     button {
       mat-icon {
@@ -93,7 +93,7 @@
 
     .upload-hint {
       margin-top: 12px;
-      color: #666;
+      color: var(--text-secondary);
       font-size: 14px;
     }
   }
@@ -159,7 +159,7 @@
   gap: 12px;
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color);
 
   button {
     mat-icon, mat-spinner {

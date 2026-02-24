@@ -100,9 +100,7 @@ export class CreatePostComponent {
         error: (error) => {
             console.log("post can't be created man!!",error);
             this.isLoading.set(false);
-            this.errorMessage.set(
-                error.error?.message || 'try again later'
-            );
+            this.errorMessage.set('try again later');
         }
     });
   }

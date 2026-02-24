@@ -105,7 +105,6 @@ export class AdminDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.log('Error loading users:', error);
-
         this.isLoadingUsers.set(false);
       },
     });
