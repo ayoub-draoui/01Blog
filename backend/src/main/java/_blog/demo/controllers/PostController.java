@@ -116,6 +116,7 @@ public class PostController {
     ) {
         PostUpdateRequest request = new PostUpdateRequest(title, content);
         Post updatedPost = postService.updatePost(id, user.getId(), request, media);
+        System.out.println("3333333333333333333333333333333333333333333333333,UPDATED POST: " + updatedPost + " Media: " + media);
         
         PostResponse enrichedPost = postService.getPostById(updatedPost.getId(), user.getId());
         
