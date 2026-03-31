@@ -31,7 +31,7 @@
             <input
               matInput
               formControlName="title"
-              placeholder="Give your post a catchy title"
+              placeholder="speek your mind soldier"
               [disabled]="isLoading()"
               maxlength="300"
             />
@@ -53,7 +53,7 @@
             <textarea
               matInput
               formControlName="content"
-              placeholder="Share your thoughts, experiences, or learning journey..."
+              placeholder="speek your mind soldier"
               rows="10"
               [disabled]="isLoading()"
               maxlength="6000"
@@ -72,9 +72,30 @@
 
           <!-- Media Upload -->
           <div class="media-section">
-            <h3>Media</h3>
+            @if (previewUrl()) {
+              <div class="media-preview">
+                @if (fileType() === 'image') {
+                  <img [src]="previewUrl()" alt="Preview" />
+                } @else if (fileType() === 'video') {
+                  <video [src]="previewUrl()" controls></video>
+                }
 
-            @if (!previewUrl()) {
+                <button
+                  mat-icon-button
+                  class="remove-button"
+                  type="button"
+                  (click)="removeFile()"
+                  [disabled]="isLoading()"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <div class="media-badge" [class.new-media]="selectedFile()">
+                  <mat-icon>{{ selectedFile() ? 'fiber_new' : 'info' }}</mat-icon>
+                  <span>{{ selectedFile() ? 'New media' : 'Current media' }}</span>
+                </div>
+              </div>
+            } @else {
               <div class="upload-area">
                 <input
                   type="file"
@@ -93,35 +114,6 @@
                   Upload Image or Video
                 </button>
                 <p class="upload-hint">Max size: 20MB</p>
-              </div>
-            } @else {
-              <div class="media-preview">
-                @if (fileType() === 'image') {
-                  <img [src]="previewUrl()!" alt="Preview" />
-                } @else if (fileType() === 'video') {
-                  <video [src]="previewUrl()!" controls></video>
-                }
-                <button
-                  mat-icon-button
-                  class="remove-button"
-                  type="button"
-                  (click)="removeFile()"
-                  [disabled]="isLoading()"
-                  matTooltip="Remove media"
-                >
-                  <mat-icon>close</mat-icon>
-                </button>
-                @if (existingMediaUrl() && keepExistingMedia()) {
-                  <div class="media-badge">
-                    <mat-icon>info</mat-icon>
-                    <span>Current media</span>
-                  </div>
-                } @else if (selectedFile()) {
-                  <div class="media-badge new-media">
-                    <mat-icon>fiber_new</mat-icon>
-                    <span>New media</span>
-                  </div>
-                }
               </div>
             }
           </div>

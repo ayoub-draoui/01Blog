@@ -86,16 +86,13 @@ export class EditPostComponent implements OnInit {
         });
         
         if (post.mediaUrl) {
-          this.existingMediaUrl.set(post.mediaUrl);
-          this.previewUrl.set(post.mediaUrl);
-          // Determine media type from URL or metadata
+          // Point the preview to the existing server URL
+          this.previewUrl.set(this.postService.getMediaUrl(post.mediaUrl));
           this.fileType.set(this.getMediaType(post.mediaUrl));
         }
-        
         this.isLoadingPost.set(false);
       },
       error: (error) => {
-        console.log("Couldn't load post:", error);
         this.errorMessage.set('Failed to load post');
         this.isLoadingPost.set(false);
       }
@@ -113,7 +110,7 @@ export class EditPostComponent implements OnInit {
     if (videoExtensions.some(ext => lowerUrl.includes(ext))) {
       return 'video';
     }
-    return 'image'; // Default to image
+    return 'image'; 
   }
 
   onFileSelected(event: Event): void {
@@ -126,7 +123,7 @@ export class EditPostComponent implements OnInit {
         return;
       }
       
-      if (file.size > 20 * 1024 * 1024) {
+      if (file.size > 20 * 1024 * 1024) { 
         this.errorMessage.set("The file shouldn't be more than 20MB");
         return;
       }
