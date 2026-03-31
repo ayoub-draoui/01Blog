@@ -13,6 +13,7 @@ export interface User {
   followingCount?: number;
   postsCount?: number;
   isFollowing?: boolean | null;
+  banned?: boolean;
 }
 
 

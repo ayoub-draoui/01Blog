@@ -83,13 +83,9 @@ export class PostService{
   }
 
 //   get l comments 
-getComments(postId: number, page: number = 0, size: number = 20): Observable<any> {
-    const url = `${environment.apiUrl}${environment.apiEndpoints.posts.base}/${postId}/comments`;
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get(url, { params });
+getComments(postId: number): Observable<any> {
+    const url = `${environment.apiUrl}${environment.apiEndpoints.posts.base}/${postId}/comments/all`;
+    return this.http.get(url, {});
   }
        // http://localhost:8080/posts/1/comments/19
   deleteComment(postId: number,commentId: number): Observable<void> {

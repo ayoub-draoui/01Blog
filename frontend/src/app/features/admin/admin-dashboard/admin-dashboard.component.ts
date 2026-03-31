@@ -60,7 +60,7 @@ export class AdminDashboardComponent implements OnInit {
   isLoadingReports = signal(false);
   searchQuery = signal('');
   
-  userColumns = ['id', 'username', 'email', 'role', 'actions'];
+  userColumns = ['id', 'username', 'email', 'role', 'status', 'actions'];
   postColumns = ['id', 'title', 'author', 'createdAt', 'actions'];
   reportColumns = ['id', 'type', 'reporter', 'reported', 'status', 'actions'];
   
@@ -126,28 +126,23 @@ export class AdminDashboardComponent implements OnInit {
 
 
 
-  toggleUserBan(userId: number, username: string, currentlyBanned: boolean): void {
-    const action = currentlyBanned ? 'unban' : 'ban';
-    const message = `Are you sure you want to ${action} user "${username}"?`;
+  toggleUserBan(user: User): void {
+    const action = user.banned ? 'unban' : 'ban';
     
-    if (!confirm(message)) {
-      return;
-    }
+    // Using a simple confirm for now, but ensure we pass the object to track state
+    if (!confirm(`Are you sure you want to ${action} ${user.username}?`)) return;
 
-    this.adminService.toggleUserBan(userId).subscribe({
-      next: (response) => {
-        this.snackBar.open(
-          `User "${username}" ${currentlyBanned ? 'unbanned' : 'banned'} successfully`, 
-          'Close', 
-          { duration: 3000 }
-        );
-        this.loadUsers();
-        this.loadDashboardStats();
+    this.adminService.toggleUserBan(user.id).subscribe({
+      next: () => {
+        // Optimistic update or refresh
+        this.snackBar.open(`User ${user.username} ${action}ned!`, 'Close', { duration: 3000 });
+        this.loadUsers(); // Refresh the list
+        this.loadDashboardStats(); // Update the pending reports/stats if linked
       },
-      error: (error) => {
-        console.error('Error toggling user ban:', error);
-        this.snackBar.open(`Failed to ${action} user`, 'Close', { duration: 3000 });
-      },
+      error: (err) => {
+        console.error('Ban failed', err);
+        this.snackBar.open(`Failed to ${action} user.`, 'Close', { duration: 3000 });
+      }
     });
   }
 
