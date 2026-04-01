@@ -1,5 +1,4 @@
 package _blog.demo.controllers;
-
 import _blog.demo.dto.ChangePasswordRequest;
 import _blog.demo.dto.UpdateProfileRequest;
 import _blog.demo.dto.UserProfileResponse;

@@ -130,11 +130,11 @@ export class PostDetailComponent implements OnInit {
 
     this.postService.getComments(postId).subscribe({
       next: (response) => {
-        console.warn(response);
-        this.comments.set(response.content || []);
+        // console.warn(response);
+        this.comments.set(response || []);
         console.log('ccccccccccccccccccccccccccccccccccccccccccccccccccccc', this.comments());
 
-        console.warn(response.content);
+        // console.warn(response.content);
 
         this.isLoadingComments.set(false);
       },

@@ -61,7 +61,7 @@ export class ThemeService {
     
     localStorage.setItem('theme', theme);
     
-    console.log(`✅ Theme applied: ${theme}`);
+    console.log(`Theme applied: ${theme}`);
   }
 
    

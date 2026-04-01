@@ -65,7 +65,7 @@ public class AuthService {
           User user = userRepo.findByUsernameOrEmail(req.usernameOrEmail())
         .orElseThrow(() -> new RuntimeException("User not found"));
 
-        System.out.println("✅ User role from DB: " + user.getRole().name());
+        System.out.println("User role from DB: " + user.getRole().name());
         
         CustomUserDetails userDetails = new CustomUserDetails(user);
         String token = jwtUtil.generateToken(userDetails);
@@ -83,7 +83,7 @@ public class AuthService {
                 user.getIsBanned()
             );
         
-        System.out.println("✅ AuthResponse role: " + response.role());
+        System.out.println("AuthResponse role: " + response.role());
         
         return response;
 
