@@ -2,8 +2,6 @@ package _blog.demo.controllers;
 
 import _blog.demo.dto.CommentCreateRequest;
 import _blog.demo.dto.CommentResponse;
-// import _blog.demo.dto.CommentUpdateRequest;
-// import _blog.demo.model.Comment;
 import _blog.demo.security.CustomUserDetails;
 import _blog.demo.service.CommentService;
 import jakarta.validation.Valid;
