@@ -48,18 +48,7 @@ public class CommentService {
         return mapToResponse(saved);
     }
 
-    // public Comment updateComment(Long commentId, Long userId, CommentUpdateRequest request) {
-    //     Comment comment = commentRepo.findById(commentId)
-    //             .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
-
-    //     // Only owner can update
-    //     if (!comment.getUserId().equals(userId)) {
-    //         throw new UnauthorizedException("You are not authorized to update this comment");
-    //     }
-
-    //     comment.setContent(request.content());
-    //     return commentRepo.save(comment);
-    // }
+  
 
     public void deleteComment(Long commentId, Long userId) {
         Comment comment = commentRepo.findById(commentId)
@@ -75,7 +64,7 @@ public class CommentService {
     //     Page<Comment> comments = commentRepo.findByPostIdOrderByCreatedAtDesc(postId, PageRequest.of(page, size));
     //     return comments.map(this::mapToResponse);
     // }
-   public List<CommentResponse> getPostCommentsAll(Long postId) {
+   public List<CommentResponse> getPostComments(Long postId) {
         List<Comment> comments = commentRepo.findByPostIdOrderByCreatedAtDesc(postId);
         return comments.stream()
                 .map(this::mapToResponse)

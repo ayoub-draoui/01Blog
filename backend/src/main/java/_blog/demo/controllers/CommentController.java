@@ -20,7 +20,11 @@ import java.util.Map;
 @AllArgsConstructor
 public class CommentController {
     private CommentService commentService;
-
+    
+    @GetMapping("/all")
+    public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable Long postId) {
+        return ResponseEntity.ok(commentService.getPostComments(postId));
+    }
     // Create a comment
     @PostMapping
     public ResponseEntity<CommentResponse> createComment(
@@ -68,10 +72,6 @@ public class CommentController {
 
 
     // jiib all comments without pagination
-    @GetMapping("/all")
-    public ResponseEntity<List<CommentResponse>> getAllPostComments(@PathVariable Long postId) {
-        return ResponseEntity.ok(commentService.getPostCommentsAll(postId));
-    }
 
     // jiib l comments count
     @GetMapping("/count")
