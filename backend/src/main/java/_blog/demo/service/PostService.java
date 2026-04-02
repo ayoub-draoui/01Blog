@@ -36,11 +36,11 @@ public class PostService {
         this.notificationService = notificationService;
 
     }
-
+        //   this is gonnna create les posts
     @Transactional
-    public Post creatPost(Post post, Long authorId, MultipartFile mediaFile) {
+    public Post creatPost(Post post, String username, Long authorId, MultipartFile mediaFile) {
         post.setAuthorId(authorId);
-        // post.setAuthorUsername(username);
+        post.setAuthorUsername(username);
 
         if (mediaFile != null && !mediaFile.isEmpty()) {
             String contentType = mediaFile.getContentType();
@@ -67,7 +67,7 @@ public class PostService {
         return savedPost;
     }
 
-   
+//    this lii gonna bring l posts men taarf
     @Transactional(readOnly = true)
     public List<PostResponse> allPosts(Long currentUserId, int page, int size) {
         int offset = page * size;
@@ -92,9 +92,19 @@ public class PostService {
         return mapToPostResponse(result);
     }
 
-    
+    // this is gonna bring les posts for pple whom the fuckig user is you're following;    
     @Transactional(readOnly = true)
-    public List<PostResponse> getByAuthor(Long authorId, Long currentUserId, int page, int size) {
+    public List<PostResponse> getByAuthor(Long currentUserId, int page, int size) {
+        int offset = page * size;
+        List<Object[]> results = postRepository.findPersonalizedFeedWithDetails(currentUserId, size, offset);
+
+        return results.stream()
+                .map(this::mapToPostResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> findPostsByAuthorWithDetails(Long authorId, Long currentUserId, int page, int size) {
         int offset = page * size;
         List<Object[]> results = postRepository.findPostsByAuthorWithDetails(authorId, currentUserId, size, offset);
 
@@ -102,7 +112,6 @@ public class PostService {
                 .map(this::mapToPostResponse)
                 .collect(Collectors.toList());
     }
- 
     @Transactional
     public Post updatePost(
             Long postId,
@@ -145,19 +154,14 @@ public class PostService {
 
         return postRepository.save(post);
     }
-
-    /**
-     * Get simple post by ID (without enrichment) - used internally
-     */
+ 
     @Transactional(readOnly = true)
     public Post getPostEntityById(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + postId));
     }
 
-    /**
-     * Delete a post
-     */
+    
     @Transactional
     public void delete(Long postId, Long currentUserId) {
         Post post = postRepository.findById(postId)
@@ -167,7 +171,7 @@ public class PostService {
             throw new UnauthorizedException("Not your post, you can't delete it");
         }
 
-        // Delete associated media file if exists
+       
         if (post.getMediaUrl() != null) {
             fileStorageService.deletFile(post.getMediaUrl());
         }

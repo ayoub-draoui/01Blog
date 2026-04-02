@@ -38,16 +38,36 @@ public class PostController {
         post.setTitle(title);
         post.setContent(content);
         
-        Post created = postService.creatPost(post,  user.getId(), media);
+        Post created = postService.creatPost(post, user.getUsername(), user.getId(), media);
         
         // fetch  post data 
         PostResponse enrichedPost = postService.getPostById(created.getId(), user.getId());
         
         return ResponseEntity.ok(enrichedPost);
     }
+        
+    
+    @GetMapping("/feed")
+    public ResponseEntity<Map<String, Object>> getFeed(
+        @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Long currentUserId = user != null ? user.getId() : null;
+        List<PostResponse> posts = postService.getByAuthor(currentUserId, page, size);
+        long totalPosts = postService.getTotalPostsCount();
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", posts);
+        response.put("currentPage", page);
+        response.put("totalItems", totalPosts);
+        response.put("totalPages", (int) Math.ceil((double) totalPosts / size));
+        response.put("pageSize", size);
+
+        return ResponseEntity.ok(response);
+    }
      
-    @GetMapping
+    @GetMapping("/explore")
     public ResponseEntity<Map<String, Object>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -76,7 +96,7 @@ public class PostController {
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Long currentUserId = user != null ? user.getId() : null;        
-        List<PostResponse> posts = postService.getByAuthor(authorId, currentUserId, page, size);
+        List<PostResponse> posts = postService.findPostsByAuthorWithDetails(authorId, currentUserId, page, size);
         long totalPosts = postService.getTotalPostsCount(); 
         Map<String, Object> response = new HashMap<>();
         response.put("content", posts);

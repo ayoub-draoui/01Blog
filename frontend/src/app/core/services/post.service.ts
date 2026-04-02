@@ -11,15 +11,14 @@ export class PostService{
     // private postCache = signal<Post[]>([]);
     constructor(private http: HttpClient) {}
 //  geet posts of ppl whom you're following ;
-    getFeed(page :number = 0 , size : number =10):Observable<Page<Post>> {
-        const url = `${environment.apiUrl}${environment.apiEndpoints.posts.feed}`
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
-        return this.http.get<Page<Post>>(url, { params });
+    getFeed(page: number = 0, size: number = 10): Observable<Page<Post>> {
+        const url = `${environment.apiUrl}${environment.apiEndpoints.posts.base}/feed`;
+        const params = new HttpParams().set('page', page.toString()).set('size', size.toString()) ;
+        return this.http.get<Page<Post>>(url,{ params });
     }
         // get les posts men taarf;
-
     getExploreFeed(page: number = 0, size: number = 10): Observable<Page<Post>> {
-    const url = `${environment.apiUrl}/feed/explore`;
+    const url = `${environment.apiUrl}${environment.apiEndpoints.posts.base}/explore`;
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
