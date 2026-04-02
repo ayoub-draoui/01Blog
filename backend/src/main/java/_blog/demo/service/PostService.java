@@ -38,9 +38,9 @@ public class PostService {
     }
 
     @Transactional
-    public Post creatPost(Post post, String username, Long authorId, MultipartFile mediaFile) {
+    public Post creatPost(Post post, Long authorId, MultipartFile mediaFile) {
         post.setAuthorId(authorId);
-        post.setAuthorUsername(username);
+        // post.setAuthorUsername(username);
 
         if (mediaFile != null && !mediaFile.isEmpty()) {
             String contentType = mediaFile.getContentType();
@@ -179,11 +179,10 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    /**
-     * Helper method to map Object[] from native query to PostResponse
-     * This is the CRITICAL mapping function!
-     * PUBLIC so other services (like FeedService) can use it
-     */
+    // Helper method to map Object[] from native query to PostResponse
+    // This is the CRITICAL mapping function!
+    // PUBLIC so other services (like FeedService) can use it
+      
       public PostResponse mapToPostResponse(Object[] row) {
             Object[] flatRow = flattenRow(row);
             return new PostResponse(

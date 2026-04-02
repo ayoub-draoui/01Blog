@@ -38,9 +38,9 @@ public class PostController {
         post.setTitle(title);
         post.setContent(content);
         
-        Post created = postService.creatPost(post, user.getUsername(), user.getId(), media);
+        Post created = postService.creatPost(post,  user.getId(), media);
         
-        // Fetch the enriched post data using optimized query
+        // fetch  post data 
         PostResponse enrichedPost = postService.getPostById(created.getId(), user.getId());
         
         return ResponseEntity.ok(enrichedPost);
@@ -75,13 +75,9 @@ public class PostController {
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        Long currentUserId = user != null ? user.getId() : null;
-        
-        // Get posts using optimized query
+        Long currentUserId = user != null ? user.getId() : null;        
         List<PostResponse> posts = postService.getByAuthor(authorId, currentUserId, page, size);
-        long totalPosts = postService.getTotalPostsCount(); // You might want to add countByAuthorId
-        
-        // Build pagination response
+        long totalPosts = postService.getTotalPostsCount(); 
         Map<String, Object> response = new HashMap<>();
         response.put("content", posts);
         response.put("currentPage", page);
